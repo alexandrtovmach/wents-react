@@ -1,0 +1,31 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background-image: url("../../attachments/images/header-wave.png");
+  background-repeat: repeat-x;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+
+  .header-logo {
+    display: block;
+    width: 120px;
+    height: 50px;
+    background-image: url("../../attachments/images/logo.png");
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: center;
+  }
+
+  .header-navigation {
+    font-size: 150%;
+    
+    >a {
+      margin: 0 20px;
+    }
+  }
+}

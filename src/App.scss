@@ -1,0 +1,26 @@
+/* global classes */
+
+.main-wrapper-padding {
+  padding-left: 15vw;
+  padding-right: 15vw;
+
+  @media screen and (max-width: 1024px) {
+    padding-left: 2vw;
+    padding-right: 2vw;
+  }
+}
+
+.header-compensator {
+  padding-top: 80px;
+}
+
+.viewport {
+  width: 100%;
+  height: 100vh;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

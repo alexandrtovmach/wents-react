@@ -9,43 +9,49 @@ import {
   PostRentContainer,
   ProfileContainer
 } from "./containers";
-import { PageNotFound } from './components';
+import {
+  Header,
+  PageNotFound
+} from './components';
 import './App.scss';
 
 class App extends React.Component {
   render() {
     return (
-      <Switch>
-        <Route
-          path="/"
-          component={HomeContainer}
-        />
-        <Route
-          path="/login"
-          component={LoginContainer}
-        />
-        <Route
-          path="/search-rent"
-          component={SearchRentContainer}
-        />
-        <Route
-          path="/post-rent"
-          component={PostRentContainer}
-        />
-        <Route
-          path="/profile"
-          component={ProfileContainer}
-        />
-        <Route
-          path="/login"
-          component={LoginContainer}
-        />
-        <Route
-          path="/support"
-          component={SupportContainer}
-        />
-        <Route component={PageNotFound} />
-      </Switch>
+      <>
+        <Header />
+        <Switch>
+          <Route
+            path="/"
+            component={HomeContainer}
+          />
+          <Route
+            path="/login"
+            component={LoginContainer}
+          />
+          <Route
+            path="/search-rent"
+            component={SearchRentContainer}
+          />
+          <Route
+            path="/post-rent"
+            component={PostRentContainer}
+          />
+          <Route
+            path="/profile"
+            component={ProfileContainer}
+          />
+          <Route
+            path="/login"
+            component={LoginContainer}
+          />
+          <Route
+            path="/support"
+            component={SupportContainer}
+          />
+          {/* <Route component={PageNotFound} /> */}
+        </Switch>
+      </>
     );
   }
 }
