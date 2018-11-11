@@ -7020,6 +7020,10 @@ react-scripts@2.1.1:
   optionalDependencies:
     fsevents "1.2.4"
 
+react-semantic-ui-range@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/react-semantic-ui-range/-/react-semantic-ui-range-0.6.2.tgz#5573c602616d5fe4a6134c07bfc78a60805cf18b"
+
 react@^16.6.1:
   version "16.6.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.6.1.tgz#ee2aef4f0a09e494594882029821049772f915fe"

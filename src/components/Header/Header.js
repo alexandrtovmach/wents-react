@@ -1,16 +1,23 @@
 import React from 'react';
+import { Header } from 'semantic-ui-react';
+
 import './Header.scss';
 
 const ANIMATION_SPEED = 1;
 
-export default class Header extends React.Component {
+export default class HeaderComponent extends React.Component {
+  constructor() {
+    super();
+
+    this.moveBg = this.moveBg.bind(this);
+  }
 
   componentDidMount() {
-    window.addEventListener("scroll", this.moveBg.bind(this))
+    window.addEventListener("scroll", this.moveBg)
   }
 
   componentWillUnmount() {
-
+    window.removeEventListener("scroll", this.moveBg)
   }
 
   moveBg() {
@@ -36,10 +43,10 @@ export default class Header extends React.Component {
         <nav
           className="header-navigation"
         >
-          <a href="/search-rent">Search house</a>
-          <a href="/post-rent">Post house</a>
-          <a href="/support">Support</a>
-          <a href="/profile">Profile</a>
+          <Header as="a" color="blue" href="/search-rent">Search house</Header>
+          <Header as="a" color="blue" href="/post-rent">Post house</Header>
+          <Header as="a" color="blue" href="/support">Support</Header>
+          <Header as="a" color="blue" href="/profile">Profile</Header>
         </nav>
       </header>
     )
