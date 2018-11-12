@@ -18,6 +18,10 @@
   height: 100vh;
 }
 
+.min-height-viewport {
+  min-height: calc(100vh - 160px); // 160px is Footer height
+}
+
 .flex-center {
   display: flex;
   align-items: center;

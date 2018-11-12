@@ -25,34 +25,42 @@ class App extends React.Component {
         <Switch>
           <Route
             path="/"
+            exact
             component={HomeContainer}
           />
           <Route
             path="/login"
+            exact
             component={LoginContainer}
           />
           <Route
             path="/search-rent"
+            exact
             component={SearchRentContainer}
           />
           <Route
             path="/post-rent"
+            exact
             component={PostRentContainer}
           />
           <Route
             path="/rent"
+            exact
             component={RentContainer}
           />
           <Route
             path="/profile"
+            exact
             component={ProfileContainer}
           />
           <Route
             path="/login"
+            exact
             component={LoginContainer}
           />
           <Route
             path="/support"
+            exact
             component={SupportContainer}
           />
           {/* <Route component={PageNotFound} /> */}
