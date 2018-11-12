@@ -19,7 +19,9 @@ export default () => {
 
         <Container>
           <Search />
-          <Filters />
+          <Filters
+            onChange={console.log}
+          />
         </Container>
       </Segment>
         <Segment basic textAlign="center" padded>

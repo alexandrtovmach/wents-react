@@ -127,15 +127,25 @@ export default class FilterForm extends React.Component {
       maxPrice: 300,
       unlimitedDate: false,
       startDate: Date.now(),
-      endDate: Date.now() + 1000*60*60*24
+      endDate: Date.now() + 1000*60*60*24,
+      apartmentsType: "apartment",
+      rentType: "short",
+      benefitList: ["wifi", "furniture"]
     }
 
-    this.priceChange = this.priceChange.bind(this);
+    this.priceChanged = this.priceChanged.bind(this);
     this.toggleUnlimitedDate = this.toggleUnlimitedDate.bind(this);
-    this.dateChange = this.dateChange.bind(this);
+    this.dateChanged = this.dateChanged.bind(this);
+    this.optionSelected = this.optionSelected.bind(this);
   }
 
-  priceChange([min, max]) {
+  componentDidUpdate() {
+    this.props.onChange && this.props.onChange(this.state);
+  }
+
+  priceChanged([min, max]) {
+    max = max <= 2000? max || 1: 2000;
+    min = min < max? min || 0: max - 1;
     this.setState({
       minPrice: min,
       maxPrice: max
@@ -148,7 +158,7 @@ export default class FilterForm extends React.Component {
     });
   }
 
-  dateChange(event, value, name) {
+  dateChanged(event, value, name) {
     if (!event.target.validationMessage) {
       this.setState({
         [name]: new Date(value).valueOf()
@@ -156,15 +166,22 @@ export default class FilterForm extends React.Component {
     }
   }
 
+  optionSelected(value, name) {
+    this.setState({
+      [name]: value
+    });
+  }
+
   render() {
     const {
       minPrice,
       maxPrice,
       unlimitedDate,
-      startDateError,
-      endDateError,
       startDate,
-      endDate
+      endDate,
+      apartmentsType,
+      rentType,
+      benefitList
     } = this.state;
     return (
       <Segment padded>
@@ -183,19 +200,13 @@ export default class FilterForm extends React.Component {
           </Form.Group>
           <Form.Group>
             <Form.Field width={1}>
-              {
-                startDateError &&
-                <Label basic color='red' pointing='below'>
-                  {startDateError}
-                </Label>
-              }
               <Input
                 label="Start date"
                 placeholder='From'
                 type="date"
                 value={dateToInputFormat(startDate)}
                 max={dateToInputFormat(endDate)}
-                onChange={(event, data) => this.dateChange(event, data.value, "startDate")}
+                onChange={(event, data) => this.dateChanged(event, data.value, "startDate")}
               />
             </Form.Field>
             <Form.Field width={1}>
@@ -206,7 +217,7 @@ export default class FilterForm extends React.Component {
                 disabled={unlimitedDate}
                 value={dateToInputFormat(endDate)}
                 min={dateToInputFormat(startDate)}
-                onChange={(event, data) => this.dateChange(event, data.value, "endDate")}
+                onChange={(event, data) => this.dateChanged(event, data.value, "endDate")}
               />
             </Form.Field>
           </Form.Group>
@@ -219,7 +230,7 @@ export default class FilterForm extends React.Component {
                 min={0}
                 max={2000}
                 value={[minPrice, maxPrice]}
-                onChange={this.priceChange}
+                onChange={this.priceChanged}
               />
             </Form.Field>
           </Form.Group>
@@ -230,7 +241,7 @@ export default class FilterForm extends React.Component {
                 placeholder='Min'
                 type="number"
                 value={minPrice}
-                onChange={(event, data) => this.priceChange([data.value, maxPrice])}
+                onChange={(event, data) => this.priceChanged([data.value, maxPrice])}
               />
             </Form.Field>
             <Form.Field width={1}>
@@ -240,7 +251,7 @@ export default class FilterForm extends React.Component {
                 type="number"
                 width={3}
                 value={maxPrice}
-                onChange={(event, data) => this.priceChange([minPrice, data.value])}
+                onChange={(event, data) => this.priceChanged([minPrice, data.value])}
               />
             </Form.Field>
           </Form.Group>
@@ -248,9 +259,28 @@ export default class FilterForm extends React.Component {
             <Header>Additional</Header>
           </Form.Group>
           <Form.Group>
-            <Form.Select label="Apartments type" options={appartmentsTypes} defaultValue="room" width={4} />
-            <Form.Select label="Rent type" options={rentTypes} defaultValue="short" width={4} />
-            <Form.Select label="Options" options={benefits} multiple defaultValue={["wifi", "bath"]} width={8} />
+            <Form.Select
+              label="Apartments type"
+              options={appartmentsTypes}
+              value={apartmentsType}
+              width={4}
+              onChange={(event, data) => this.optionSelected(data.value, "apartmentsType")}
+            />
+            <Form.Select
+              label="Rent type"
+              options={rentTypes}
+              value={rentType}
+              width={4}
+              onChange={(event, data) => this.optionSelected(data.value, "rentType")}
+            />
+            <Form.Select
+              label="Options"
+              options={benefits}
+              multiple
+              value={benefitList}
+              width={8}
+              onChange={(event, data) => this.optionSelected(data.value, "benefitList")}
+            />
           </Form.Group>
         </Form>
       </Segment>
