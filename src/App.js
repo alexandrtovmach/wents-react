@@ -7,11 +7,13 @@ import {
   SupportContainer,
   SearchRentContainer,
   PostRentContainer,
-  ProfileContainer
+  ProfileContainer,
+  RentContainer
 } from "./containers";
 import {
   Header,
-  PageNotFound
+  PageNotFound,
+  Footer
 } from './components';
 import './App.scss';
 
@@ -38,6 +40,10 @@ class App extends React.Component {
             component={PostRentContainer}
           />
           <Route
+            path="/rent"
+            component={RentContainer}
+          />
+          <Route
             path="/profile"
             component={ProfileContainer}
           />
@@ -51,6 +57,7 @@ class App extends React.Component {
           />
           {/* <Route component={PageNotFound} /> */}
         </Switch>
+        <Footer />
       </>
     );
   }

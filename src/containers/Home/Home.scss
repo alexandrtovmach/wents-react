@@ -1,26 +1,19 @@
-.home-container {
-  section {
-    &:nth-child(1) {
-      position: relative;
-      flex-direction: column;
-      background-image: url("../../attachments/images/home-bg.jpg");
-      background-repeat: no-repeat;
-      background-size: 100% auto;
+.main-bg {
+  background-image: url("../../attachments/images/home-bg.jpg") !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% auto !important;
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 
-      &::before {
-        content: "";
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-      }
-
-      >* {
-        z-index: 1;
-      }
-    }
+  >* {
+    z-index: 1;
   }
 }
