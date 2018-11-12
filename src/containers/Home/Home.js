@@ -11,7 +11,6 @@ export default () => {
     >
       <Segment
         basic
-        fluid
         className="header-compensator viewport flex-center main-bg flex-column"
       >
         <Header as="h1" size="huge" inverted>
@@ -29,10 +28,12 @@ export default () => {
               Search results:
             </Header>
             <Card.Group centered>
-              {[1,2,3,4,5,6].map(a => <RentCard a={a}/>)}
+              {[1,2,3,4,5,6].map(a => <RentCard key={a} a={a}/>)}
             </Card.Group>
             <Button
               className="margin-2"
+              as="a"
+              href="/search-rent"
             >
               More
             </Button>
