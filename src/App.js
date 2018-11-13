@@ -16,8 +16,18 @@ import {
   Footer
 } from './components';
 import './App.scss';
+import { getUser } from './services/auth';
 
 class App extends React.Component {
+  state = {
+    user: null
+  };
+
+  async componentDidMount() {
+    const user = await getUser();
+    this.setState({ user: user });
+  }
+
   render() {
     return (
       <>
@@ -51,7 +61,7 @@ class App extends React.Component {
           <Route
             path="/profile"
             exact
-            component={ProfileContainer}
+            render={() => <ProfileContainer user={this.state.user} />}
           />
           <Route
             path="/login"

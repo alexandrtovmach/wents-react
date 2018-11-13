@@ -6,3 +6,4 @@ export { default as SortPanel } from './SortPanel/SortPanel';
 export { default as RentCard } from './RentCard/RentCard';
 export { default as PageNotFound } from './PageNotFound/PageNotFound';
 export { default as Auth } from './Auth/Auth';
+export { default as Loader } from './Loader/Loader';
