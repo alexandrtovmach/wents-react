@@ -106,3 +106,5 @@ export const benefits = [
     icon: "clock"
   },
 ];
+
+export const advertStatusList = ["Active", "Pending", "Archived"];

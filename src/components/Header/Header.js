@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header } from 'semantic-ui-react';
+import { Header, Button, Label } from 'semantic-ui-react';
 
 import { getUser } from '../../services/auth';
 import './Header.scss';
@@ -55,6 +55,23 @@ export default class HeaderComponent extends React.Component {
           {
             user &&
             <Header as="a" color="blue" href="/profile">Profile</Header>
+          }
+          {
+            user &&
+            <Button
+              as='div'
+              labelPosition='right'
+              size="tiny"
+            >
+              <Button 
+                primary
+                icon="mail"
+                size="tiny"
+              />
+              <Label basic color="blue" pointing='left'>
+                {user.newMessages || 0}
+              </Label>
+            </Button>
           }
         </nav>
       </header>

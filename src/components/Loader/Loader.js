@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Container, Loader as SemanticLoader } from 'semantic-ui-react';
+import { Container, Loader, Dimmer } from 'semantic-ui-react';
 
-const Loader = () => (
+export default () => (
   <Container
     fluid
-    className="loader-wrap header-compensator min-height-viewport"
+    className="header-compensator min-height-viewport"
   >
-    <SemanticLoader active inline="centered" />
+    <Dimmer active inverted>
+      <Loader inverted content='Loading' />
+    </Dimmer>
   </Container>
 );
-
-export default Loader;

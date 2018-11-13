@@ -1,7 +1,7 @@
 import React from 'react';
-import { Container, Card, Segment, Dimmer, Loader, Header } from 'semantic-ui-react';
+import { Container, Card, Segment, Header } from 'semantic-ui-react';
 
-import { RentCard } from "../../components";
+import { RentCard, Loader } from "../../components";
 import { getUser } from '../../services/auth';
 
 export default class PostRent extends React.Component {
@@ -33,14 +33,7 @@ export default class PostRent extends React.Component {
     const { loading } = this.state;
     if (loading) {
       return (
-        <Container
-          fluid
-          className="header-compensator min-height-viewport"
-        >
-          <Dimmer active inverted>
-            <Loader inverted content='Loading' />
-          </Dimmer>
-        </Container>
+        <Loader />
       )
     } else {
       return (

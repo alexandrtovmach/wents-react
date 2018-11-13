@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Form, Input, Header, Label, Container } from "semantic-ui-react";
+import { Segment, Form, Header, } from "semantic-ui-react";
 
 import { Map, AddressInput, ImageInput } from '../';
 import { dateToInputFormat } from '../../services/utils';

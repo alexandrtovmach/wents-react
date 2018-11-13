@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Card, Segment, Dimmer, Loader, Header } from 'semantic-ui-react';
+import { Container, Segment } from 'semantic-ui-react';
 
 import { RentPost } from '../../components';
 
@@ -26,7 +26,10 @@ export default class Rent extends React.Component {
 
   
   render() {
-    const { post, user } = this.state;
+    const {
+      post,
+      // user
+    } = this.state;
     return (
       <Container
         text
