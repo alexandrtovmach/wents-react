@@ -5,7 +5,6 @@ import { Search, Filters, RentCard, SortPanel } from "../../components";
 export default () => {
   return (
     <Container
-      fluid
       className="header-compensator min-height-viewport"
     >
       <Segment

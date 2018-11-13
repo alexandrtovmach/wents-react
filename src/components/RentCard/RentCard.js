@@ -1,11 +1,11 @@
 import React from 'react';
 import { Card, Image, Icon } from 'semantic-ui-react';
 
-export default ({ a }) => (
-  <Card as="a" href={`/rent/${a}`} target="_blank" >
-    <Image src={`https://source.unsplash.com/random/37${a}x37${a}`} />
+export default ({ id }) => (
+  <Card as="a" href={`/rent/${id}`} target="_blank" >
+    <Image src={`https://source.unsplash.com/random/37${id}x37${id}`} />
     <Card.Content>
-      <Card.Header>Hostel #{a}</Card.Header>
+      <Card.Header>Hostel #{id}</Card.Header>
       <Card.Meta>
         <span className='date'>Lviv, Ukraine</span>
       </Card.Meta>
