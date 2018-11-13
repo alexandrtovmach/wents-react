@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Form, Input, Header, Label } from "semantic-ui-react";
+import { Segment, Form, Input, Header } from "semantic-ui-react";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';

@@ -12,7 +12,7 @@ import {
 } from "./containers";
 import {
   Header,
-  PageNotFound,
+  // PageNotFound,
   Footer
 } from './components';
 import './App.scss';
