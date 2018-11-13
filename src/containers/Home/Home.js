@@ -24,23 +24,23 @@ export default () => {
           />
         </Container>
       </Segment>
-        <Segment basic textAlign="center" padded>
-          <Container>
-            <Header as="h1" size="huge">
-              Search results:
-            </Header>
-            <Card.Group centered>
-              {[1,2,3,4,5,6].map(a => <RentCard key={a} a={a}/>)}
-            </Card.Group>
-            <Button
-              className="margin-2"
-              as="a"
-              href="/search-rent"
-            >
-              More
-            </Button>
-          </Container>
-        </Segment>
+      <Segment basic textAlign="center" padded>
+        <Container>
+          <Header as="h1" size="huge">
+            Search results:
+          </Header>
+          <Card.Group centered>
+            {[1,2,3,4,5,6].map(id => <RentCard key={id} id={id}/>)}
+          </Card.Group>
+          <Button
+            className="margin-2"
+            as="a"
+            href="/search-rent"
+          >
+            More
+          </Button>
+        </Container>
+      </Segment>
     </Container>
   );
 }

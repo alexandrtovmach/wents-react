@@ -20,7 +20,7 @@ export default () => {
       </Segment>
       <Segment basic textAlign="center" padded>
         <Card.Group centered stackable itemsPerRow={4}>
-          {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].map(a => <RentCard key={a} a={a}/>)}
+          {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].map(id => <RentCard key={id} id={id}/>)}
         </Card.Group>
       </Segment>
     </Container>

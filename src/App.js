@@ -45,7 +45,10 @@ class App extends React.Component {
           />
           <Route
             path="/rent"
-            exact
+            component={RentContainer}
+          />
+          <Route
+            path="/rent/:id"
             component={RentContainer}
           />
           <Route
