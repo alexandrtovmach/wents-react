@@ -1,6 +1,7 @@
 import React from 'react';
 import { Header } from 'semantic-ui-react';
 
+import { getUser } from '../../services/auth';
 import './Header.scss';
 
 const ANIMATION_SPEED = 1;
@@ -8,12 +9,16 @@ const ANIMATION_SPEED = 1;
 export default class HeaderComponent extends React.Component {
   constructor() {
     super();
+    this.state = {
+      user: null
+    }
 
     this.moveBg = this.moveBg.bind(this);
   }
 
   componentDidMount() {
-    window.addEventListener("scroll", this.moveBg)
+    window.addEventListener("scroll", this.moveBg);
+    getUser().then(user => this.setState({user}))
   }
 
   componentWillUnmount() {
@@ -30,6 +35,7 @@ export default class HeaderComponent extends React.Component {
   }
 
   render () {
+    const { user } = this.state;
     return (
       <header
         ref={el => this.headerEl = el}
@@ -46,7 +52,10 @@ export default class HeaderComponent extends React.Component {
           <Header as="a" color="blue" href="/search-rent">Search house</Header>
           <Header as="a" color="blue" href="/post-rent">Post house</Header>
           <Header as="a" color="blue" href="/support">Support</Header>
-          <Header as="a" color="blue" href="/profile">Profile</Header>
+          {
+            user &&
+            <Header as="a" color="blue" href="/profile">Profile</Header>
+          }
         </nav>
       </header>
     )
