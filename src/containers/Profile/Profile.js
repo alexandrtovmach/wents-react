@@ -10,12 +10,15 @@ import {
   Header,
   Card,
   List,
-  Tab
+  Tab,
+  Label,
+  Form,
+  Modal
 } from 'semantic-ui-react';
-import { RentCard, Loader } from "../../components";
-import { lorem } from '../../services/utils';
+import { RentCard, Loader, AddressInput, ImageInput } from "../../components";
 import { advertStatusList } from '../../services/constants';
-import { getUser } from '../../services/auth';
+import { getUser, signOut } from '../../services/auth';
+import { dateToInputFormat } from '../../services/utils';
 
 
 export default class Profile extends React.Component {
@@ -24,33 +27,119 @@ export default class Profile extends React.Component {
 
     this.state = {
       user: null,
-      loading: true
+      loading: true,
+      edit: false,
+      avatarChanging: false
     };
 
     this.filterPostsByStatus = this.filterPostsByStatus.bind(this);
-    this.editUserOn = this.editUserOn.bind(this);
+    this.toggleEdit = this.toggleEdit.bind(this);
+    this.avatarChange = this.avatarChange.bind(this);
+    this.nameChanged = this.nameChanged.bind(this);
+    this.birthChanged = this.birthChanged.bind(this);
+    this.addressChanged = this.addressChanged.bind(this);
+    this.phoneChanged = this.phoneChanged.bind(this);
+    this.descriptionChanged = this.descriptionChanged.bind(this);
+    this.logout = this.logout.bind(this);
   }
   
   async componentDidMount() {
     const user = await getUser();
+    if (user) {
+      this.setState({
+        fullUser: user,
+        user: {
+          displayName: user.displayName,
+          photoURL: user.photoURL || 'https://react.semantic-ui.com/images/wireframe/square-image.png',
+          rating: Math.round(Math.random() * 5),
+          address: user.address,
+          birth: user.birth,
+          phoneNumber: user.phoneNumber,
+          email: user.email,
+          description: user.description
+        },
+        loading: false
+      });
+    } else {
+      window.location.href = "/login";
+    }
+  }
+
+  toggleEdit() {
+    const { edit } = this.state;
+    if (edit) {
+      this.setState({
+        edit: false
+      });
+    } else {
+      this.setState({
+        edit: true
+      });
+    }
+  }
+
+  avatarChange() {
     this.setState({
-      fullUser: user,
-      user: {
-        name: user.displayName || "User Name",
-        photo: user.photoURL || 'https://react.semantic-ui.com/images/wireframe/square-image.png',
-        rating: Math.round(Math.random() * 5),
-        address: user.address || 'Ukraine, Lviv',
-        birth: user.birth || "Immortal",
-        phone: user.phoneNumber || "095-666-66-66",
-        email: user.email || "devil@hell.net"
-      },
-      loading: false
+      avatarChanging: true
     });
   }
 
-  editUserOn() {
-    // turn on edit
-    console.log(this.state.fullUser);
+  nameChanged(event, value) {
+    if (!event.target.validationMessage) {
+      this.setState({
+        user: {
+          ...this.state.user,
+          displayName: value
+        }
+      });
+    }
+  }
+
+  birthChanged(event, value) {
+    if (!event.target.validationMessage) {
+      this.setState({
+        user: {
+          ...this.state.user,
+          birth: value
+        }
+      });
+    }
+  }
+
+  addressChanged({ address }) {
+    this.setState({
+      user: {
+        ...this.state.user,
+        address: address
+      }
+    });
+  }
+
+  phoneChanged(event, value) {
+    if (!event.target.validationMessage) {
+      this.setState({
+        user: {
+          ...this.state.user,
+          phoneNumber: value
+        }
+      });
+    }
+  }
+
+  descriptionChanged(event, value) {
+    if (!event.target.validationMessage) {
+      this.setState({
+        user: {
+          ...this.state.user,
+          description: value
+        }
+      });
+    }
+  }
+
+  logout() {
+    signOut();
+    window.location.reload();
   }
 
   filterPostsByStatus(posts, status) {
@@ -71,7 +160,7 @@ export default class Profile extends React.Component {
     });
   }
 
-  generateUserPhotoAndRating(user) {
+  generateUserPhotoAndRating(user, edit) {
     return (
       <Segment
         basic
@@ -79,10 +168,18 @@ export default class Profile extends React.Component {
         textAlign="center"
       >
         <Image
-          src={user.photo}
+          src={user.photoURL}
           centered
-          avatar
           size="medium"
+          label={
+            edit &&
+            <Label
+              as='a'
+              corner='right'
+              icon='configure'
+              onClick={this.avatarChange}
+            />
+          }
         />
         <Header>
           <Header.Content>
@@ -101,41 +198,100 @@ export default class Profile extends React.Component {
     )
   }
 
-  generateUserMetaInfo(user) {
-    return (
-      <Segment
-        basic
-        padded
-      >
-        <Header size="huge">
-          {user.name}
-        </Header>
-        <List>
-          <List.Item>
-            <List.Icon name='map marker alternate' />
-            <List.Content>{user.address}</List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Icon name='calendar check outline' />
-            <List.Content>{user.birth}</List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Icon name='mail' />
-            <List.Content>
-              <a href={`mailto:${user.email}`}>{user.email}</a>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Icon name='phone' />
-            <List.Content>{user.phone}</List.Content>
-          </List.Item>
-        </List>
-      </Segment>
-    )
+  generateUserMetaInfo(user, edit) {
+    if (edit) {
+      return (
+        <Segment
+          basic
+        >
+          <Form>
+            <Form.Input
+              fluid
+              icon='user'
+              iconPosition='left'
+              placeholder="Your name"
+              maxLength={30}
+              value={user.displayName}
+              onChange={(event, data) => this.nameChanged(event, data.value)}
+            />
+            <Form.Field>
+              <AddressInput
+                setLocation={this.addressChanged}
+                value={user.address}
+                icon='map marker alternate'
+                placeholder="Your location"
+              />
+            </Form.Field>
+            <Form.Input
+              fluid
+              type="date"
+              value={dateToInputFormat(user.birth)}
+              min="1950-01-01"
+              icon='calendar check outline'
+              iconPosition='left'
+              onChange={(event, data) => this.birthChanged(event, data.value)}
+            />
+            <Form.Input
+              fluid
+              type="tel"
+              maxLength={13}
+              pattern="[\+]\d{0,12}"
+              placeholder="+380XXXXXXXXX"
+              value={user.phoneNumber}
+              icon='phone'
+              iconPosition='left'
+              onChange={(event, data) => this.phoneChanged(event, data.value)}
+            />
+          </Form>
+        </Segment>
+      )
+    } else {
+      return (
+        <Segment
+          basic
+          padded
+        >
+          <Header
+            size="huge"
+          >
+            {user.displayName || "User Name"}
+          </Header>
+          <List>
+            {
+              user.address &&
+              <List.Item>
+                <List.Icon name='map marker alternate' />
+                <List.Content>{user.address}</List.Content>
+              </List.Item>
+            }
+            {
+              user.birth &&
+              <List.Item>
+                <List.Icon name='calendar check outline' />
+                <List.Content>{user.birth}</List.Content>
+              </List.Item>
+            }
+            <List.Item>
+              <List.Icon name='mail' />
+              <List.Content>
+                <a href={`mailto:${user.email}`}>{user.email}</a>
+              </List.Content>
+            </List.Item>
+            {
+              user.phoneNumber &&
+              <List.Item>
+                <List.Icon name='phone' />
+                <List.Content>{user.phoneNumber}</List.Content>
+              </List.Item>
+            }
+          </List>
+        </Segment>
+      )
+    }
   }
 
   render() {
-    const { user, loading } = this.state;
+    const { user, loading, edit, avatarChanging } = this.state;
 
     if (loading) {
       return <Loader />
@@ -144,26 +300,61 @@ export default class Profile extends React.Component {
         <Container
           className="header-compensator min-height-viewport"
         >
+          <Modal
+            open={avatarChanging}
+            closeOnEscape={true}
+            closeOnDimmerClick={true}
+            size="small"
+          >
+            <Modal.Header>Select a Photo</Modal.Header>
+            <Modal.Content>
+              <ImageInput />
+            </Modal.Content>
+          </Modal>
           <Grid stackable divided>
             <Grid.Column
               width={4}
             >
-              {this.generateUserPhotoAndRating(user)}
-              {this.generateUserMetaInfo(user)}
+              {this.generateUserPhotoAndRating(user, edit)}
+              {this.generateUserMetaInfo(user, edit)}
               <Button
-                basic
+                basic={!edit}
                 primary
                 fluid
-                onClick={this.editUserOn}
+                onClick={this.toggleEdit}
               >
-                Edit Profile
+                {edit? "Save Profile": "Edit Profile"}
+              </Button>
+              <Button
+                fluid
+                onClick={this.logout}
+                className="margin-v-1"
+              >
+                Logout
               </Button>
             </Grid.Column>
             <Grid.Column width={12}>
-              <Segment basic>
-                <Header size="large">About</Header>
-                <Item>{lorem}</Item>
-              </Segment>
+              {
+                edit? (
+                  <Form
+                    as={Segment}
+                    basic
+                  >
+                    <Form.TextArea
+                      autoHeight
+                      label="About"
+                      maxLength={500}
+                      value={user.description}
+                      onChange={(event, data) => this.descriptionChanged(event, data.value)}
+                    />
+                  </Form>
+                ) : (
+                  <Segment basic>
+                    <Header size="large">About</Header>
+                    <Item>{user.description || "Nothing special"}</Item>
+                  </Segment>
+                )
+              }
               <Segment basic>
                 <Header size="large">My Adverts</Header>
                 <Tab panes={this.generateAdvertTabs()} />

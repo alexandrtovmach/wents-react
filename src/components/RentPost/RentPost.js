@@ -28,7 +28,6 @@ export default class FilterForm extends React.Component {
 
 
     this.setLocation = this.setLocation.bind(this);
-    
   }
 
   componentDidUpdate() {
