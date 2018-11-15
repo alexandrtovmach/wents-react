@@ -158,12 +158,14 @@ export default class AuthComponent extends React.Component {
             or:
           </Header>
           <Button
+            className="margin-v-1"
             color="google plus"
             icon="google"
             content="Login with Google"
             onClick={this.signInGoogle}
           />
           <Button
+            className="margin-v-1"
             color="facebook"
             icon="facebook"
             content="Login with Facebook"

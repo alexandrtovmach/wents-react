@@ -8,10 +8,11 @@ export default () => {
   return (
     <Container
       fluid
+      className="no-margin-mobile"
     >
       <Segment
         basic
-        className="header-compensator viewport flex-center main-bg flex-column"
+        className="header-compensator viewport flex-center flex-column main-bg"
       >
         <Header as="h1" size="huge" inverted>
           RENTWENS

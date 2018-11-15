@@ -18,7 +18,9 @@ export default (props) => {
           <Icon name='sort alphabet up' />
         </Button>
       </Button.Group>
-      {' '}
+      {/* temporary fix for mobile devices */}
+      <br />
+      <br />
       <Button.Group>
         <Button active={false}>
           Price
