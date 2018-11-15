@@ -20,6 +20,7 @@ import {
 import { RentCard, Loader, AddressInput, AvatarUploader } from "../../components";
 import { advertStatusList } from '../../services/constants';
 import { getUser, signOut } from '../../services/auth';
+import { extendUserWithAdditionalData } from '../../services/database';
 import { dateToInputFormat } from '../../services/utils';
 
 
@@ -30,7 +31,7 @@ export default class Profile extends React.Component {
     this.state = {
       user: null,
       loading: true,
-      edit: true,
+      edit: false,
       avatarChanging: false,
       avatarDimmerShow: false
     };
@@ -55,11 +56,12 @@ export default class Profile extends React.Component {
       this.setState({
         fullUser: user,
         user: {
+          uid: user.uid,
           displayName: user.displayName,
           photoURL: user.photoURL || 'https://react.semantic-ui.com/images/wireframe/square-image.png',
           rating: Math.round(Math.random() * 5),
           address: user.address,
-          birth: user.birth,
+          birthday: user.birthday,
           phoneNumber: user.phoneNumber,
           email: user.email,
           description: user.description
@@ -72,11 +74,16 @@ export default class Profile extends React.Component {
   }
 
   toggleEdit() {
-    const { edit } = this.state;
+    const { edit, user } = this.state;
     if (edit) {
       this.setState({
-        edit: false
+        loading: true
       });
+      extendUserWithAdditionalData(user)
+        .then(this.setState({
+          edit: false,
+          loading: false
+        }))
     } else {
       this.setState({
         edit: true
@@ -91,8 +98,13 @@ export default class Profile extends React.Component {
   }
 
 
-  handleAvatarDimmerShow = () => this.setState({ avatarDimmerShow: true });
-  handleAvatarDimmerHide = () => this.setState({ avatarDimmerShow: false });
+  handleAvatarDimmerShow() {
+    this.setState({ avatarDimmerShow: true });
+  }
+
+  handleAvatarDimmerHide() {
+    this.setState({ avatarDimmerShow: false });
+  }
 
   avatarChanged(value) {
     this.setState({
@@ -120,7 +132,7 @@ export default class Profile extends React.Component {
       this.setState({
         user: {
           ...this.state.user,
-          birth: value
+          birthday: value
         }
       });
     }
@@ -191,13 +203,14 @@ export default class Profile extends React.Component {
           as={Image}
           centered
           fluid
+          dimmed={edit}
           dimmer={{
             active: edit && avatarDimmerShow,
-            content: <Icon name='configure' size="huge"/>
+            content: <Icon name='configure' size="huge"/>,
+            onClick: this.toggleAvatarChange
           }}
           onMouseEnter={this.handleAvatarDimmerShow}
           onMouseLeave={this.handleAvatarDimmerHide}
-          onClick={this.toggleAvatarChange}
           src={user.photoURL}
         />
         <Header>
@@ -244,7 +257,7 @@ export default class Profile extends React.Component {
             <Form.Input
               fluid
               type="date"
-              value={dateToInputFormat(user.birth)}
+              value={dateToInputFormat(user.birthday)}
               min="1950-01-01"
               icon='calendar check outline'
               iconPosition='left'
@@ -284,10 +297,10 @@ export default class Profile extends React.Component {
               </List.Item>
             }
             {
-              user.birth &&
+              user.birthday &&
               <List.Item>
                 <List.Icon name='calendar check outline' />
-                <List.Content>{user.birth}</List.Content>
+                <List.Content>{user.birthday}</List.Content>
               </List.Item>
             }
             <List.Item>

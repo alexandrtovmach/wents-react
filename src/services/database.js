@@ -1,20 +1,21 @@
 import { database } from './firebase';
+import { userKeys } from './constants';
 
-export const extendUserWithAdditionalData = ({user}) => {
-  user = {
+export const extendUserWithAdditionalData = (user) => {
+  const initialUserObj = {
     uid: user.uid,
-    displayName: user.displayName || extractFromProvidersData(user, "displayName"),
-    email: user.email || extractFromProvidersData(user, "email"),
-    emailVerified: user.emailVerified,
-    metadata: user.metadata,
-    phoneNumber: user.phoneNumber || extractFromProvidersData(user, "phoneNumber"),
-    photoURL: user.photoURL || extractFromProvidersData(user, "photoURL"),
-    providerData: user.providerData
+    providerData: user.providerData || null
   };
+  user = userKeys.reduce((prev, el) => {
+    return {
+      ...prev,
+      [el]: user[el] || extractFromProvidersData(user, el) || null
+    }
+  }, initialUserObj);
   if (user && user.uid) {
     return database()
       .ref(`users/${user.uid}`)
-      .set({
+      .update({
         ...user
       });
   } else {
@@ -22,19 +23,25 @@ export const extendUserWithAdditionalData = ({user}) => {
   }
 };
 
-export const getUserAdditionalData = user => {
+export const getUserAdditionalData = ({user}) => {
   if (user && user.uid) {
     return database()
       .ref(`users/${user.uid}`)
       .once('value')
-      .then(snapshot => snapshot.val() || {})
+      .then(snapshot => {
+        const additional = snapshot.val() || {};
+        return {
+          ...user,
+          ...additional
+        };
+      })
   } else {
     return null
   }
 };
 
 export const extractFromProvidersData = (user, key) => {
-  return user && user.providerData.reduce((prev, el) => {
+  return user && user.providerData && user.providerData.reduce((prev, el) => {
     return prev || el[key]
   }, null);
 };
