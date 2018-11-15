@@ -11,3 +11,4 @@ export { default as AddressInput } from './AddressInput/AddressInput';
 export { default as Map } from './Map/Map';
 export { default as ImageInput } from './ImageInput/ImageInput';
 export { default as Loader } from './Loader/Loader';
+export { default as AvatarUploader } from './AvatarUploader/AvatarUploader';

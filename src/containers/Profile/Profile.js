@@ -15,7 +15,8 @@ import {
   Form,
   Modal
 } from 'semantic-ui-react';
-import { RentCard, Loader, AddressInput, ImageInput } from "../../components";
+
+import { RentCard, Loader, AddressInput, AvatarUploader } from "../../components";
 import { advertStatusList } from '../../services/constants';
 import { getUser, signOut } from '../../services/auth';
 import { dateToInputFormat } from '../../services/utils';
@@ -28,13 +29,14 @@ export default class Profile extends React.Component {
     this.state = {
       user: null,
       loading: true,
-      edit: false,
+      edit: true,
       avatarChanging: false
     };
 
     this.filterPostsByStatus = this.filterPostsByStatus.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
-    this.avatarChange = this.avatarChange.bind(this);
+    this.toggleAvatarChange = this.toggleAvatarChange.bind(this);
+    this.avatarChanged = this.avatarChanged.bind(this);
     this.nameChanged = this.nameChanged.bind(this);
     this.birthChanged = this.birthChanged.bind(this);
     this.addressChanged = this.addressChanged.bind(this);
@@ -78,9 +80,15 @@ export default class Profile extends React.Component {
     }
   }
 
-  avatarChange() {
+  toggleAvatarChange() {
     this.setState({
-      avatarChanging: true
+      avatarChanging: !this.state.avatarChanging
+    });
+  }
+
+  avatarChanged(value) {
+    this.setState({
+      avatarByteArr: value
     });
   }
 
@@ -177,7 +185,7 @@ export default class Profile extends React.Component {
               as='a'
               corner='right'
               icon='configure'
-              onClick={this.avatarChange}
+              onClick={this.toggleAvatarChange}
             />
           }
         />
@@ -304,11 +312,18 @@ export default class Profile extends React.Component {
             open={avatarChanging}
             closeOnEscape={true}
             closeOnDimmerClick={true}
+            onClose={this.toggleAvatarChange}
             size="small"
           >
             <Modal.Header>Select a Photo</Modal.Header>
             <Modal.Content>
-              <ImageInput />
+              {/* <ImageInput
+                avatar
+                onChanged={this.avatarChanged}
+              /> */}
+              <AvatarUploader
+
+              />
             </Modal.Content>
           </Modal>
           <Grid stackable divided>

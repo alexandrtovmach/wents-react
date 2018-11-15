@@ -1,0 +1,16 @@
+@mixin fullsize {
+  width: 100%!important;
+  height: 100%!important;
+  min-height: 200px;
+}
+
+.avatar-container {
+  >div,
+  >div>div,
+  >div>div>label,
+  >div>div>div,
+  >div>div>div>div {
+    @include fullsize;
+    overflow: auto;
+  }
+}

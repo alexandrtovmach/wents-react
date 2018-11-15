@@ -4,17 +4,20 @@ import { Dashboard } from '@uppy/react';
 
 import "./ImageInput.scss";
 
-export default (props) => {
+export default ({avatar, onAddedFile, onRemovedFile}) => {
   const uppy = Uppy({
-    autoProceed: false
+    autoProceed: false,
+    restrictions: {
+      maxNumberOfFiles: avatar && 1
+    }
   })
 
   uppy.on('file-added', (file) => {
-    props.onAddedFile && props.onAddedFile(file);
+    onAddedFile && onAddedFile(file);
   })
 
   uppy.on('file-removed', (file) => {
-    props.onDroppedFile && props.onDroppedFile(file);
+    onRemovedFile && onRemovedFile(file);
   })
 
   return (
