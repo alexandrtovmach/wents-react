@@ -11,9 +11,10 @@ import {
   Card,
   List,
   Tab,
-  Label,
+  Icon,
   Form,
-  Modal
+  Modal,
+  Dimmer
 } from 'semantic-ui-react';
 
 import { RentCard, Loader, AddressInput, AvatarUploader } from "../../components";
@@ -30,12 +31,15 @@ export default class Profile extends React.Component {
       user: null,
       loading: true,
       edit: true,
-      avatarChanging: false
+      avatarChanging: false,
+      avatarDimmerShow: false
     };
 
     this.filterPostsByStatus = this.filterPostsByStatus.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
     this.toggleAvatarChange = this.toggleAvatarChange.bind(this);
+    this.handleAvatarDimmerShow = this.handleAvatarDimmerShow.bind(this);
+    this.handleAvatarDimmerHide = this.handleAvatarDimmerHide.bind(this);
     this.avatarChanged = this.avatarChanged.bind(this);
     this.nameChanged = this.nameChanged.bind(this);
     this.birthChanged = this.birthChanged.bind(this);
@@ -86,9 +90,17 @@ export default class Profile extends React.Component {
     });
   }
 
+
+  handleAvatarDimmerShow = () => this.setState({ avatarDimmerShow: true });
+  handleAvatarDimmerHide = () => this.setState({ avatarDimmerShow: false });
+
   avatarChanged(value) {
     this.setState({
-      avatarByteArr: value
+      user: {
+        ...this.state.user,
+        photoURL: value
+      },
+      avatarChanging: false
     });
   }
 
@@ -168,26 +180,25 @@ export default class Profile extends React.Component {
     });
   }
 
-  generateUserPhotoAndRating(user, edit) {
+  generateUserPhotoAndRating(user, edit, avatarDimmerShow) {
     return (
       <Segment
         basic
         size="tiny"
         textAlign="center"
       >
-        <Image
-          src={user.photoURL}
+        <Dimmer.Dimmable
+          as={Image}
           centered
-          size="medium"
-          label={
-            edit &&
-            <Label
-              as='a'
-              corner='right'
-              icon='configure'
-              onClick={this.toggleAvatarChange}
-            />
-          }
+          fluid
+          dimmer={{
+            active: edit && avatarDimmerShow,
+            content: <Icon name='configure' size="huge"/>
+          }}
+          onMouseEnter={this.handleAvatarDimmerShow}
+          onMouseLeave={this.handleAvatarDimmerHide}
+          onClick={this.toggleAvatarChange}
+          src={user.photoURL}
         />
         <Header>
           <Header.Content>
@@ -299,7 +310,7 @@ export default class Profile extends React.Component {
   }
 
   render() {
-    const { user, loading, edit, avatarChanging } = this.state;
+    const { user, loading, edit, avatarChanging, avatarDimmerShow } = this.state;
 
     if (loading) {
       return <Loader />
@@ -317,12 +328,10 @@ export default class Profile extends React.Component {
           >
             <Modal.Header>Select a Photo</Modal.Header>
             <Modal.Content>
-              {/* <ImageInput
-                avatar
-                onChanged={this.avatarChanged}
-              /> */}
               <AvatarUploader
-
+                src={user.photoURL}
+                onChange={this.avatarChanged}
+                onCancel={this.toggleAvatarChange}
               />
             </Modal.Content>
           </Modal>
@@ -330,7 +339,7 @@ export default class Profile extends React.Component {
             <Grid.Column
               width={4}
             >
-              {this.generateUserPhotoAndRating(user, edit)}
+              {this.generateUserPhotoAndRating(user, edit, avatarDimmerShow)}
               {this.generateUserMetaInfo(user, edit)}
               <Button
                 basic={!edit}
