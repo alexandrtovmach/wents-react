@@ -3,11 +3,12 @@ import { database } from './firebase';
 export const extendUserWithAdditionalData = ({user}) => {
   user = {
     uid: user.uid,
-    displayName: user.displayName,
-    email: user.email,
+    displayName: user.displayName || extractFromProvidersData(user, "displayName"),
+    email: user.email || extractFromProvidersData(user, "email"),
     emailVerified: user.emailVerified,
     metadata: user.metadata,
-    phoneNumber: user.phoneNumber,
+    phoneNumber: user.phoneNumber || extractFromProvidersData(user, "phoneNumber"),
+    photoURL: user.photoURL || extractFromProvidersData(user, "photoURL"),
     providerData: user.providerData
   };
   if (user && user.uid) {
@@ -31,3 +32,10 @@ export const getUserAdditionalData = user => {
     return null
   }
 };
+
+export const extractFromProvidersData = (user, key) => {
+  return user && user.providerData.reduce((prev, el) => {
+    return prev || el[key]
+  }, null);
+};
+

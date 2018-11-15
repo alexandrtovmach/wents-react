@@ -4,10 +4,12 @@ import StandaloneSearchBox from "react-google-maps/lib/components/places/Standal
 import { compose, withProps, lifecycle } from "recompose";
 import { Input } from 'semantic-ui-react';
 
+import config from '../../config/firebase';
+
 const AddressInput = compose(
   withProps({
     googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${
-      process.env.REACT_APP_GOOGLE_API_KEY
+      config.apiKey
     }&v=3.exp&libraries=geometry,drawing,places`,
     loadingElement: <div style={{ height: `100%` }} />
   }),

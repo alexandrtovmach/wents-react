@@ -14,12 +14,13 @@ import {
   renderComponent
 } from "recompose";
 
+import config from '../../config/firebase';
 import './Map.scss';
 
 const Map = compose(
   withProps({
     googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${
-      process.env.REACT_APP_GOOGLE_API_KEY
+      config.apiKey
     }&v=3.exp&libraries=geometry,drawing,places`,
     loadingElement: <div className="map-loading-element" />,
     containerElement: <div className="map-container-element" />,
