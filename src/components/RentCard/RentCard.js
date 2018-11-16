@@ -20,7 +20,7 @@ export default ({ id, add }) => {
   } else {
     return (
       <Card as="a" href={`/rent/${id}`} target="_blank" >
-        <Image src={`https://source.unsplash.com/random/37${id}x37${id}`} />
+        <Image src={`https://source.unsplash.com/random/370x370`} />
         <Card.Content>
           <Card.Header>Hostel #{id}</Card.Header>
           <Card.Meta>

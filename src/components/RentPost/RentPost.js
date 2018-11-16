@@ -1,9 +1,11 @@
 import React from 'react';
-import { Segment, Form, Header, } from "semantic-ui-react";
+import { Segment, Form, Header, Button, Modal } from "semantic-ui-react";
 
-import { Map, AddressInput, ImageInput } from '../';
+import { Map, AddressInput, ImageInput } from '..';
 import { dateToInputFormat } from '../../services/utils';
 import { appartmentsTypes, rentTypes, benefits } from '../../services/constants';
+import { uploadImage } from '../../services/storage';
+import { pushData, updateData } from '../../services/database';
 
 
 export default class FilterForm extends React.Component {
@@ -11,73 +13,111 @@ export default class FilterForm extends React.Component {
     super();
 
     this.state = {
-      minPrice: 0,
-      maxPrice: 300,
+      title: "",
+      description: "",
+      price: 100,
       unlimitedDate: false,
       startDate: Date.now(),
       endDate: Date.now() + 1000*60*60*24,
       apartmentsType: "apartment",
       rentType: "short",
-      benefitList: ["wifi", "furniture"]
+      benefitList: ["wifi", "furniture"],
+      photosData: []
     }
 
-    this.priceChanged = this.priceChanged.bind(this);
-    this.toggleUnlimitedDate = this.toggleUnlimitedDate.bind(this);
-    this.dateChanged = this.dateChanged.bind(this);
-    this.optionSelected = this.optionSelected.bind(this);
-
-
-    this.setLocation = this.setLocation.bind(this);
+    this.fieldChange = this.fieldChange.bind(this);
+    this.photoAdded = this.photoAdded.bind(this);
+    this.photoRemoved = this.photoRemoved.bind(this);
+    this.saveChanges = this.saveChanges.bind(this);
   }
 
-  componentDidUpdate() {
-    this.props.onChange && this.props.onChange(this.state);
-  }
-
-  priceChanged([min, max]) {
-    max = max <= 2000? max || 1: 2000;
-    min = min < max? min || 0: max - 1;
+  componentDidMount() {
     this.setState({
-      minPrice: min,
-      maxPrice: max
-    });
+      ...this.props.data
+    })
   }
 
-  toggleUnlimitedDate() {
-    this.setState({
-      unlimitedDate: !this.state.unlimitedDate
-    });
-  }
-
-  dateChanged(event, value, name) {
-    if (!event.target.validationMessage) {
+  componentDidUpdate(prevProps) {
+    if (!prevProps.data && this.props.data) {
       this.setState({
-        [name]: new Date(value).valueOf()
+        ...this.props.data
+      })
+    }
+  }
+
+  fieldChange(event, value, name) {
+    if (event === null || !event.target.validationMessage) {
+      this.setState({
+        [name]: value
       });
     }
   }
 
-  optionSelected(value, name) {
+  photoAdded(file) {
     this.setState({
-      [name]: value
+      photosData: [
+        ...this.state.photosData,
+        file
+      ]
     });
   }
 
-  setLocation(location) {
-    this.setState({ location });
+  photoRemoved(file) {
+    console.log(file);
+  }
+
+  validForm() {
+    return true;
+  }
+
+  saveChanges() {
+    const rentData = this.state;
+    const { onChange } = this.props;
+    const photosData = rentData.photosData;
+    delete rentData.photosData;
+
+    if (onChange && this.validForm()) {
+      const { data } = this.props;
+      if (data) {
+        console.log("exist");
+        Promise.all(photosData.map(photo => uploadImage("posts", data.id, photo.data, photo.extension)))
+          .then(photoURLs => {
+            const finalRentData = {
+              ...rentData,
+              photos: photoURLs
+            };
+            updateData("posts", data.id, finalRentData)
+              .then(() => onChange(finalRentData))
+          })
+      } else {
+        console.log("new");
+        pushData("posts", rentData)
+          .then(rentId => {
+            Promise.all(photosData.map(photo => uploadImage("posts", rentId, photo.data, photo.extension)))
+              .then(photoURLs => {
+                const finalRentData = {
+                  ...rentData,
+                  photos: photoURLs
+                };
+                updateData("posts", rentId, finalRentData)
+                  .then(() => onChange(finalRentData))
+              })
+          })
+      }
+    }
   }
 
   render() {
     const {
+      title,
+      description,
       location,
-      // ---
-      minPrice,
-      maxPrice,
+      apartmentsType,
+      rentType,
       unlimitedDate,
       startDate,
       endDate,
-      apartmentsType,
-      rentType,
+      price,
       benefitList
     } = this.state;
     return (
@@ -90,23 +130,29 @@ export default class FilterForm extends React.Component {
             <Form.Input
               width={1}
               label="Title"
-              onChange={(event, data) => this.dateChanged(event, data.value, "startDate")}
+              minLength="1"
+              maxLength="50"
+              placeholder='Name for post...'
+              value={title}
+              onChange={(event, data) => this.fieldChange(event, data.value, "title")}
             />
           </Form.Group>
           <Form.Group>
             <Form.TextArea
               width={1}
-              label="Description"
               autoHeight
+              label="Description"
+              maxLength="500"
               placeholder='Tell more about your post...'
-              onChange={(event, data) => this.dateChanged(event, data.value, "startDate")}
+              value={description}
+              onChange={(event, data) => this.fieldChange(event, data.value, "description")}
             />
           </Form.Group>
           <Form.Group>
             <Form.Field width={1}>
               <label>Address</label>
               <AddressInput
-                setLocation={this.setLocation}
+                setLocation={(data) => this.fieldChange(null, data.value, "location")}
                 placeholder="Address"
               />
             </Form.Field>
@@ -114,7 +160,7 @@ export default class FilterForm extends React.Component {
           <Form.Group>
             <Form.Field>
               <Map
-                setLocation={this.setLocation}
+                setLocation={(data) => this.fieldChange(null, data.value, "location")}
                 location={location}
                 placeholder="Type in an address to see a map"
               />
@@ -126,14 +172,14 @@ export default class FilterForm extends React.Component {
               options={appartmentsTypes}
               value={apartmentsType}
               width={4}
-              onChange={(event, data) => this.optionSelected(data.value, "apartmentsType")}
+              onChange={(event, data) => this.fieldChange(null, data.value, "apartmentsType")}
             />
             <Form.Select
               label="Rent type"
               options={rentTypes}
               value={rentType}
               width={4}
-              onChange={(event, data) => this.optionSelected(data.value, "rentType")}
+              onChange={(event, data) => this.fieldChange(null, data.value, "rentType")}
             />
           </Form.Group>
           <Form.Group>
@@ -145,7 +191,7 @@ export default class FilterForm extends React.Component {
               toggle
               checked={unlimitedDate}
               width={1}
-              onChange={this.toggleUnlimitedDate}
+              onChange={() => this.fieldChange(null, !unlimitedDate, "unlimitedDate")}
             />
           </Form.Group>
           <Form.Group>
@@ -156,7 +202,7 @@ export default class FilterForm extends React.Component {
               type="date"
               value={dateToInputFormat(startDate)}
               max={dateToInputFormat(endDate)}
-              onChange={(event, data) => this.dateChanged(event, data.value, "startDate")}
+              onChange={(event, data) => this.fieldChange(event, new Date(data.value).valueOf(), "startDate")}
             />
             <Form.Input
               width={1}
@@ -166,7 +212,7 @@ export default class FilterForm extends React.Component {
               disabled={unlimitedDate}
               value={dateToInputFormat(endDate)}
               min={dateToInputFormat(startDate)}
-              onChange={(event, data) => this.dateChanged(event, data.value, "endDate")}
+              onChange={(event, data) => this.fieldChange(event, new Date(data.value).valueOf(), "endDate")}
             />
           </Form.Group>
           <Form.Group>
@@ -176,21 +222,12 @@ export default class FilterForm extends React.Component {
             <Form.Input
               width={1}
               label="Price"
-              placeholder='Min'
+              placeholder='100$'
               type="number"
-              value={minPrice}
-              onChange={(event, data) => this.priceChanged([data.value, maxPrice])}
+              min={0}
+              value={price}
+              onChange={(event, data) => this.fieldChange(event, data.value, "price")}
             />
-          </Form.Group>
-          <Form.Group>
-            <Header>Photos</Header>
-          </Form.Group>
-          <Form.Group>
-            <Form.Field
-              width={1}
-            >
-              <ImageInput />
-            </Form.Field>
           </Form.Group>
           <Form.Group>
             <Header>Additional</Header>
@@ -202,10 +239,45 @@ export default class FilterForm extends React.Component {
               multiple
               value={benefitList}
               width={8}
-              onChange={(event, data) => this.optionSelected(data.value, "benefitList")}
+              onChange={(event, data) => this.fieldChange(null, data.value, "benefitList")}
             />
           </Form.Group>
+          <Form.Group>
+            <Header>Photos</Header>
+          </Form.Group>
+          <Form.Group>
+            <Form.Field
+              width={1}
+            >
+              <ImageInput
+                onAddedFile={this.photoAdded}
+                onRemovedFile={this.photoRemoved}
+              />
+            </Form.Field>
+          </Form.Group>
         </Form>
+        
+
+        <Modal
+          size="tiny"
+          trigger={
+            <Button
+              primary
+              fluid
+              content="Save"
+            />
+          }
+          header='Are you sure?'
+          actions={[
+            'No',
+            <Button
+              key="yes-button"
+              positive
+              content="Yes"
+              onClick={this.saveChanges}
+            />
+          ]}
+        />
       </Segment>
     );
   }

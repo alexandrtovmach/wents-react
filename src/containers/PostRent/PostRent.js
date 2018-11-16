@@ -14,18 +14,16 @@ export default class PostRent extends React.Component {
     };
   }
 
-  componentDidMount() {
-    getUser()
-      .then(user => {
-        if (user) {
-          this.setState({
-            user: user,
-            loading: false
-          })
-        } else {
-          window.location.href = "/login";
-        }
+  async componentDidMount() {
+    const user = await getUser();
+    if (user) {
+      this.setState({
+        user: user,
+        loading: false
       })
+    } else {
+      window.location.href = "/login";
+    }
   }
 
   
@@ -45,7 +43,7 @@ export default class PostRent extends React.Component {
           </Header>
           <Segment basic textAlign="center" padded>
             <Card.Group stackable itemsPerRow={4}>
-              {[1,2].map(id => <RentCard key={id} id={id} />)}
+              {["-LRRC8fI1pkhQdk4PYnh"].map(id => <RentCard key={id} id={id} />)}
               <RentCard
                 key={0}
                 add={true}

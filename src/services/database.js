@@ -1,5 +1,6 @@
 import { database } from './firebase';
 import { userKeys } from './constants';
+import { getUser } from './auth';
 
 export const extendUserWithAdditionalData = (user) => {
   const initialUserObj = {
@@ -38,6 +39,29 @@ export const getUserAdditionalData = ({user}) => {
   } else {
     return null
   }
+};
+
+export const getData = async (type, path = "", userId) => {
+  userId = userId || (await getUser()).uid;
+  return database()
+    .ref(`${type}/${userId}/${path}`)
+    .once('value')
+    .then(snapshot => snapshot.val())
+};
+
+export const pushData = async (type, data, userId) => {
+  userId = userId || (await getUser()).uid;
+  return database()
+    .ref(`${type}/${userId}`)
+    .push(data)
+    .then(snapshot => snapshot.key)
+};
+
+export const updateData = async (type, path, data, userId) => {
+  userId = userId || (await getUser()).uid;
+  return database()
+    .ref(`${type}/${userId}/${path}`)
+    .update(data)
 };
 
 export const extractFromProvidersData = (user, key) => {

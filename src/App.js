@@ -48,11 +48,11 @@ class App extends React.Component {
             component={PostRentContainer}
           />
           <Route
-            path="/rent"
+            path="/rent/:id"
             component={RentContainer}
           />
           <Route
-            path="/rent/:id"
+            path="/rent"
             component={RentContainer}
           />
           <Route

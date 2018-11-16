@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Segment } from 'semantic-ui-react';
 
 import { RentPost } from '../../components';
+import { getData } from '../../services/database';
 
 export default class Rent extends React.Component {
   constructor() {
@@ -16,10 +17,15 @@ export default class Rent extends React.Component {
   componentDidMount() {
     const { match } = this.props;
     if (match && match.params && match.params.id) {
-      // request post
-      this.setState({
-        post: {}
-      });
+      getData("posts")
+        .then(rentPost => {
+          this.setState({
+            post: {
+              ...rentPost[match.params.id],
+              id: match.params.id,
+            }
+          });
+        })
     }
   }
   
@@ -40,6 +46,7 @@ export default class Rent extends React.Component {
         >
           <RentPost
             data={post}
+            onChange={console.log}
             // edit={user.id === post.ownerId}
           />
         </Segment>
