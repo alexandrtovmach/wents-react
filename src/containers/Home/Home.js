@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Container, Card, Button, Segment } from 'semantic-ui-react';
+import { Header, Container, Card, Button, Segment, Accordion, Icon } from 'semantic-ui-react';
 
 import { Search, Filters, RentCard } from "../../components";
 import { getLatestData } from '../../services/database';
@@ -10,7 +10,11 @@ export default class Home extends React.Component {
   constructor() {
     super();
 
-    this.state = {};
+    this.state = {
+      showFilters: false
+    };
+
+    this.toggleFiltersShow = this.toggleFiltersShow.bind(this);
   }
 
   async componentDidMount() {
@@ -20,8 +24,17 @@ export default class Home extends React.Component {
     })
   }
 
+  toggleFiltersShow() {
+    this.setState({
+      showFilters: !this.state.showFilters
+    })
+  }
+
   render() {
-    const { posts } = this.state;
+    const {
+      posts,
+      showFilters
+    } = this.state;
     return (
       <Container
         fluid
@@ -34,12 +47,24 @@ export default class Home extends React.Component {
           <Header as="h1" size="huge" inverted>
             RENTWENS
           </Header>
-  
           <Container>
             <Search />
-            <Filters
-              // onChange={console.log}
-            />
+            <Accordion
+              fluid
+              styled
+              className="margin-v-1"
+            >
+              <Accordion.Title active={showFilters} onClick={this.toggleFiltersShow}>
+                <Icon name='dropdown' />
+                Filters
+              </Accordion.Title>
+              <Accordion.Content active={showFilters}>
+                <Filters
+                  basic
+                  // onChange={console.log}
+                />
+              </Accordion.Content>
+            </Accordion>
           </Container>
         </Segment>
         <Segment basic textAlign="center" padded>

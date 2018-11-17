@@ -76,7 +76,10 @@ export default class FilterForm extends React.Component {
       benefitList
     } = this.state;
     return (
-      <Segment padded>
+      <Segment
+        padded
+        basic={this.props.basic}
+      >
         <Form widths="equal" >
           <Form.Group>
             <Header>Date</Header>
