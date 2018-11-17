@@ -1,7 +1,7 @@
 import React from 'react';
 import { Segment, Form, Header, Button, Modal, Dimmer, Icon, Image } from "semantic-ui-react";
 
-import { Map, AddressInput, ImageInput } from '..';
+import { Map, AddressInput, ImageInput, Loader } from '..';
 import { dateToInputFormat } from '../../services/utils';
 import { appartmentsTypes, rentTypes, benefits } from '../../services/constants';
 import { uploadImage, deleteImage } from '../../services/storage';
@@ -22,7 +22,9 @@ export default class FilterForm extends React.Component {
       apartmentsType: "apartment",
       rentType: "short",
       benefitList: ["wifi", "furniture"],
-      photosData: []
+      photosData: [],
+      urlsToRemove: [],
+      imageDimmerShow: -1
     }
 
     this.fieldChange = this.fieldChange.bind(this);
@@ -77,58 +79,50 @@ export default class FilterForm extends React.Component {
 
   photoRemoveByUrl(urlToRemove) {
     this.setState({
-      loading: true
+      photos: this.state.photos.filter(url => url !== urlToRemove),
+      urlsToRemove: [...this.state.urlsToRemove, urlToRemove]
     })
-    deleteImage(urlToRemove)
-      .then(() => 
-        this.setState({
-          photos: this.state.photos.filter(url => url !== urlToRemove),
-          loading: false
-        })
-      )
   }
 
   validForm() {
     return true;
   }
 
-  saveChanges() {
+  async saveChanges() {
+    this.setState({
+      loading: true
+    })
     const rentData = this.state;
     const { onChange } = this.props;
     const photosData = rentData.photosData || [];
+    const urlsToRemove = rentData.urlsToRemove || [];
     delete rentData.photosData;
+    delete rentData.urlsToRemove;
+    delete rentData.imageDimmerShow;
+    delete rentData.loading;
 
     if (onChange && this.validForm()) {
       const { data } = this.props;
-      if (data) {
-        Promise.all(photosData.map(photo => uploadImage("posts", data.id, photo.data, photo.extension)))
-          .then(photoURLs => {
-            const finalRentData = {
-              ...rentData,
-              photos: [...photoURLs, ...(rentData.photos || [])]
-            };
-            updateData("posts", data.id, finalRentData)
-              .then(() => onChange(finalRentData))
-          })
-      } else {
-        pushData("posts", rentData)
-          .then(rentId => {
-            Promise.all(photosData.map(photo => uploadImage("posts", rentId, photo.data, photo.extension)))
-              .then(photoURLs => {
-                const finalRentData = {
-                  ...rentData,
-                  photos: [...photoURLs, ...(rentData.photos || [])]
-                };
-                updateData("posts", rentId, finalRentData)
-                  .then(() => onChange(finalRentData))
-              })
-          })
-      }
+      const id = (data && data.id) || await pushData("posts", rentData);
+
+      Promise.all([
+        ...urlsToRemove.map(urlToRemove => deleteImage(urlToRemove)),
+        ...photosData.map(photo => uploadImage("posts", id, photo.data, photo.extension)),
+      ])
+        .then(photoURLs => {
+          const finalRentData = {
+            ...rentData,
+            photos: [...photoURLs, ...(rentData.photos || [])].filter(Boolean)
+          };
+          updateData("posts", id, finalRentData)
+            .then(() => onChange(finalRentData))
+        })
     }
   }
 
   render() {
     const {
+      loading,
       title,
       description,
       location,
@@ -144,6 +138,10 @@ export default class FilterForm extends React.Component {
     } = this.state;
     return (
       <Segment padded>
+        {
+          loading &&
+          <Loader />
+        }
         <Form widths="equal" >
           <Form.Group>
             <Header>Main</Header>

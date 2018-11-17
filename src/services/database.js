@@ -66,6 +66,7 @@ export const getLatestData = (type) => {
 };
 
 export const updateData = async (type, path, data, userId) => {
+  console.log(data);
   userId = userId || (await getUser()).uid;
   return database()
     .ref(`${type}/${userId}/${path}`)
