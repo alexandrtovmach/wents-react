@@ -27,6 +27,11 @@ body {
   }
 }
 
+.half-viewport {
+  width: 100%;
+  min-height: 50vh;
+}
+
 .viewport {
   width: 100%;
   min-height: 100vh;
@@ -34,6 +39,14 @@ body {
 
 .min-height-viewport {
   min-height: calc(100vh - 160px); // 160px is Footer height
+}
+
+.min-width-1 {
+  min-width: 10em;
+}
+
+.min-width-2 {
+  min-width: 20em;
 }
 
 .flex-center {

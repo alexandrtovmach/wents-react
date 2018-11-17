@@ -38,16 +38,18 @@ export default class Home extends React.Component {
     return (
       <Container
         fluid
-        className="no-margin-mobile"
+        className="no-margin-mobile min-height-viewport"
       >
         <Segment
           basic
-          className="header-compensator viewport flex-center flex-column main-bg"
+          className="header-compensator half-viewport flex-center flex-column main-bg"
         >
           <Header as="h1" size="huge" inverted>
             RENTWENS
           </Header>
-          <Container>
+          <Container
+            className="min-width-2"
+          >
             <Search />
             <Accordion
               fluid
@@ -69,7 +71,7 @@ export default class Home extends React.Component {
         </Segment>
         <Segment basic textAlign="center" padded>
           <Container>
-            <Header as="h1" size="huge">
+            <Header size="medium">
               Search results:
             </Header>
             <Card.Group centered>
