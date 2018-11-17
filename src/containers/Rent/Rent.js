@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Segment } from 'semantic-ui-react';
 
-import { RentPost } from '../../components';
+import { RentPost, Loader } from '../../components';
 import { getData } from '../../services/database';
 
 export default class Rent extends React.Component {
@@ -10,7 +10,7 @@ export default class Rent extends React.Component {
 
     this.state = {
       post: null,
-      user: null
+      loading: true
     };
   }
 
@@ -23,9 +23,14 @@ export default class Rent extends React.Component {
             post: {
               ...rentPost[match.params.id],
               id: match.params.id,
-            }
+            },
+            loading: false
           });
         })
+    } else {
+      this.setState({
+        loading: false
+      })
     }
   }
   
@@ -34,13 +39,17 @@ export default class Rent extends React.Component {
   render() {
     const {
       post,
-      // user
+      loading
     } = this.state;
     return (
       <Container
         text
         className="header-compensator min-height-viewport"
       >
+        {
+          loading &&
+          <Loader />
+        }
         <Segment
           basic
         >

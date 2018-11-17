@@ -4,12 +4,13 @@ import StandaloneSearchBox from "react-google-maps/lib/components/places/Standal
 import { compose, withProps, lifecycle } from "recompose";
 import { Input } from 'semantic-ui-react';
 
-import config from '../../config/firebase';
+// import config from '../../config/firebase';
 
 const AddressInput = compose(
   withProps({
     googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${
-      config.apiKey
+      process.env.REACT_APP_GOOGLE_API_KEY
+      // config.apiKey
     }&v=3.exp&libraries=geometry,drawing,places`,
     loadingElement: <div style={{ height: `100%` }} />
   }),
@@ -21,13 +22,15 @@ const AddressInput = compose(
         },
         onPlacesChanged: () => {
           const locations = this.searchBox.getPlaces();
-          const location = locations[0].geometry.location;
+          const locationItem = locations && locations[0];
           const locationCoords = {
-            lat: location.lat(),
-            lng: location.lng(),
-            address: locations[0].formatted_address
+            lng: locationItem && locationItem.geometry && locationItem.geometry.location.lng(),
+            lat: locationItem && locationItem.geometry && locationItem.geometry.location.lat(),
+            address: locationItem && (locationItem.formatted_address || locationItem.name)
           };
-          this.props.setLocation(locationCoords);
+          if (locationCoords.lng && locationCoords.lat && locationCoords.address) {
+            this.props.setLocation(locationCoords);
+          }
         }
       });
     }
@@ -40,10 +43,11 @@ const AddressInput = compose(
     onPlacesChanged={props.onPlacesChanged}
   >
     <Input
+      onChange={props.onPlacesChanged}
       type="text"
       icon={props.icon || null}
       iconPosition={props.icon? "left": null}
-      value={props.value}
+      defaultValue={props.value}
       placeholder={props.placeholder}
       className="location-search-input"
     />

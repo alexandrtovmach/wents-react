@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  withScriptjs,
   withGoogleMap,
   GoogleMap,
   Marker
@@ -14,14 +13,15 @@ import {
   renderComponent
 } from "recompose";
 
-import config from '../../config/firebase';
+// import config from '../../config/firebase';
 import './Map.scss';
 
 const Map = compose(
   withProps({
     googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${
-      config.apiKey
-    }&v=3.exp&libraries=geometry,drawing,places`,
+      process.env.REACT_APP_GOOGLE_API_KEY
+      // config.apiKey
+    }&v=3.exp&libraries=geometry,drawing`,
     loadingElement: <div className="map-loading-element" />,
     containerElement: <div className="map-container-element" />,
     mapElement: <div className="map-element" />
@@ -48,9 +48,8 @@ const Map = compose(
       }
     };
   }),
-  withScriptjs,
   withGoogleMap
-)(({ onMapMounted, zoom, location, onLocationChange, range }) => {
+)(({ onMapMounted, zoom, location, onLocationChange }) => {
   return (
     <GoogleMap
       ref={onMapMounted}

@@ -73,13 +73,12 @@ export default class FilterForm extends React.Component {
   saveChanges() {
     const rentData = this.state;
     const { onChange } = this.props;
-    const photosData = rentData.photosData;
+    const photosData = rentData.photosData || [];
     delete rentData.photosData;
 
     if (onChange && this.validForm()) {
       const { data } = this.props;
       if (data) {
-        console.log("exist");
         Promise.all(photosData.map(photo => uploadImage("posts", data.id, photo.data, photo.extension)))
           .then(photoURLs => {
             const finalRentData = {
@@ -90,7 +89,6 @@ export default class FilterForm extends React.Component {
               .then(() => onChange(finalRentData))
           })
       } else {
-        console.log("new");
         pushData("posts", rentData)
           .then(rentId => {
             Promise.all(photosData.map(photo => uploadImage("posts", rentId, photo.data, photo.extension)))
@@ -152,7 +150,9 @@ export default class FilterForm extends React.Component {
             <Form.Field width={1}>
               <label>Address</label>
               <AddressInput
-                setLocation={(data) => this.fieldChange(null, data.value, "location")}
+                setLocation={(data) => this.fieldChange(null, data, "location")}
+                value={location && location.address}
+                center={location}
                 placeholder="Address"
               />
             </Form.Field>
@@ -160,7 +160,7 @@ export default class FilterForm extends React.Component {
           <Form.Group>
             <Form.Field>
               <Map
-                setLocation={(data) => this.fieldChange(null, data.value, "location")}
+                setLocation={(data) => this.fieldChange(null, data, "location")}
                 location={location}
                 placeholder="Type in an address to see a map"
               />
