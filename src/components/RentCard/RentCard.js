@@ -25,7 +25,8 @@ export default ({ data, add }) => {
       title,
       location,
       description,
-      photos
+      photos,
+      price
     } = data || {};
     return (
       <Card as="a" href={`/rent/${id}`} target="_blank" >
@@ -36,8 +37,7 @@ export default ({ data, add }) => {
           <Card.Description>{description && description.slice(0, 100)}...</Card.Description>
         </Card.Content>
         <Card.Content extra>
-          <Icon name='like' />
-          {description && description.length} Likes
+          {price}$
         </Card.Content>
       </Card>
     )
