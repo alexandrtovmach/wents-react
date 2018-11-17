@@ -57,6 +57,14 @@ export const pushData = async (type, data, userId) => {
     .then(snapshot => snapshot.key)
 };
 
+export const getLatestData = (type) => {
+  return database()
+    .ref(`${type}`)
+    .orderByKey()
+    .once('value')
+    .then(snapshot => snapshot.val())
+};
+
 export const updateData = async (type, path, data, userId) => {
   userId = userId || (await getUser()).uid;
   return database()

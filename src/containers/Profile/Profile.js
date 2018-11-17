@@ -18,7 +18,7 @@ import {
 } from 'semantic-ui-react';
 
 import { RentCard, Loader, AddressInput, AvatarUploader } from "../../components";
-import { advertStatusList } from '../../services/constants';
+import { advertStatusList, placeholderImg } from '../../services/constants';
 import { getUser, signOut } from '../../services/auth';
 import { extendUserWithAdditionalData } from '../../services/database';
 import { dateToInputFormat } from '../../services/utils';
@@ -58,7 +58,7 @@ export default class Profile extends React.Component {
         user: {
           uid: user.uid,
           displayName: user.displayName,
-          photoURL: user.photoURL || 'https://react.semantic-ui.com/images/wireframe/square-image.png',
+          photoURL: user.photoURL,
           rating: Math.round(Math.random() * 5),
           address: user.address,
           birthday: user.birthday,
@@ -211,7 +211,7 @@ export default class Profile extends React.Component {
           }}
           onMouseEnter={this.handleAvatarDimmerShow}
           onMouseLeave={this.handleAvatarDimmerHide}
-          src={user.photoURL}
+          src={user.photoURL || placeholderImg}
         />
         <Header>
           <Header.Content>

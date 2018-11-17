@@ -3,6 +3,7 @@ import { Container, Card, Segment, Header } from 'semantic-ui-react';
 
 import { RentCard, Loader } from "../../components";
 import { getUser } from '../../services/auth';
+import { getData } from '../../services/database';
 
 export default class PostRent extends React.Component {
   constructor() {
@@ -17,8 +18,10 @@ export default class PostRent extends React.Component {
   async componentDidMount() {
     const user = await getUser();
     if (user) {
+      const posts = await getData("posts", "", user.uid);
       this.setState({
-        user: user,
+        user,
+        posts,
         loading: false
       })
     } else {
@@ -28,7 +31,7 @@ export default class PostRent extends React.Component {
 
   
   render() {
-    const { loading } = this.state;
+    const { loading, posts } = this.state;
     if (loading) {
       return (
         <Loader />
@@ -43,7 +46,15 @@ export default class PostRent extends React.Component {
           </Header>
           <Segment basic textAlign="center" padded>
             <Card.Group stackable itemsPerRow={4}>
-              {["-LRRC8fI1pkhQdk4PYnh"].map(id => <RentCard key={id} id={id} />)}
+              {Object.keys(posts).map(id => (
+                <RentCard
+                  key={id}
+                  data={{
+                    ...posts[id],
+                    id
+                  }}
+                />
+              ))}
               <RentCard
                 key={0}
                 add={true}
