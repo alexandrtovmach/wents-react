@@ -14,7 +14,7 @@ export default class Home extends React.Component {
   }
 
   async componentDidMount() {
-    const lastPosts = await getLatestData("posts");
+    const lastPosts = await getLatestData("posts", 6);
     console.log(lastPosts);
     this.setState({
       posts: lastPosts

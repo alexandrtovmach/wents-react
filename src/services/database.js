@@ -1,6 +1,7 @@
 import { database } from './firebase';
 import { userKeys } from './constants';
 import { getUser } from './auth';
+import { extractFromProvidersData } from './utils';
 
 export const extendUserWithAdditionalData = (user) => {
   const initialUserObj = {
@@ -49,33 +50,52 @@ export const getData = async (type, path = "", userId) => {
     .then(snapshot => snapshot.val())
 };
 
-export const pushData = async (type, data, userId) => {
-  userId = userId || (await getUser()).uid;
+export const getDataByPath = (path) => {
   return database()
-    .ref(`${type}/${userId}`)
-    .push(data)
-    .then(snapshot => snapshot.key)
+    .ref(path)
+    .once('value')
+    .then(snapshot => ({
+      [snapshot.key]: snapshot.val()
+    }))
 };
 
-export const getLatestData = (type) => {
+export const pushData = async (type, data, userId) => {
+  userId = userId || (await getUser()).uid;
+  const pathString = `${type}/${userId}`;
   return database()
-    .ref(`${type}`)
-    .orderByKey()
-    .once('value')
-    .then(snapshot => snapshot.val())
+    .ref(pathString)
+    .push(data)
+    .then(snapshot => (
+      addTimestamp(type, `${pathString}/${snapshot.key}`)
+        .then(() => snapshot.key)
+    ))
 };
 
 export const updateData = async (type, path, data, userId) => {
-  console.log(data);
   userId = userId || (await getUser()).uid;
+  const pathString = `${type}/${userId}/${path}`;
   return database()
-    .ref(`${type}/${userId}/${path}`)
+    .ref(pathString)
     .update(data)
+    // .then(() => addTimestamp(type, `${pathString}`)) // add timestamp
 };
 
-export const extractFromProvidersData = (user, key) => {
-  return user && user.providerData && user.providerData.reduce((prev, el) => {
-    return prev || el[key]
-  }, null);
+export const addTimestamp = (type, path) => {
+  const now = Date.now();
+  return database()
+    .ref(`timestamps/${type}/${now}`)
+    .set(path)
+    .then(() => now)
 };
 
+export const getLatestData = (type, limit) => {
+  return database()
+    .ref(`timestamps/${type}`)
+    .orderByKey()
+    .limitToLast(limit || 20)
+    .once('value')
+    .then(snapshot => snapshot.val())
+    .then(stamps => Object.keys(stamps).reverse().map(time => stamps[time]))
+    .then(paths => Promise.all(paths.map(path => getDataByPath(path))))
+    .then(list => list.reduce((prev, el) => ({...prev,...el}), {}))
+};

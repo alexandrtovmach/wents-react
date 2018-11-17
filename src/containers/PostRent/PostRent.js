@@ -46,7 +46,7 @@ export default class PostRent extends React.Component {
           </Header>
           <Segment basic textAlign="center" padded>
             <Card.Group stackable itemsPerRow={4}>
-              {Object.keys(posts).map(id => (
+              {posts && Object.keys(posts).map(id => (
                 <RentCard
                   key={id}
                   data={{
