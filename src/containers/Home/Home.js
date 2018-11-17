@@ -42,7 +42,7 @@ export default class Home extends React.Component {
       >
         <Segment
           basic
-          className="header-compensator half-viewport flex-center flex-column main-bg"
+          className="header-compensator viewport flex-center flex-column main-bg"
         >
           <Header as="h1" size="huge" inverted>
             RENTWENS
