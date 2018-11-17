@@ -1,10 +1,10 @@
 import React from 'react';
-import { Segment, Form, Header, Button, Modal } from "semantic-ui-react";
+import { Segment, Form, Header, Button, Modal, Dimmer, Icon, Image } from "semantic-ui-react";
 
 import { Map, AddressInput, ImageInput } from '..';
 import { dateToInputFormat } from '../../services/utils';
 import { appartmentsTypes, rentTypes, benefits } from '../../services/constants';
-import { uploadImage } from '../../services/storage';
+import { uploadImage, deleteImage } from '../../services/storage';
 import { pushData, updateData } from '../../services/database';
 
 
@@ -26,6 +26,7 @@ export default class FilterForm extends React.Component {
     }
 
     this.fieldChange = this.fieldChange.bind(this);
+    this.photoRemoveByUrl = this.photoRemoveByUrl.bind(this);
     this.photoAdded = this.photoAdded.bind(this);
     this.photoRemoved = this.photoRemoved.bind(this);
     this.saveChanges = this.saveChanges.bind(this);
@@ -43,6 +44,14 @@ export default class FilterForm extends React.Component {
         ...this.props.data
       })
     }
+  }
+
+  handleImageDimmerShow(i) {
+    this.setState({ imageDimmerShow: i });
+  }
+
+  handleImageDimmerHide(i) {
+    this.setState({ imageDimmerShow: -1 });
   }
 
   fieldChange(event, value, name) {
@@ -66,6 +75,19 @@ export default class FilterForm extends React.Component {
     console.log(file);
   }
 
+  photoRemoveByUrl(urlToRemove) {
+    this.setState({
+      loading: true
+    })
+    deleteImage(urlToRemove)
+      .then(() => 
+        this.setState({
+          photos: this.state.photos.filter(url => url !== urlToRemove),
+          loading: false
+        })
+      )
+  }
+
   validForm() {
     return true;
   }
@@ -83,7 +105,7 @@ export default class FilterForm extends React.Component {
           .then(photoURLs => {
             const finalRentData = {
               ...rentData,
-              photos: photoURLs
+              photos: [...photoURLs, ...(rentData.photos || [])]
             };
             updateData("posts", data.id, finalRentData)
               .then(() => onChange(finalRentData))
@@ -95,7 +117,7 @@ export default class FilterForm extends React.Component {
               .then(photoURLs => {
                 const finalRentData = {
                   ...rentData,
-                  photos: photoURLs
+                  photos: [...photoURLs, ...(rentData.photos || [])]
                 };
                 updateData("posts", rentId, finalRentData)
                   .then(() => onChange(finalRentData))
@@ -116,7 +138,9 @@ export default class FilterForm extends React.Component {
       startDate,
       endDate,
       price,
-      benefitList
+      benefitList,
+      photos,
+      imageDimmerShow
     } = this.state;
     return (
       <Segment padded>
@@ -249,6 +273,30 @@ export default class FilterForm extends React.Component {
             <Form.Field
               width={1}
             >
+              {
+                (photos && photos.length)? 
+                  <Segment basic>
+                    {
+                      photos.map((url, i) => (
+                        <Dimmer.Dimmable
+                          key={url}
+                          as={Image}
+                          className="margin-1"
+                          src={url}
+                          size="tiny"
+                          dimmer={{
+                            active: imageDimmerShow === i,
+                            content: <Icon name='trash' size="large"/>,
+                            onClick: () => this.photoRemoveByUrl(url)
+                          }}
+                          onMouseEnter={() => this.handleImageDimmerShow(i)}
+                          onMouseLeave={() => this.handleImageDimmerHide(i)}
+                        />
+                      ))
+                    }
+                  </Segment>
+                : null
+              }
               <ImageInput
                 onAddedFile={this.photoAdded}
                 onRemovedFile={this.photoRemoved}

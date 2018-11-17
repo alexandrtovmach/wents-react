@@ -19,3 +19,13 @@ export const uploadImage = async (imageType, imageName, fileData, fileExt, userI
     throw new Error("Not provided all arguments to 'uploadImage()'")
   }
 };
+
+export const deleteImage = async (url, userId) => {
+  if (url) {
+    userId = userId || (await getUser()).uid;
+    const ref = storage().refFromURL(url);
+    return ref.delete();
+  } else {
+    throw new Error("Not provided all arguments to 'deleteImage()'")
+  }
+};

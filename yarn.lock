@@ -908,6 +908,12 @@
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.2.tgz#e13182e1b69871a422d7863e11a4a6f5b814a4bd"
 
+"@uppy/companion-client@0.27.2":
+  version "0.27.2"
+  resolved "https://registry.yarnpkg.com/@uppy/companion-client/-/companion-client-0.27.2.tgz#526572b5129d7786c06368e8def5bc46c5980048"
+  dependencies:
+    namespace-emitter "^2.0.1"
+
 "@uppy/core@^0.28.0":
   version "0.28.0"
   resolved "https://registry.yarnpkg.com/@uppy/core/-/core-0.28.0.tgz#a9baae85f73bf127763cf7a95cf9b837e95bb938"
@@ -998,6 +1004,14 @@
   resolved "https://registry.yarnpkg.com/@uppy/thumbnail-generator/-/thumbnail-generator-0.28.0.tgz#7750f27c97207afaac0e3bbd4be7f4bb920357cd"
   dependencies:
     "@uppy/utils" "0.28.0"
+
+"@uppy/url@^0.28.0":
+  version "0.28.0"
+  resolved "https://registry.yarnpkg.com/@uppy/url/-/url-0.28.0.tgz#970895776821da84149624fa93f359d36f419d14"
+  dependencies:
+    "@uppy/companion-client" "0.27.2"
+    "@uppy/utils" "0.28.0"
+    preact "^8.2.9"
 
 "@uppy/utils@0.28.0":
   version "0.28.0"

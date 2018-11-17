@@ -55,8 +55,7 @@ export default class Rent extends React.Component {
         >
           <RentPost
             data={post}
-            onChange={console.log}
-            // edit={user.id === post.ownerId}
+            onChange={() => window.location.href = "/post-rent"}
           />
         </Segment>
       </Container>
