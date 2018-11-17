@@ -11,10 +11,10 @@ export default (props) => {
         <Button active={false}>
           Name
         </Button>
-        <Button icon onClick={() => props.onChange && props.onChange("name", 0)}>
+        <Button icon onClick={() => props.onChange && props.onChange("title", 1)}>
           <Icon name='sort alphabet down' />
         </Button>
-        <Button icon onClick={(e, data) => props.onChange && props.onChange("name", 1)}>
+        <Button icon onClick={(e, data) => props.onChange && props.onChange("title", -1)}>
           <Icon name='sort alphabet up' />
         </Button>
       </Button.Group>
@@ -25,10 +25,10 @@ export default (props) => {
         <Button active={false}>
           Price
         </Button>
-        <Button icon onClick={(e, data) => props.onChange && props.onChange("price", 0)}>
+        <Button icon onClick={(e, data) => props.onChange && props.onChange("price", 1)}>
           <Icon name='arrow down' />
         </Button>
-        <Button icon onClick={(e, data) => props.onChange && props.onChange("price", 1)}>
+        <Button icon onClick={(e, data) => props.onChange && props.onChange("price", -1)}>
           <Icon name='arrow up' />
         </Button>
       </Button.Group>

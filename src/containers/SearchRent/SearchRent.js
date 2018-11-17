@@ -8,7 +8,14 @@ export default class SearchRent extends React.Component {
   constructor() {
     super();
 
-    this.state = {};
+    this.state = {
+      sortBy: {
+        name: "title",
+        type: -1
+      }
+    };
+
+    this.sortChaged = this.sortChaged.bind(this);
   }
 
   async componentDidMount() {
@@ -18,8 +25,29 @@ export default class SearchRent extends React.Component {
     })
   }
 
+  sortChaged(name, type) {
+    this.setState({
+      sortBy: {
+        name,
+        type
+      }
+    })
+  }
+
+  sortHandler(a, b, posts) {
+    const { name, type } = this.state.sortBy || {};
+    if (!name || !type) return 0;
+    a = name === "price"? Number(posts[a][name]): posts[a][name];
+    b = name === "price"? Number(posts[b][name]): posts[b][name];
+    if(a < b) return (-1 * type);
+    if(a > b) return (1 * type);
+    return 0;
+  }
+
   render() {
-    const { posts } = this.state;
+    const {
+      posts,
+    } = this.state;
     return (
       <Container
         className="header-compensator min-height-viewport"
@@ -32,12 +60,12 @@ export default class SearchRent extends React.Component {
             onChange={console.log}
           />
           <SortPanel
-            onChange={console.log}
+            onChange={this.sortChaged}
           />
         </Segment>
         <Segment basic textAlign="center" padded>
           <Card.Group centered stackable itemsPerRow={4}>
-            {posts && Object.keys(posts).map(id => (
+            {posts && Object.keys(posts).sort((a, b) => this.sortHandler(a, b, posts)).map(id => (
               <RentCard
                 key={id}
                 data={{
