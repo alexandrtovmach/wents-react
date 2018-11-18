@@ -3,6 +3,7 @@ import { Container, Card, Segment } from 'semantic-ui-react';
 
 import { Search, Filters, RentCard, SortPanel } from "../../components";
 import { getLatestData } from '../../services/database';
+import { debounce } from '../../services/utils';
 
 export default class SearchRent extends React.Component {
   constructor() {
@@ -15,7 +16,9 @@ export default class SearchRent extends React.Component {
       }
     };
 
-    this.sortChaged = this.sortChaged.bind(this);
+    this.sortChanged = this.sortChanged.bind(this);
+    this.searchChanged = debounce(this.searchChanged.bind(this), 1000);
+    this.filtersChanged = debounce(this.filtersChanged.bind(this), 1000);
   }
 
   async componentDidMount() {
@@ -25,7 +28,27 @@ export default class SearchRent extends React.Component {
     })
   }
 
-  sortChaged(name, type) {
+  searchChanged(searchString) {
+    searchString && console.log(searchString);
+    // this.setState({
+    //   sortBy: {
+    //     name,
+    //     type
+    //   }
+    // })
+  }
+
+  filtersChanged(filters) {
+    console.log(filters);
+    // this.setState({
+    //   sortBy: {
+    //     name,
+    //     type
+    //   }
+    // })
+  }
+
+  sortChanged(name, type) {
     this.setState({
       sortBy: {
         name,
@@ -55,12 +78,14 @@ export default class SearchRent extends React.Component {
         <Segment
           basic
         >
-          <Search />
+          <Search
+            onChange={this.searchChanged}
+          />
           <Filters
-            onChange={console.log}
+            onChange={this.filtersChanged}
           />
           <SortPanel
-            onChange={this.sortChaged}
+            onChange={this.sortChanged}
           />
         </Segment>
         <Segment basic textAlign="center" padded>

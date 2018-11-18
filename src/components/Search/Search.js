@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input } from "semantic-ui-react";
 
-export default () => {
+export default props => {
   return (
     <Input
       fluid
@@ -11,6 +11,7 @@ export default () => {
         link: true
       }}
       placeholder="Search..."
+      onChange={(e, data) => props.onChange && props.onChange(data.value)}
     />
   );
 }

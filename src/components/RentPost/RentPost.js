@@ -213,7 +213,10 @@ export default class FilterForm extends React.Component {
               toggle
               checked={unlimitedDate}
               width={1}
-              onChange={() => this.fieldChange(null, !unlimitedDate, "unlimitedDate")}
+              onChange={() => {
+                this.fieldChange(null, !unlimitedDate, "unlimitedDate");
+                this.fieldChange(null, new Date(startDate).valueOf() + 1000*60*60*24*365*Number(!unlimitedDate), "endDate");
+              }}
             />
           </Form.Group>
           <Form.Group>
