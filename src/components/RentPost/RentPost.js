@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Form, Header, Button, Modal, Dimmer, Icon, Image } from "semantic-ui-react";
+import { Segment, Form, Header, Button, Modal, Dimmer, Icon, Image, ButtonGroup, Checkbox } from "semantic-ui-react";
 
 import { Map, AddressInput, ImageInput, Loader } from '..';
 import { dateToInputFormat } from '../../services/utils';
@@ -88,7 +88,7 @@ export default class FilterForm extends React.Component {
     return true;
   }
 
-  async saveChanges() {
+  async saveChanges(publish) {
     this.setState({
       loading: true
     })
@@ -96,10 +96,14 @@ export default class FilterForm extends React.Component {
     const { onChange } = this.props;
     const photosData = rentData.photosData || [];
     const urlsToRemove = rentData.urlsToRemove || [];
+    rentData.price = Number(rentData.price);
     delete rentData.photosData;
     delete rentData.urlsToRemove;
     delete rentData.imageDimmerShow;
     delete rentData.loading;
+    if (publish) {
+      rentData.publish = true
+    }
 
     if (onChange && this.validForm()) {
       const { data } = this.props;
@@ -318,13 +322,22 @@ export default class FilterForm extends React.Component {
           }
           header='Are you sure?'
           actions={[
-            'No',
-            <Button
+            'Cancel',
+            <ButtonGroup
               key="yes-button"
-              positive
-              content="Yes"
-              onClick={this.saveChanges}
-            />
+            >
+              <Button
+                positive
+                basic
+                content="Save"
+                onClick={this.saveChanges}
+              />
+              <Button
+                positive
+                content="Save&Publish"
+                onClick={() => this.saveChanges(true)}
+              />
+            </ButtonGroup>
           ]}
         />
       </Segment>

@@ -62,40 +62,62 @@ export const getDataByPath = (path) => {
 export const pushData = async (type, data, userId) => {
   userId = userId || (await getUser()).uid;
   const pathString = `${type}/${userId}`;
+  data = {
+    ...data,
+    createdAt: Date.now()
+  }
   return database()
     .ref(pathString)
     .push(data)
-    .then(snapshot => (
-      addTimestamp(type, `${pathString}/${snapshot.key}`)
-        .then(() => snapshot.key)
-    ))
+    .then(snapshot => (data.publish && addToPublic(type, snapshot.key, data)) || snapshot.key)
 };
 
-export const updateData = async (type, path, data, userId) => {
+export const updateData = async (type, key, data, userId) => {
   userId = userId || (await getUser()).uid;
-  const pathString = `${type}/${userId}/${path}`;
+  const pathString = `${type}/${userId}/${key}`;
+  data = {
+    ...data,
+    updatedAt: Date.now()
+  }
   return database()
     .ref(pathString)
-    .update(data)
+    .update({
+      ...data,
+      id: key
+    })
+    .then(() => data.publish && addToPublic(type, key, data))
     // .then(() => addTimestamp(type, `${pathString}`)) // add timestamp
 };
 
-export const addTimestamp = (type, path) => {
-  const now = Date.now();
+export const addToPublic = async (type, key, data) => {
   return database()
-    .ref(`timestamps/${type}/${now}`)
-    .set(path)
-    .then(() => now)
+    .ref(`public/${type}/${key}`)
+    .set({
+      ...data,
+      id: key
+    })
+    .then(() => key)
 };
 
 export const getLatestData = (type, limit) => {
   return database()
-    .ref(`timestamps/${type}`)
-    .orderByKey()
+    .ref(`public/${type}`)
+    .orderByChild("updatedAt")
     .limitToLast(limit || 20)
     .once('value')
     .then(snapshot => snapshot.val())
-    .then(stamps => Object.keys(stamps).reverse().map(time => stamps[time]))
-    .then(paths => Promise.all(paths.map(path => getDataByPath(path))))
-    .then(list => list.reduce((prev, el) => ({...prev,...el}), {}))
+};
+
+export const getDataByPrice = async (type, parameters) => {
+  const {
+    minPrice,
+    maxPrice
+  } = parameters;
+  return database()
+    .ref(`public/${type}`)
+    .orderByChild("price")
+    .startAt(minPrice)
+    .endAt(maxPrice)
+    .once('value')
+    .then(snapshot => snapshot.val())
 };

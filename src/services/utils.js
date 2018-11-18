@@ -24,5 +24,23 @@ export const debounce = (fn, time) => {
   }
 }
 
+export const filterPostsByParameters = (posts, p) => {
+  return Object.keys(posts).reduce((prev, el) => {
+    const post = posts[el];
+    if (
+      post.title.toLowerCase().includes(p.title.toLowerCase()) &&
+      post.unlimitedDate === p.unlimitedDate &&
+      post.startDate >= p.startDate &&
+      (post.endDate <= p.endDate || post.unlimitedDate) &&
+      post.apartmentsType === p.apartmentsType &&
+      post.rentType === p.rentType &&
+      (p.benefitList.some(benefit => post.benefitList.includes(benefit)) || !p.benefitList.length)
+    ) {
+      prev[el] = post;
+    }
+    return prev;
+  }, {})
+}
+
 
 export const lorem = 'Etiam quis turpis a urna vestibulum tincidunt eget at nunc. Sed commodo luctus tellus, sit amet gravida orci. Mauris nec congue urna, ac lacinia augue. Nunc elit neque, mollis sit amet erat at, vestibulum mattis sem. Sed luctus tincidunt lacus in euismod. Praesent pellentesque cursus enim eget cursus. Quisque nibh odio, accumsan sed faucibus vitae, laoreet quis lorem. Fusce aliquet iaculis rutrum. Donec sed rhoncus elit, vitae consectetur urna. Pellentesque eu sem tristique, porta ex eu, imperdiet lectus. Aliquam et ligula hendrerit tellus facilisis porttitor. Aenean ac nisi egestas, viverra nulla eu, rhoncus massa. Sed eu tristique libero, vel venenatis neque. Integer volutpat blandit magna in hendrerit. Morbi a orci a turpis pretium tristique malesuada eget eros.';

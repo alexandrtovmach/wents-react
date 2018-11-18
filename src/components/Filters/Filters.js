@@ -19,7 +19,7 @@ export default class FilterForm extends React.Component {
       maxPrice: 300,
       unlimitedDate: false,
       startDate: Date.now(),
-      endDate: Date.now() + 1000*60*60*24,
+      endDate: Date.now() + 1000*60*60*24*30,
       apartmentsType: "apartment",
       rentType: "short",
       benefitList: ["wifi", "furniture"]
@@ -29,6 +29,10 @@ export default class FilterForm extends React.Component {
     this.toggleUnlimitedDate = this.toggleUnlimitedDate.bind(this);
     this.dateChanged = this.dateChanged.bind(this);
     this.optionSelected = this.optionSelected.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState !== this.state;
   }
 
   componentDidUpdate() {

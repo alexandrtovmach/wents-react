@@ -2,8 +2,8 @@ import React from 'react';
 import { Container, Card, Segment } from 'semantic-ui-react';
 
 import { Search, Filters, RentCard, SortPanel } from "../../components";
-import { getLatestData } from '../../services/database';
-import { debounce } from '../../services/utils';
+import { getDataByPrice } from '../../services/database';
+import { debounce, filterPostsByParameters } from '../../services/utils';
 
 export default class SearchRent extends React.Component {
   constructor() {
@@ -13,7 +13,12 @@ export default class SearchRent extends React.Component {
       sortBy: {
         name: "title",
         type: -1
-      }
+      },
+      filters: {
+        minPrice: 0,
+        maxPrice: 300
+      },
+      searchString: ""
     };
 
     this.sortChanged = this.sortChanged.bind(this);
@@ -22,14 +27,16 @@ export default class SearchRent extends React.Component {
   }
 
   async componentDidMount() {
-    const lastPosts = await getLatestData("posts", 20);
     this.setState({
-      posts: lastPosts
+      posts: await getDataByPrice("posts", this.state.filters)
     })
   }
 
   searchChanged(searchString) {
-    searchString && console.log(searchString);
+    // if (searchString) {
+    //   getDataByParameters("posts", {title: searchString})
+    //     .then(posts => this.setState(posts))
+    // }
     // this.setState({
     //   sortBy: {
     //     name,
@@ -38,14 +45,27 @@ export default class SearchRent extends React.Component {
     // })
   }
 
-  filtersChanged(filters) {
-    console.log(filters);
-    // this.setState({
-    //   sortBy: {
-    //     name,
-    //     type
-    //   }
-    // })
+  async filtersChanged(filters) {
+    const { minPrice, maxPrice } = this.state.filters;
+    if (filters.minPrice !== minPrice || filters.maxPrice !== maxPrice) {
+      const posts = await getDataByPrice("posts", filters);
+      this.setState({
+        posts: posts,
+        filteredPosts: filterPostsByParameters(posts, {
+          ...filters,
+          title: this.state.searchString
+        }),
+        filters
+      })
+    } else {
+      this.setState({
+        filteredPosts: filterPostsByParameters(this.state.posts, {
+          ...filters,
+          title: this.state.searchString
+        }),
+        filters
+      })
+    }
   }
 
   sortChanged(name, type) {
@@ -69,8 +89,10 @@ export default class SearchRent extends React.Component {
 
   render() {
     const {
-      posts,
+      // posts,
+      filteredPosts
     } = this.state;
+    console.log("render", filteredPosts);
     return (
       <Container
         className="header-compensator min-height-viewport"
@@ -90,11 +112,11 @@ export default class SearchRent extends React.Component {
         </Segment>
         <Segment basic textAlign="center" padded>
           <Card.Group centered stackable itemsPerRow={4}>
-            {posts && Object.keys(posts).sort((a, b) => this.sortHandler(a, b, posts)).map(id => (
+            {filteredPosts && Object.keys(filteredPosts).sort((a, b) => this.sortHandler(a, b, filteredPosts)).map(id => (
               <RentCard
                 key={id}
                 data={{
-                  ...posts[id],
+                  ...filteredPosts[id],
                   id
                 }}
               />
