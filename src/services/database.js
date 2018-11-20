@@ -50,6 +50,13 @@ export const getData = async (type, path = "", userId) => {
     .then(snapshot => snapshot.val())
 };
 
+export const getPublicData = async (type, path = "") => {
+  return database()
+    .ref(`public/${type}/${path}`)
+    .once('value')
+    .then(snapshot => snapshot.val())
+};
+
 export const getDataByPath = (path) => {
   return database()
     .ref(path)

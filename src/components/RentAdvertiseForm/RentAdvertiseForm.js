@@ -1,14 +1,15 @@
 import React from 'react';
-import { Segment, Form, Header, Button, Modal, Dimmer, Icon, Image, ButtonGroup, Checkbox } from "semantic-ui-react";
+import { Segment, Form, Header, Button, Modal, Dimmer, Icon, Image, ButtonGroup } from "semantic-ui-react";
 
 import { Map, AddressInput, ImageInput, Loader } from '..';
 import { dateToInputFormat } from '../../services/utils';
 import { appartmentsTypes, rentTypes, benefits } from '../../services/constants';
 import { uploadImage, deleteImage } from '../../services/storage';
 import { pushData, updateData } from '../../services/database';
+import { getUser } from '../../services/auth';
 
 
-export default class FilterForm extends React.Component {
+export default class RentAdvertiseForm extends React.Component {
   constructor() {
     super();
 
@@ -34,9 +35,10 @@ export default class FilterForm extends React.Component {
     this.saveChanges = this.saveChanges.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.setState({
-      ...this.props.data
+      ...this.props.data,
+      ownerId: (await getUser()).uid
     })
   }
 

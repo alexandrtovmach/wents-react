@@ -1,8 +1,9 @@
 import React from 'react';
 import { Container, Segment } from 'semantic-ui-react';
 
-import { RentPost, Loader } from '../../components';
-import { getData } from '../../services/database';
+import { RentAdvertiseForm, RentAdvertise, Loader } from '../../components';
+import { getPublicData } from '../../services/database';
+import { getUser } from '../../services/auth';
 
 export default class Rent extends React.Component {
   constructor() {
@@ -10,23 +11,24 @@ export default class Rent extends React.Component {
 
     this.state = {
       post: null,
-      loading: true
+      loading: true,
+      isOwner: false
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { match } = this.props;
     if (match && match.params && match.params.id) {
-      getData("posts")
-        .then(rentPost => {
-          this.setState({
-            post: {
-              ...rentPost[match.params.id],
-              id: match.params.id,
-            },
-            loading: false
-          });
-        })
+      const user = await getUser();
+      const rentPost = await getPublicData("posts", match.params.id);
+      this.setState({
+        isOwner: user && user.uid === rentPost.ownerId,
+        post: {
+          ...rentPost,
+          id: match.params.id,
+        },
+        loading: false
+      });
     } else {
       this.setState({
         loading: false
@@ -39,11 +41,13 @@ export default class Rent extends React.Component {
   render() {
     const {
       post,
-      loading
+      loading,
+      isOwner
     } = this.state;
+    console.log(isOwner);
     return (
       <Container
-        text
+        text={isOwner}
         className="header-compensator min-height-viewport"
       >
         {
@@ -53,10 +57,18 @@ export default class Rent extends React.Component {
         <Segment
           basic
         >
-          <RentPost
-            data={post}
-            onChange={() => window.location.href = "/post-rent"}
-          />
+          {
+            isOwner? (
+              <RentAdvertiseForm
+                data={post}
+                onChange={() => window.location.href = "/post-rent"}
+              />
+            ) : (
+              <RentAdvertise
+                data={post}
+              />
+            )
+          }
         </Segment>
       </Container>
     )
