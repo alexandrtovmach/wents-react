@@ -1,8 +1,9 @@
 import React from 'react';
-import { Header, Button, Label } from 'semantic-ui-react';
+import { Header, Button, Label, Menu, Image } from 'semantic-ui-react';
 
 import { getUser } from '../../services/auth';
 import './Header.scss';
+import LogoSrc from "../../attachments/images/logo.png";
 
 const ANIMATION_SPEED = 1;
 
@@ -41,39 +42,70 @@ export default class HeaderComponent extends React.Component {
         ref={el => this.headerEl = el}
         className="header main-wrapper-padding"
       >
-        <a
+        <Image
+          as="a"
           href="/"
-          className="header-logo"
           title="Home"
-        > </a>
-        <nav
+          size="small"
+          src={LogoSrc}
+        />
+        <Menu
+          text
+          stackable
           className="header-navigation"
         >
-          <Header as="a" color="blue" href="/search-rent">Search house</Header>
-          <Header as="a" color="blue" href="/post-rent">Post house</Header>
-          <Header as="a" color="blue" href="/support">Support</Header>
+          <Menu.Item
+            link
+            color="blue"
+            href="/search-rent"
+            content="Search house"
+          />
+          <Menu.Item
+            link
+            color="blue"
+            href="/post-rent"
+            content="Post house"
+          />
+          <Menu.Item
+            link
+            color="blue"
+            href="/support"
+            content="Support"
+          />
           {
             user &&
-            <Header as="a" color="blue" href="/profile">Profile</Header>
+            <Menu.Item
+              link
+              color="blue"
+              href="/profile"
+              content="Profile"
+            />
           }
           {
             user &&
-            <Button
-              as='div'
-              labelPosition='right'
-              size="tiny"
-            >
-              <Button 
-                primary
-                icon="mail"
+            <Menu.Item>
+              <Button
+                as='div'
+                labelPosition='right'
                 size="tiny"
-              />
-              <Label basic color="blue" pointing='left'>
-                {user.newMessages || 0}
-              </Label>
-            </Button>
+              >
+                <Button 
+                  primary
+                  icon="mail"
+                  size="tiny"
+                />
+                <Label basic color="blue" pointing='left'>
+                  {user.newMessages || 0}
+                </Label>
+              </Button>
+            </Menu.Item>
           }
-        </nav>
+        </Menu>
+        {/* <nav
+          className="header-navigation"
+        >
+          
+        </nav> */}
       </header>
     )
   }
