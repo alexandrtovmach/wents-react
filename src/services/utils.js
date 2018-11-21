@@ -25,16 +25,19 @@ export const debounce = (fn, time) => {
 }
 
 export const filterPostsByParameters = (posts, p) => {
+  console.log(p);
   return Object.keys(posts).reduce((prev, el) => {
     const post = posts[el];
     if (
-      post.title.toLowerCase().includes(p.title.toLowerCase()) &&
-      post.unlimitedDate === p.unlimitedDate &&
-      post.startDate >= p.startDate &&
-      (post.endDate <= p.endDate || post.unlimitedDate) &&
-      post.apartmentsType === p.apartmentsType &&
-      post.rentType === p.rentType &&
-      (p.benefitList.some(benefit => post.benefitList.includes(benefit)) || !p.benefitList.length)
+      (post.title.toLowerCase().includes(p.title.toLowerCase()) || p.title === undefined) &&
+      (post.unlimitedDate === p.unlimitedDate || p.unlimitedDate === undefined) &&
+      ((p.startDate && p.endDate <= post.endDate) || p.startDate === undefined) &&
+      ((p.endDate && p.startDate >= post.startDate) || p.startDate === undefined) &&
+      // (post.startDate >= p.startDate || p.startDate === undefined) &&
+      // ((post.endDate <= p.endDate || post.unlimitedDate) || p.endDate === undefined) &&
+      (post.apartmentsType === p.apartmentsType || p.apartmentsType === undefined) &&
+      (post.rentType === p.rentType || p.rentType === undefined) &&
+      ((p.benefitList && p.benefitList.some(benefit => post.benefitList.includes(benefit))) || p.benefitList === undefined || !p.benefitList.length)
     ) {
       prev[el] = post;
     }

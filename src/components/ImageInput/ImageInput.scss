@@ -3,10 +3,10 @@
   min-height: initial !important;
   .uppy-Dashboard-innerWrap {
     .uppy-DashboardContent-bar {
-      z-index: 100!important;
+      z-index: 1!important;
     }
   }
   .uppy-DashboardItem-action {
-    z-index: 100!important;
+    z-index: 1!important;
   }
 }

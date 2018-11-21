@@ -47,7 +47,7 @@ export default class Rent extends React.Component {
     console.log(isOwner);
     return (
       <Container
-        text={isOwner}
+        text={isOwner || !post}
         className="header-compensator min-height-viewport"
       >
         {
@@ -58,7 +58,7 @@ export default class Rent extends React.Component {
           basic
         >
           {
-            isOwner? (
+            isOwner || !post? (
               <RentAdvertiseForm
                 data={post}
                 onChange={() => window.location.href = "/post-rent"}

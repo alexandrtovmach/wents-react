@@ -19,10 +19,10 @@ export default class FilterForm extends React.Component {
       maxPrice: 300,
       unlimitedDate: false,
       startDate: Date.now(),
-      endDate: Date.now() + 1000*60*60*24*30,
+      endDate: Date.now() + 1000*60*60*24*120,
       apartmentsType: "apartment",
       rentType: "short",
-      benefitList: ["wifi", "furniture"]
+      benefitList: []
     }
 
     this.priceChanged = this.priceChanged.bind(this);

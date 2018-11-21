@@ -16,7 +16,13 @@ export default class SearchRent extends React.Component {
       },
       filters: {
         minPrice: 0,
-        maxPrice: 300
+        maxPrice: 300,
+        unlimitedDate: false,
+        startDate: Date.now(),
+        endDate: Date.now() + 1000*60*60*24*120,
+        apartmentsType: "apartment",
+        rentType: "short",
+        benefitList: []
       },
       searchString: ""
     };
@@ -27,22 +33,23 @@ export default class SearchRent extends React.Component {
   }
 
   async componentDidMount() {
+    const posts = await getDataByPrice("posts", this.state.filters);
     this.setState({
-      posts: await getDataByPrice("posts", this.state.filters)
+      posts,
+      filteredPosts: filterPostsByParameters(posts, {
+        ...this.state.filters,
+        title: this.state.searchString
+      })
     })
   }
 
   searchChanged(searchString) {
-    // if (searchString) {
-    //   getDataByParameters("posts", {title: searchString})
-    //     .then(posts => this.setState(posts))
-    // }
-    // this.setState({
-    //   sortBy: {
-    //     name,
-    //     type
-    //   }
-    // })
+    this.setState({
+      filteredPosts: filterPostsByParameters(this.state.posts, {
+        ...this.state.filters,
+        title: searchString || ""
+      })
+    })
   }
 
   async filtersChanged(filters) {
