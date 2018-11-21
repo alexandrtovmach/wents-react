@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Image, Icon, Segment, Header } from 'semantic-ui-react';
 
 import { placeholderImg } from '../../services/constants';
+import './RentCard.scss';
 
 export default ({ data, add }) => {
   if (add) {
@@ -30,7 +31,13 @@ export default ({ data, add }) => {
     } = data || {};
     return (
       <Card as="a" href={`/rent/${id}`} target="_blank" >
-        <Image src={(photos && photos[0]) || placeholderImg} />
+        <div
+          style={{
+            backgroundImage: `url(${(photos && photos[0]) || placeholderImg})`
+          }}
+          className="card-cover-photo"
+        />
+        {/* <Image src={(photos && photos[0]) || placeholderImg} fluid/> */}
         <Card.Content>
           <Card.Header>{title || "Untitled"}</Card.Header>
           <Card.Meta>{location && location.address}</Card.Meta>

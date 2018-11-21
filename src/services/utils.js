@@ -31,8 +31,8 @@ export const filterPostsByParameters = (posts, p) => {
     if (
       (post.title.toLowerCase().includes(p.title.toLowerCase()) || p.title === undefined) &&
       (post.unlimitedDate === p.unlimitedDate || p.unlimitedDate === undefined) &&
-      ((p.startDate && p.endDate <= post.endDate) || p.startDate === undefined) &&
-      ((p.endDate && p.startDate >= post.startDate) || p.startDate === undefined) &&
+      (post.endDate >= p.startDate || p.startDate === undefined) &&
+      ((post.endDate <= p.endDate || post.unlimitedDate) || p.endDate === undefined) &&
       // (post.startDate >= p.startDate || p.startDate === undefined) &&
       // ((post.endDate <= p.endDate || post.unlimitedDate) || p.endDate === undefined) &&
       (post.apartmentsType === p.apartmentsType || p.apartmentsType === undefined) &&
