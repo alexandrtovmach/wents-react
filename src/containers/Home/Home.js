@@ -117,6 +117,7 @@ export default class Home extends React.Component {
               </Accordion.Title>
               <Accordion.Content active={showFilters}>
                 <Filters
+                  basic
                   onChange={this.filtersChanged}
                 />
               </Accordion.Content>
