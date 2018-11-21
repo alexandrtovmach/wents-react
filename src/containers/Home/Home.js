@@ -2,26 +2,78 @@ import React from 'react';
 import { Header, Container, Card, Button, Segment, Accordion, Icon } from 'semantic-ui-react';
 
 import { Search, Filters, RentCard } from "../../components";
-import { getLatestData } from '../../services/database';
+import { getDataByPrice } from '../../services/database';
+import { debounce, filterPostsByParameters } from '../../services/utils';
 
 import './Home.scss';
+
+const LIMIT_CARDS = 6;
 
 export default class Home extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      showFilters: false
+      showFilters: false,
+      filters: {
+        minPrice: 0,
+        maxPrice: 300,
+        unlimitedDate: false,
+        startDate: Date.now(),
+        endDate: Date.now() + 1000*60*60*24*120,
+        apartmentsType: "apartment",
+        rentType: "short",
+        benefitList: []
+      },
+      searchString: ""
     };
 
     this.toggleFiltersShow = this.toggleFiltersShow.bind(this);
+    this.searchChanged = debounce(this.searchChanged.bind(this), 1000);
+    this.filtersChanged = debounce(this.filtersChanged.bind(this), 1000);
   }
 
   async componentDidMount() {
-    const lastPosts = await getLatestData("posts", 6);
+    const posts = await getDataByPrice("posts", this.state.filters);
     this.setState({
-      posts: lastPosts
+      posts,
+      filteredPosts: filterPostsByParameters(posts, {
+        ...this.state.filters,
+        title: this.state.searchString
+      })
     })
+  }
+
+  searchChanged(searchString) {
+    this.setState({
+      filteredPosts: filterPostsByParameters(this.state.posts, {
+        ...this.state.filters,
+        title: searchString || ""
+      })
+    })
+  }
+
+  async filtersChanged(filters) {
+    const { minPrice, maxPrice } = this.state.filters;
+    if (filters.minPrice !== minPrice || filters.maxPrice !== maxPrice) {
+      const posts = await getDataByPrice("posts", filters);
+      this.setState({
+        posts: posts,
+        filteredPosts: filterPostsByParameters(posts, {
+          ...filters,
+          title: this.state.searchString
+        }),
+        filters
+      })
+    } else {
+      this.setState({
+        filteredPosts: filterPostsByParameters(this.state.posts, {
+          ...filters,
+          title: this.state.searchString
+        }),
+        filters
+      })
+    }
   }
 
   toggleFiltersShow() {
@@ -32,7 +84,7 @@ export default class Home extends React.Component {
 
   render() {
     const {
-      posts,
+      filteredPosts,
       showFilters
     } = this.state;
     return (
@@ -50,7 +102,10 @@ export default class Home extends React.Component {
           <Container
             className="min-width-2"
           >
-            <Search />
+            
+            <Search
+              onChange={this.searchChanged}
+            />
             <Accordion
               fluid
               styled
@@ -62,8 +117,7 @@ export default class Home extends React.Component {
               </Accordion.Title>
               <Accordion.Content active={showFilters}>
                 <Filters
-                  basic
-                  // onChange={console.log}
+                  onChange={this.filtersChanged}
                 />
               </Accordion.Content>
             </Accordion>
@@ -75,11 +129,11 @@ export default class Home extends React.Component {
               Search results:
             </Header>
             <Card.Group centered>
-              {posts && Object.keys(posts).map(id => (
+              {filteredPosts && Object.keys(filteredPosts).slice(0, LIMIT_CARDS).map(id => (
                 <RentCard
                   key={id}
                   data={{
-                    ...posts[id],
+                    ...filteredPosts[id],
                     id
                   }}
                 />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Image, Icon, Segment, Header } from 'semantic-ui-react';
+import { Card, Icon, Segment, Header } from 'semantic-ui-react';
 
 import { placeholderImg } from '../../services/constants';
 import './RentCard.scss';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Header, Button, Modal, Image, Container, Grid, List, Card } from "semantic-ui-react";
+import { Segment, Header, Button, Modal, Image, Grid, List, Card } from "semantic-ui-react";
 
 import './RentAdvertise.scss';
 // import { Map, AddressInput, ImageInput, Loader } from '..';
@@ -47,7 +47,6 @@ export default class RentAdvertise extends React.Component {
 
   render() {
     const {
-      loading,
       title,
       description,
       location,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Button, Label, Menu, Image } from 'semantic-ui-react';
+import { Button, Label, Menu, Image } from 'semantic-ui-react';
 
 import { getUser } from '../../services/auth';
 import './Header.scss';
