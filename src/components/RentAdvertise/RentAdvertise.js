@@ -1,6 +1,7 @@
 import React from 'react';
-import { Segment, Header, Button, Modal, Image, Grid, List, Card } from "semantic-ui-react";
+import { Segment, Header, Button, Modal, Image, Grid, List, Card, Icon, Label } from "semantic-ui-react";
 
+import { benefits } from '../../services/constants';
 import './RentAdvertise.scss';
 // import { Map, AddressInput, ImageInput, Loader } from '..';
 // import { dateToInputFormat } from '../../services/utils';
@@ -98,13 +99,28 @@ export default class RentAdvertise extends React.Component {
               {
                 apartmentsType &&
                 <List.Item>
-                  <List.Content>Apartments Type: {apartmentsType}</List.Content>
+                  <Label as='a' tag color="blue">
+                    {apartmentsType}
+                  </Label>
+                  {/* <List.Content>Apartments Type: {apartmentsType}</List.Content> */}
                 </List.Item>
               }
               {
                 rentType &&
                 <List.Item>
-                  <List.Content>Rent Type: {rentType}</List.Content>
+                  <Label as='a' tag color="blue">
+                    {rentType}
+                  </Label>
+                  {/* <List.Content>Rent Type: {rentType}</List.Content> */}
+                </List.Item>
+              }
+              {
+                price &&
+                <List.Item>
+                  <Label as='a' tag color="red" floating>
+                    {price}$
+                  </Label>
+                  {/* <List.Content>Price: {price}$</List.Content> */}
                 </List.Item>
               }
               {
@@ -120,15 +136,19 @@ export default class RentAdvertise extends React.Component {
                 </List.Item>
               }
               {
-                price &&
-                <List.Item>
-                  <List.Content>Price: {price}$</List.Content>
-                </List.Item>
-              }
-              {
                 benefitList &&
                 <List.Item>
-                  <List.Content>Benefits: {benefitList.join(", ")}</List.Content>
+                  <List.Content>Benefits: {benefitList.map(val => {
+                    const { icon, text } = (benefits.find(b => b.value === val) || {});
+                    return (
+                      <Icon
+                        key={val}
+                        name={icon}
+                        title={text}
+                      />
+                    )
+                  })}
+                  </List.Content>
                 </List.Item>
               }
             </List>
@@ -161,6 +181,7 @@ export default class RentAdvertise extends React.Component {
                 content={
                   photos.map(photoURL => (
                     <Modal
+                      key={photoURL}
                       trigger={(
                         <Card
                           as="a"

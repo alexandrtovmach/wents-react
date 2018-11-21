@@ -44,32 +44,34 @@ export default class Rent extends React.Component {
       loading,
       isOwner
     } = this.state;
-    console.log(isOwner);
+    console.log(isOwner, post);
     return (
       <Container
         text={isOwner || !post}
         className="header-compensator min-height-viewport"
       >
         {
-          loading &&
-          <Loader />
+          loading? (
+            <Loader />
+          ) : (
+            <Segment
+              basic
+            >
+              {
+                isOwner || !post? (
+                  <RentAdvertiseForm
+                    data={post}
+                    onChange={() => window.location.href = "/post-rent"}
+                  />
+                ) : (
+                  <RentAdvertise
+                    data={post}
+                  />
+                )
+              }
+            </Segment>
+          )
         }
-        <Segment
-          basic
-        >
-          {
-            isOwner || !post? (
-              <RentAdvertiseForm
-                data={post}
-                onChange={() => window.location.href = "/post-rent"}
-              />
-            ) : (
-              <RentAdvertise
-                data={post}
-              />
-            )
-          }
-        </Segment>
       </Container>
     )
   }
