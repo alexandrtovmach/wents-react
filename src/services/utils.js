@@ -35,8 +35,8 @@ export const filterPostsByParameters = (posts, p) => {
       ((post.endDate <= p.endDate || post.unlimitedDate) || p.endDate === undefined) &&
       // (post.startDate >= p.startDate || p.startDate === undefined) &&
       // ((post.endDate <= p.endDate || post.unlimitedDate) || p.endDate === undefined) &&
-      (post.apartmentsType === p.apartmentsType || p.apartmentsType === undefined) &&
-      (post.rentType === p.rentType || p.rentType === undefined) &&
+      (post.apartmentsType === p.apartmentsType || p.apartmentsType === "any" || p.apartmentsType === undefined) &&
+      (post.rentType === p.rentType || p.rentType === "any" || p.rentType === undefined) &&
       ((p.benefitList && p.benefitList.some(benefit => post.benefitList.includes(benefit))) || p.benefitList === undefined || !p.benefitList.length)
     ) {
       prev[el] = post;

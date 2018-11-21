@@ -1,5 +1,9 @@
 export const appartmentsTypes = [
   {
+    text: "Any",
+    value: "any"
+  },
+  {
     text: "House",
     value: "house"
   },
@@ -14,6 +18,10 @@ export const appartmentsTypes = [
 ];
 
 export const rentTypes = [
+  {
+    text: "Any",
+    value: "any"
+  },
   {
     text: "Short-term",
     value: "short"

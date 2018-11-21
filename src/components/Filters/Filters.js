@@ -20,8 +20,8 @@ export default class FilterForm extends React.Component {
       unlimitedDate: false,
       startDate: Date.now(),
       endDate: Date.now() + 1000*60*60*24*120,
-      apartmentsType: "apartment",
-      rentType: "short",
+      apartmentsType: "any",
+      rentType: "any",
       benefitList: []
     }
 

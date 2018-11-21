@@ -50,7 +50,7 @@ export default ({ data, add }) => {
           <Label
             attached='bottom right'
             key={`price-${id}`}
-            as='a'
+            // as='a'
             color='blue'
             content={`${price}$`}
           />
@@ -58,7 +58,7 @@ export default ({ data, add }) => {
             ribbon
             basic
             key={`info-${id}`}
-            as='a'
+            // as='a'
             color='blue'
           >
             <Icon name="hotel"/>
@@ -76,7 +76,7 @@ export default ({ data, add }) => {
           <Card.Meta>{location && location.address}</Card.Meta>
           <Card.Description>{description && description.slice(0, 100)}...</Card.Description>
         </Card.Content>
-        <Card.Content extra textAlign="justify">
+        <Card.Content extra>
           {new Date(startDate).toLocaleDateString()} - {new Date(endDate).toLocaleDateString()}
         </Card.Content>
         {/* <Label

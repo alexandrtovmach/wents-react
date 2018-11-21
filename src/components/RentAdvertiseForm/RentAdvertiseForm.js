@@ -197,14 +197,14 @@ export default class RentAdvertiseForm extends React.Component {
           <Form.Group>
             <Form.Select
               label="Apartments type"
-              options={appartmentsTypes}
+              options={appartmentsTypes.slice(-3)}
               value={apartmentsType}
               width={4}
               onChange={(event, data) => this.fieldChange(null, data.value, "apartmentsType")}
             />
             <Form.Select
               label="Rent type"
-              options={rentTypes}
+              options={rentTypes.slice(-2)}
               value={rentType}
               width={4}
               onChange={(event, data) => this.fieldChange(null, data.value, "rentType")}
