@@ -76,28 +76,6 @@ export default class RentAdvertise extends React.Component {
 
             <List>
               {
-                location &&
-                <Modal
-                  trigger={(
-                    <List.Item>
-                      <Segment
-                        as={Button}
-                        content={(location && location.address) || "Look on map"}
-                      />
-                    </List.Item>
-                  )}
-                  closeOnEscape={true}
-                  closeOnDimmerClick={true}
-                  onClose={this.toggleAvatarChange}
-                  size="small"
-                >
-                  <Modal.Header>Location of this rent</Modal.Header>
-                  <Modal.Content>
-                    In development
-                  </Modal.Content>
-                </Modal>
-              }
-              {
                 apartmentsType && rentType &&
                 <List.Item>
                   <Label
@@ -116,7 +94,7 @@ export default class RentAdvertise extends React.Component {
               {
                 price &&
                 <List.Item>
-                  <Label as='a' color="red" circular>
+                  <Label as='a' color="red">
                     {price}$
                   </Label>
                 </List.Item>
@@ -148,6 +126,32 @@ export default class RentAdvertise extends React.Component {
                   })}
                   </List.Content>
                 </List.Item>
+              }
+              {
+                location &&
+                <Modal
+                  trigger={(
+                    <List.Item>
+                      <Segment
+                        as={Button}
+                        fluid
+                        basic
+                      >
+                        <Icon name="map marker alternate"/>
+                        {(location && location.address) || "Look on map"}
+                      </Segment>
+                    </List.Item>
+                  )}
+                  closeOnEscape={true}
+                  closeOnDimmerClick={true}
+                  onClose={this.toggleAvatarChange}
+                  size="small"
+                >
+                  <Modal.Header>Location of this rent</Modal.Header>
+                  <Modal.Content>
+                    In development
+                  </Modal.Content>
+                </Modal>
               }
             </List>
 

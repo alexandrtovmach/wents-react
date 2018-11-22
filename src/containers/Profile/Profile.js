@@ -20,7 +20,7 @@ import {
 import { RentCard, Loader, AddressInput, AvatarUploader } from "../../components";
 import { advertStatusList, placeholderImg } from '../../services/constants';
 import { getUser, signOut } from '../../services/auth';
-import { extendUserWithAdditionalData } from '../../services/database';
+import { extendUserWithAdditionalData, getData } from '../../services/database';
 import { dateToInputFormat } from '../../services/utils';
 
 
@@ -33,7 +33,8 @@ export default class Profile extends React.Component {
       loading: true,
       edit: false,
       avatarChanging: false,
-      avatarDimmerShow: false
+      avatarDimmerShow: false,
+      posts: []
     };
 
     this.filterPostsByStatus = this.filterPostsByStatus.bind(this);
@@ -53,6 +54,7 @@ export default class Profile extends React.Component {
   async componentDidMount() {
     const user = await getUser();
     if (user) {
+      const userPosts = await getData("posts", "", user.uid);
       this.setState({
         fullUser: user,
         user: {
@@ -66,6 +68,7 @@ export default class Profile extends React.Component {
           email: user.email,
           description: user.description
         },
+        posts: userPosts || [],
         loading: false
       });
     } else {
@@ -175,19 +178,35 @@ export default class Profile extends React.Component {
   }
 
   filterPostsByStatus(posts, status) {
-    // filtration
     return (
-      <Card.Group>
-        <RentCard id={status.length} />
+      <Card.Group centered>
+        {Object.keys(posts).map(key => posts[key][status.key] === status.value && <RentCard data={posts[key]} />)}
       </Card.Group>
     )
   };
 
   generateAdvertTabs() {
+    const { posts } = this.state;
     return advertStatusList.map(status => {
       return {
-        menuItem: status,
-        render: () => <Tab.Pane>{this.filterPostsByStatus([], status)}</Tab.Pane>
+        menuItem: status.name,
+        render: () => <Tab.Pane>{this.filterPostsByStatus(posts, status)}</Tab.Pane>
+      };
+    });
+  }
+
+  generateTypesTabs() {
+    return ["Adverts", "Posts"].map(name => {
+      return {
+        menuItem: name,
+        render: () => (
+          <Tab.Pane>
+            <Tab
+              menu={{ secondary: true, pointing: true }}
+              panes={this.generateAdvertTabs()}
+            />
+          </Tab.Pane>
+        )
       };
     });
   }
@@ -393,8 +412,11 @@ export default class Profile extends React.Component {
                 )
               }
               <Segment basic>
-                <Header size="large">My Adverts</Header>
-                <Tab panes={this.generateAdvertTabs()} />
+                {/* <Header size="large">My Adverts</Header> */}
+                <Tab
+                  // menu={{ vertical: true, tabular: true }}
+                  panes={this.generateTypesTabs()}
+                />
               </Segment>
             </Grid.Column>
           </Grid>

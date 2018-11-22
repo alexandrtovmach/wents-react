@@ -118,6 +118,22 @@ export const benefits = [
 
 export const userKeys = ["email", "displayName", "emailVerified", "metadata", "address", "birthday", "description", "phoneNumber", "photoURL"];
 
-export const advertStatusList = ["Active", "Pending", "Archived"];
+export const advertStatusList = [
+  {
+    name: "Active",
+    key: "publish",
+    value: true
+  },
+  {
+    name: "Pending",
+    key: "publish",
+    value: false
+  },
+  {
+    name: "Archived",
+    key: "archived",
+    value: true
+  }
+];
 
 export const placeholderImg =  'https://react.semantic-ui.com/images/wireframe/square-image.png';
