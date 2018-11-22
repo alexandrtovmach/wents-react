@@ -48,6 +48,7 @@ export default class RentAdvertise extends React.Component {
 
   render() {
     const {
+      id,
       title,
       description,
       location,
@@ -81,7 +82,7 @@ export default class RentAdvertise extends React.Component {
                     <List.Item>
                       <Segment
                         as={Button}
-                        content={location && location.address}
+                        content={(location && location.address) || "Look on map"}
                       />
                     </List.Item>
                   )}
@@ -97,30 +98,27 @@ export default class RentAdvertise extends React.Component {
                 </Modal>
               }
               {
-                apartmentsType &&
+                apartmentsType && rentType &&
                 <List.Item>
-                  <Label as='a' tag color="blue">
+                  <Label
+                    basic
+                    key={`info-${id}`}
+                    color='blue'
+                  >
+                    <Icon name="hotel"/>
                     {apartmentsType}
-                  </Label>
-                  {/* <List.Content>Apartments Type: {apartmentsType}</List.Content> */}
-                </List.Item>
-              }
-              {
-                rentType &&
-                <List.Item>
-                  <Label as='a' tag color="blue">
+                    &nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+                    <Icon name="clock"/>
                     {rentType}
                   </Label>
-                  {/* <List.Content>Rent Type: {rentType}</List.Content> */}
                 </List.Item>
               }
               {
                 price &&
                 <List.Item>
-                  <Label as='a' tag color="red" floating>
+                  <Label as='a' color="red" circular>
                     {price}$
                   </Label>
-                  {/* <List.Content>Price: {price}$</List.Content> */}
                 </List.Item>
               }
               {

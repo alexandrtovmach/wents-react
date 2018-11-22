@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, Icon, Segment, Header, Button, Image, Label } from 'semantic-ui-react';
+import { Card, Icon, Segment, Header, Image, Label } from 'semantic-ui-react';
 
-import { benefits } from '../../services/constants';
+// import { benefits } from '../../services/constants';
 import { placeholderImg } from '../../services/constants';
 import './RentCard.scss';
 
@@ -31,7 +31,7 @@ export default ({ data, add }) => {
       rentType,
       startDate,
       endDate,
-      benefits,
+      // benefits,
       photos,
       price
     } = data || {};
@@ -50,7 +50,6 @@ export default ({ data, add }) => {
           <Label
             attached='bottom right'
             key={`price-${id}`}
-            // as='a'
             color='blue'
             content={`${price}$`}
           />
@@ -58,7 +57,6 @@ export default ({ data, add }) => {
             ribbon
             basic
             key={`info-${id}`}
-            // as='a'
             color='blue'
           >
             <Icon name="hotel"/>
