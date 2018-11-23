@@ -6,7 +6,7 @@ export { default as Filters } from './Filters/Filters';
 export { default as SortPanel } from './SortPanel/SortPanel';
 export { default as AdvertiseCard } from './AdvertiseCard/AdvertiseCard';
 export { default as RentAdvertise } from './RentAdvertise/RentAdvertise';
-export { default as RentAdvertiseForm } from './RentAdvertiseForm/RentAdvertiseForm';
+export { default as AdvertiseForm } from './AdvertiseForm/AdvertiseForm';
 export { default as PageNotFound } from './PageNotFound/PageNotFound';
 export { default as Auth } from './Auth/Auth';
 export { default as AddressInput } from './AddressInput/AddressInput';

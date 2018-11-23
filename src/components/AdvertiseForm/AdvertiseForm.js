@@ -9,7 +9,7 @@ import { pushData, updateData } from '../../services/database';
 import { getUser } from '../../services/auth';
 
 
-export default class RentAdvertiseForm extends React.Component {
+export default class AdvertiseForm extends React.Component {
   constructor() {
     super();
 

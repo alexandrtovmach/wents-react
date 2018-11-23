@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Segment } from 'semantic-ui-react';
 
-import { RentAdvertiseForm, RentAdvertise, Loader } from '../../components';
+import { AdvertiseForm, RentAdvertise, Loader } from '../../components';
 import { getPublicData } from '../../services/database';
 import { getUser } from '../../services/auth';
 
@@ -59,7 +59,7 @@ export default class Advertise extends React.Component {
             >
               {
                 isOwner || !post? (
-                  <RentAdvertiseForm
+                  <AdvertiseForm
                     data={post}
                     onChange={() => window.location.href = "/posts/my"}
                   />
