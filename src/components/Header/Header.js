@@ -1,9 +1,8 @@
 import React from 'react';
-import { Button, Label, Menu, Image } from 'semantic-ui-react';
+import { Button, Label, Menu, Image, Header } from 'semantic-ui-react';
 
-import { getUser } from '../../services/auth';
-import './Header.scss';
 import LogoSrc from "../../attachments/images/logo.png";
+import './Header.scss';
 
 const ANIMATION_SPEED = 1;
 
@@ -11,7 +10,7 @@ export default class HeaderComponent extends React.Component {
   constructor() {
     super();
     this.state = {
-      user: null
+      showSidebar: true
     }
 
     this.moveBg = this.moveBg.bind(this);
@@ -19,7 +18,6 @@ export default class HeaderComponent extends React.Component {
 
   componentDidMount() {
     window.addEventListener("scroll", this.moveBg);
-    getUser().then(user => this.setState({user}))
   }
 
   componentWillUnmount() {
@@ -36,7 +34,7 @@ export default class HeaderComponent extends React.Component {
   }
 
   render () {
-    const { user } = this.state;
+    const { toggleSidebar, user } = this.props;
     return (
       <header
         ref={el => this.headerEl = el}
@@ -51,36 +49,35 @@ export default class HeaderComponent extends React.Component {
         />
         <Menu
           text
-          stackable
           className="header-navigation"
         >
           <Menu.Item
             link
             color="blue"
-            href="/search-rent"
-            content="Search house"
-          />
-          <Menu.Item
-            link
-            color="blue"
-            href="/post-rent"
-            content="Post house"
-          />
-          <Menu.Item
-            link
-            color="blue"
-            href="/support"
-            content="Support"
+            href="/search"
+            content={"SEARCH"}
           />
           {
             user &&
             <Menu.Item
               link
               color="blue"
-              href="/profile"
-              content="Profile"
+              href="/posts/my"
+              content={"POSTS"}
             />
           }
+          <Menu.Item
+            link
+            color="blue"
+            href="/profile"
+            content={user? "PROFILE": "LOGIN"}
+          />
+          <Menu.Item
+            link
+            color="blue"
+            href="/support"
+            content={"SUPPORT"}
+          />
           {
             user &&
             <Menu.Item>
@@ -101,11 +98,31 @@ export default class HeaderComponent extends React.Component {
             </Menu.Item>
           }
         </Menu>
-        {/* <nav
-          className="header-navigation"
-        >
-          
-        </nav> */}
+        {
+          user &&
+          <Button
+            className="messages-button-mobile"
+            as='div'
+            labelPosition='right'
+            size="tiny"
+          >
+            <Button 
+              primary
+              icon="mail"
+              size="tiny"
+            />
+            <Label basic color="blue" pointing='left'>
+              {user.newMessages || 0}
+            </Label>
+          </Button>
+        }
+        <Button
+          className="hamburger-navigation"
+          floated="right"
+          icon="content"
+          basic
+          onClick={toggleSidebar}
+        />
       </header>
     )
   }

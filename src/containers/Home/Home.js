@@ -143,7 +143,7 @@ export default class Home extends React.Component {
             <Button
               className="margin-2"
               as="a"
-              href="/search-rent"
+              href="/search"
             >
               More
             </Button>

@@ -61,7 +61,7 @@ export default class Rent extends React.Component {
                 isOwner || !post? (
                   <RentAdvertiseForm
                     data={post}
-                    onChange={() => window.location.href = "/post-rent"}
+                    onChange={() => window.location.href = "/posts/my"}
                   />
                 ) : (
                   <RentAdvertise

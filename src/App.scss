@@ -14,9 +14,9 @@ body {
 }
 
 .header-compensator {
-  padding-top: 120px;
+  padding-top: 100px;
   @media screen and (max-width: 1024px) {
-    padding-top: 90px!important; // overriding semantic-ui
+    padding-top: 80px!important; // overriding semantic-ui
   }
 }
 

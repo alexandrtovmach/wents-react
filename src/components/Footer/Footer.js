@@ -16,8 +16,8 @@ export default class FooterComponent extends React.Component {
         <nav
           className="footer-navigation"
         >
-          <Header as="a" color="blue" href="/search-rent">Search house</Header>
-          <Header as="a" color="blue" href="/post-rent">Post house</Header>
+          <Header as="a" color="blue" href="/search">Search house</Header>
+          <Header as="a" color="blue" href="/posts/my">Post house</Header>
           <Header as="a" color="blue" href="/support">Support</Header>
           <Header as="a" color="blue" href="/profile">Profile</Header>
         </nav>
