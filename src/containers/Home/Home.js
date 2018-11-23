@@ -30,7 +30,8 @@ export default class Home extends React.Component {
 
     this.toggleFiltersShow = this.toggleFiltersShow.bind(this);
     this.searchChanged = debounce(this.searchChanged.bind(this), 1000);
-    this.filtersChanged = debounce(this.filtersChanged.bind(this), 1000);
+    this.typeChanged = debounce(this.typeChanged.bind(this), 1000);
+    // this.filtersChanged = debounce(this.filtersChanged.bind(this), 1000);
   }
 
   async componentDidMount() {
@@ -53,28 +54,37 @@ export default class Home extends React.Component {
     })
   }
 
-  async filtersChanged(filters) {
-    const { minPrice, maxPrice } = this.state.filters;
-    if (filters.minPrice !== minPrice || filters.maxPrice !== maxPrice) {
-      const posts = await getDataByPrice("posts", filters);
-      this.setState({
-        posts: posts,
-        filteredPosts: filterPostsByParameters(posts, {
-          ...filters,
-          title: this.state.searchString
-        }),
-        filters
+  typeChanged(type) {
+    this.setState({
+      filteredPosts: filterPostsByParameters(this.state.posts, {
+        ...this.state.filters,
+        advType: type || ""
       })
-    } else {
-      this.setState({
-        filteredPosts: filterPostsByParameters(this.state.posts, {
-          ...filters,
-          title: this.state.searchString
-        }),
-        filters
-      })
-    }
+    })
   }
+
+  // async filtersChanged(filters) {
+  //   const { minPrice, maxPrice } = this.state.filters;
+  //   if (filters.minPrice !== minPrice || filters.maxPrice !== maxPrice) {
+  //     const posts = await getDataByPrice("posts", filters);
+  //     this.setState({
+  //       posts: posts,
+  //       filteredPosts: filterPostsByParameters(posts, {
+  //         ...filters,
+  //         title: this.state.searchString
+  //       }),
+  //       filters
+  //     })
+  //   } else {
+  //     this.setState({
+  //       filteredPosts: filterPostsByParameters(this.state.posts, {
+  //         ...filters,
+  //         title: this.state.searchString
+  //       }),
+  //       filters
+  //     })
+  //   }
+  // }
 
   toggleFiltersShow() {
     this.setState({
@@ -105,8 +115,9 @@ export default class Home extends React.Component {
             
             <Search
               onChange={this.searchChanged}
+              onChangeType={this.typeChanged}
             />
-            <Accordion
+            {/* <Accordion
               fluid
               styled
               className="margin-v-1"
@@ -121,7 +132,7 @@ export default class Home extends React.Component {
                   onChange={this.filtersChanged}
                 />
               </Accordion.Content>
-            </Accordion>
+            </Accordion> */}
           </Container>
         </Segment>
         <Segment basic textAlign="center" padded>

@@ -29,7 +29,8 @@ export const filterPostsByParameters = (posts, p) => {
   return Object.keys(posts).reduce((prev, el) => {
     const post = posts[el];
     if (
-      (post.title.toLowerCase().includes(p.title.toLowerCase()) || p.title === undefined) &&
+      (post.advType === p.advType || p.advType === undefined) &&
+      (p.title === undefined || post.title.toLowerCase().includes(p.title.toLowerCase())) &&
       (post.unlimitedDate === p.unlimitedDate || p.unlimitedDate === undefined) &&
       (post.endDate >= p.startDate || p.startDate === undefined) &&
       ((post.endDate <= p.endDate || post.unlimitedDate) || p.endDate === undefined) &&
