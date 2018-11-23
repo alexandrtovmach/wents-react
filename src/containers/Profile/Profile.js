@@ -17,7 +17,7 @@ import {
   Dimmer
 } from 'semantic-ui-react';
 
-import { RentCard, Loader, AddressInput, AvatarUploader } from "../../components";
+import { AdvertiseCard, Loader, AddressInput, AvatarUploader } from "../../components";
 import { advertStatusList, placeholderImg } from '../../services/constants';
 import { getUser, signOut } from '../../services/auth';
 import { extendUserWithAdditionalData, getData } from '../../services/database';
@@ -180,7 +180,7 @@ export default class Profile extends React.Component {
   filterPostsByStatus(posts, status) {
     return (
       <Card.Group centered>
-        {Object.keys(posts).map(key => posts[key][status.key] === status.value && <RentCard data={posts[key]} />)}
+        {Object.keys(posts).map(key => posts[key][status.key] === status.value && <AdvertiseCard data={posts[key]} />)}
       </Card.Group>
     )
   };

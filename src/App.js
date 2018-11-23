@@ -9,9 +9,9 @@ import {
   LoginContainer,
   SupportContainer,
   SearchRentContainer,
-  PostRentContainer,
   ProfileContainer,
-  RentContainer
+  AdvertiseListContainer,
+  AdvertiseContainer
 } from "./containers";
 import {
   Header,
@@ -76,15 +76,15 @@ class App extends React.Component {
             <Route
               path="/posts/my"
               exact
-              component={PostRentContainer}
+              component={AdvertiseListContainer}
             />
             <Route
               path="/rent/:id"
-              component={RentContainer}
+              component={AdvertiseContainer}
             />
             <Route
               path="/rent"
-              component={RentContainer}
+              component={AdvertiseContainer}
             />
             <Route
               path="/profile"

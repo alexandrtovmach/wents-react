@@ -5,7 +5,7 @@ import { RentAdvertiseForm, RentAdvertise, Loader } from '../../components';
 import { getPublicData } from '../../services/database';
 import { getUser } from '../../services/auth';
 
-export default class Rent extends React.Component {
+export default class Advertise extends React.Component {
   constructor() {
     super();
 

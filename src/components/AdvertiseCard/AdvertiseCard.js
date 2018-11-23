@@ -3,7 +3,7 @@ import { Card, Icon, Segment, Header, Image, Label } from 'semantic-ui-react';
 
 // import { benefits } from '../../services/constants';
 import { placeholderImg } from '../../services/constants';
-import './RentCard.scss';
+import './AdvertiseCard.scss';
 
 export default ({ data, add }) => {
   if (add) {

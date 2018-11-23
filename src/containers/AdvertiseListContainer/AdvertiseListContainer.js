@@ -1,11 +1,11 @@
 import React from 'react';
 import { Container, Card, Segment, Header } from 'semantic-ui-react';
 
-import { RentCard, Loader } from "../../components";
+import { AdvertiseCard, Loader } from "../../components";
 import { getUser } from '../../services/auth';
 import { getData } from '../../services/database';
 
-export default class PostRent extends React.Component {
+export default class AdvertiseList extends React.Component {
   constructor() {
     super();
 
@@ -47,7 +47,7 @@ export default class PostRent extends React.Component {
           <Segment basic textAlign="center" padded>
             <Card.Group stackable itemsPerRow={4}>
               {posts && Object.keys(posts).map(id => (
-                <RentCard
+                <AdvertiseCard
                   key={id}
                   data={{
                     ...posts[id],
@@ -55,7 +55,7 @@ export default class PostRent extends React.Component {
                   }}
                 />
               ))}
-              <RentCard
+              <AdvertiseCard
                 key={0}
                 add={true}
               />

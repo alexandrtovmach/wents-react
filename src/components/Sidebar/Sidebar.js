@@ -6,7 +6,7 @@ export default class SidebarComponent extends React.Component {
   render () {
     const { children, showSidebar, user, toggleSidebar } = this.props;
     return (
-      <Sidebar.Pushable as={Segment}>
+      <Sidebar.Pushable>
         <Sidebar
           className="header-compensator"
           as={Menu}
@@ -46,7 +46,9 @@ export default class SidebarComponent extends React.Component {
           />
         </Sidebar>
 
-        <Sidebar.Pusher dimmed={showSidebar}>
+        <Sidebar.Pusher
+          dimmed={showSidebar}
+        >
           {children}
         </Sidebar.Pusher>
       </Sidebar.Pushable>

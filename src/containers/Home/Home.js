@@ -1,7 +1,7 @@
 import React from 'react';
 import { Header, Container, Card, Button, Segment, Accordion, Icon } from 'semantic-ui-react';
 
-import { Search, Filters, RentCard } from "../../components";
+import { Search, Filters, AdvertiseCard } from "../../components";
 import { getDataByPrice } from '../../services/database';
 import { debounce, filterPostsByParameters } from '../../services/utils';
 
@@ -131,7 +131,7 @@ export default class Home extends React.Component {
             </Header>
             <Card.Group centered>
               {filteredPosts && Object.keys(filteredPosts).slice(0, LIMIT_CARDS).map(id => (
-                <RentCard
+                <AdvertiseCard
                   key={id}
                   data={{
                     ...filteredPosts[id],

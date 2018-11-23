@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Card, Segment } from 'semantic-ui-react';
 
-import { Search, Filters, RentCard, SortPanel } from "../../components";
+import { Search, Filters, AdvertiseCard, SortPanel } from "../../components";
 import { getDataByPrice } from '../../services/database';
 import { debounce, filterPostsByParameters } from '../../services/utils';
 
@@ -120,7 +120,7 @@ export default class SearchRent extends React.Component {
         <Segment basic textAlign="center" padded>
           <Card.Group centered stackable itemsPerRow={4}>
             {filteredPosts && Object.keys(filteredPosts).sort((a, b) => this.sortHandler(a, b, filteredPosts)).map(id => (
-              <RentCard
+              <AdvertiseCard
                 key={id}
                 data={{
                   ...filteredPosts[id],
