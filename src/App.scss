@@ -32,6 +32,10 @@ body {
   min-height: 50vh;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .viewport {
   width: 100%;
   min-height: 100vh;

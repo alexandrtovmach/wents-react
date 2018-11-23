@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import { Segment, Form, Header, Button, Modal, Dimmer, Icon, Image, ButtonGroup } from "semantic-ui-react";
 
 import { Map, AddressInput, ImageInput, Loader } from '..';
@@ -14,6 +15,7 @@ export default class AdvertiseForm extends React.Component {
     super();
 
     this.state = {
+      advType: "home",
       title: "",
       description: "",
       price: 100,
@@ -140,8 +142,10 @@ export default class AdvertiseForm extends React.Component {
       price,
       benefitList,
       photos,
+      advType,
       imageDimmerShow
     } = this.state;
+    const isHomeType = advType === "home";
     return (
       <Segment padded>
         {
@@ -150,7 +154,35 @@ export default class AdvertiseForm extends React.Component {
         }
         <Form widths="equal" >
           <Form.Group>
-            <Header>Main</Header>
+            <Header>
+              Advertise type
+            </Header>
+          </Form.Group>
+          <Form.Group>
+            <Button.Group
+              fluid
+              size="tiny"
+              label="Type"
+            >
+              <Button
+                animated
+                onClick={() => this.fieldChange(null, "home", "advType")}
+                color={isHomeType? "blue": null}
+              >
+                <Button.Content hidden>spojbpsd</Button.Content>
+                <Button.Content active>Home</Button.Content>
+              </Button>
+              <Button
+                onClick={() => this.fieldChange(null, "rent", "advType")}
+                content="Rent"
+                color={!isHomeType? "blue": null}
+              />
+            </Button.Group>
+          </Form.Group>
+          <Form.Group>
+            <Header>
+              Main
+            </Header>
           </Form.Group>
           <Form.Group>
             <Form.Input
@@ -273,10 +305,18 @@ export default class AdvertiseForm extends React.Component {
               onChange={(event, data) => this.fieldChange(null, data.value, "benefitList")}
             />
           </Form.Group>
-          <Form.Group>
+          <Form.Group
+            className={classNames({
+              hidden: !isHomeType
+            })}
+          >
             <Header>Photos</Header>
           </Form.Group>
-          <Form.Group>
+          <Form.Group
+            className={classNames({
+              hidden: !isHomeType
+            })}
+          >
             <Form.Field
               width={1}
             >
