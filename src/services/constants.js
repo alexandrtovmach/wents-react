@@ -118,21 +118,34 @@ export const benefits = [
 
 export const userKeys = ["email", "displayName", "emailVerified", "metadata", "address", "birthday", "description", "phoneNumber", "photoURL"];
 
+export const advertTypeList = [
+  {
+    name: "Home adverts",
+    key: "home",
+    value: "home"
+  },
+  {
+    name: "Rent adverts",
+    key: "rent",
+    value: "rent"
+  },
+];
+
 export const advertStatusList = [
   {
     name: "Active",
-    key: "publish",
-    value: true
+    key: "status",
+    value: "active"
   },
   {
     name: "Pending",
-    key: "publish",
-    value: false
+    key: "status",
+    value: "pending"
   },
   {
     name: "Archived",
-    key: "archived",
-    value: true
+    key: "status",
+    value: "archived"
   }
 ];
 

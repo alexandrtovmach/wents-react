@@ -18,7 +18,7 @@ import {
 } from 'semantic-ui-react';
 
 import { AdvertiseCard, Loader, AddressInput, AvatarUploader } from "../../components";
-import { advertStatusList, placeholderImg } from '../../services/constants';
+import { advertStatusList, placeholderImg, advertTypeList } from '../../services/constants';
 import { getUser, signOut } from '../../services/auth';
 import { extendUserWithAdditionalData, getData } from '../../services/database';
 import { dateToInputFormat } from '../../services/utils';
@@ -37,7 +37,7 @@ export default class Profile extends React.Component {
       posts: []
     };
 
-    this.filterPostsByStatus = this.filterPostsByStatus.bind(this);
+    this.filterPostsByStatusAndType = this.filterPostsByStatusAndType.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
     this.toggleAvatarChange = this.toggleAvatarChange.bind(this);
     this.handleAvatarDimmerShow = this.handleAvatarDimmerShow.bind(this);
@@ -177,33 +177,33 @@ export default class Profile extends React.Component {
     window.location.reload();
   }
 
-  filterPostsByStatus(posts, status) {
+  filterPostsByStatusAndType(posts, status, advType) {
     return (
       <Card.Group centered>
-        {Object.keys(posts).map(key => posts[key][status.key] === status.value && <AdvertiseCard data={posts[key]} />)}
+        {Object.keys(posts).map(key => posts[key][status.key] === status.value && posts[key].advType === advType && <AdvertiseCard key={posts[key].id} data={posts[key]} />)}
       </Card.Group>
     )
   };
 
-  generateAdvertTabs() {
+  generateAdvertTabs(advType) {
     const { posts } = this.state;
     return advertStatusList.map(status => {
       return {
         menuItem: status.name,
-        render: () => <Tab.Pane>{this.filterPostsByStatus(posts, status)}</Tab.Pane>
+        render: () => <Tab.Pane>{this.filterPostsByStatusAndType(posts, status, advType)}</Tab.Pane>
       };
     });
   }
 
   generateTypesTabs() {
-    return ["Adverts", "Posts"].map(name => {
+    return advertTypeList.map(type => {
       return {
-        menuItem: name,
+        menuItem: type.name,
         render: () => (
           <Tab.Pane>
             <Tab
               menu={{ secondary: true, pointing: true }}
-              panes={this.generateAdvertTabs()}
+              panes={this.generateAdvertTabs(type.value)}
             />
           </Tab.Pane>
         )

@@ -105,9 +105,8 @@ export default class AdvertiseForm extends React.Component {
     delete rentData.urlsToRemove;
     delete rentData.imageDimmerShow;
     delete rentData.loading;
-    if (publish) {
-      rentData.publish = true
-    }
+    rentData.publish = Boolean(publish);
+    rentData.status = Boolean(publish)? "active": "pending";
 
     if (onChange && this.validForm()) {
       const { data } = this.props;
@@ -372,7 +371,7 @@ export default class AdvertiseForm extends React.Component {
                 positive
                 basic
                 content="Save"
-                onClick={this.saveChanges}
+                onClick={() => this.saveChanges()}
               />
               <Button
                 positive
