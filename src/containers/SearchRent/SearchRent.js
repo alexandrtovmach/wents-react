@@ -15,6 +15,8 @@ export default class SearchRent extends React.Component {
         type: -1
       },
       filters: {
+        advType: "home",
+        title: "",
         minPrice: 0,
         maxPrice: 300,
         unlimitedDate: false,
@@ -23,53 +25,64 @@ export default class SearchRent extends React.Component {
         apartmentsType: "any",
         rentType: "any",
         benefitList: []
-      },
-      searchString: ""
+      }
     };
 
     this.sortChanged = this.sortChanged.bind(this);
     this.searchChanged = debounce(this.searchChanged.bind(this), 1000);
+    this.typeChanged = debounce(this.typeChanged.bind(this), 1000);
     this.filtersChanged = debounce(this.filtersChanged.bind(this), 1000);
   }
 
   async componentDidMount() {
-    const posts = await getDataByPrice("posts", this.state.filters);
+    const { filters } = this.state;
+    const posts = await getDataByPrice("posts", filters);
     this.setState({
       posts,
-      filteredPosts: filterPostsByParameters(posts, {
-        ...this.state.filters,
-        title: this.state.searchString
-      })
+      filters,
+      filteredPosts: filterPostsByParameters(posts, filters)
     })
   }
 
   searchChanged(searchString) {
+    const filters = {
+      ...this.state.filters,
+      title: searchString || ""
+    }
     this.setState({
-      filteredPosts: filterPostsByParameters(this.state.posts, {
-        ...this.state.filters,
-        title: searchString || ""
-      })
+      filters,
+      filteredPosts: filterPostsByParameters(this.state.posts, filters)
+    })
+  }
+
+  typeChanged(type) {
+    const filters = {
+      ...this.state.filters,
+      advType: type || ""
+    }
+    this.setState({
+      filteredPosts: filterPostsByParameters(this.state.posts, filters),
+      filters
     })
   }
 
   async filtersChanged(filters) {
-    const { minPrice, maxPrice } = this.state.filters;
+    const { minPrice, maxPrice, title, advType } = this.state.filters;
+    filters = {
+      ...filters,
+      title,
+      advType
+    }
     if (filters.minPrice !== minPrice || filters.maxPrice !== maxPrice) {
       const posts = await getDataByPrice("posts", filters);
       this.setState({
         posts: posts,
-        filteredPosts: filterPostsByParameters(posts, {
-          ...filters,
-          title: this.state.searchString
-        }),
+        filteredPosts: filterPostsByParameters(posts, filters),
         filters
       })
     } else {
       this.setState({
-        filteredPosts: filterPostsByParameters(this.state.posts, {
-          ...filters,
-          title: this.state.searchString
-        }),
+        filteredPosts: filterPostsByParameters(this.state.posts, filters),
         filters
       })
     }
@@ -96,10 +109,8 @@ export default class SearchRent extends React.Component {
 
   render() {
     const {
-      // posts,
       filteredPosts
     } = this.state;
-    console.log("render", filteredPosts);
     return (
       <Container
         className="header-compensator min-height-viewport"
@@ -109,6 +120,7 @@ export default class SearchRent extends React.Component {
         >
           <Search
             onChange={this.searchChanged}
+            onChangeType={this.typeChanged}
           />
           <Filters
             onChange={this.filtersChanged}
