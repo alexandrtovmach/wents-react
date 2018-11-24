@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Label, Menu, Image, Header } from 'semantic-ui-react';
+import { Button, Label, Menu, Image } from 'semantic-ui-react';
 
 import LogoSrc from "../../attachments/images/logo.png";
 import './Header.scss';

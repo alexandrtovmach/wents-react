@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Header, Menu, Sidebar, Segment } from 'semantic-ui-react';
+import { Header, Menu, Sidebar } from 'semantic-ui-react';
 
 export default class SidebarComponent extends React.Component {
 
