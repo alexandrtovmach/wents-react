@@ -21,7 +21,7 @@ export default class SidebarComponent extends React.Component {
             link
             color="blue"
             href="/search"
-            content={<Header color="blue">Search</Header>}
+            content={<Header color="blue">SEARCH</Header>}
           />
           {
             user &&
@@ -29,20 +29,20 @@ export default class SidebarComponent extends React.Component {
               link
               color="blue"
               href="/posts/my"
-              content={<Header color="blue">Posts</Header>}
+              content={<Header color="blue">POSTS</Header>}
             />
           }
           <Menu.Item
             link
             color="blue"
             href="/profile"
-            content={<Header color="blue">{user? "Profile": "Login"}</Header>}
+            content={<Header color="blue">{user? "PROFILE": "LOGIN"}</Header>}
           />
           <Menu.Item
             link
             color="blue"
             href="/support"
-            content={<Header color="blue">Support</Header>}
+            content={<Header color="blue">SUPPORT</Header>}
           />
         </Sidebar>
 

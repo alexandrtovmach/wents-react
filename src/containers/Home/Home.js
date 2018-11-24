@@ -1,7 +1,10 @@
 import React from 'react';
-import { Header, Container, Card, Button, Segment, Accordion, Icon } from 'semantic-ui-react';
+import { Header, Container, Card, Button, Segment } from 'semantic-ui-react';
 
-import { Search, Filters, AdvertiseCard } from "../../components";
+import {
+  Search,
+  AdvertiseCard
+} from "../../components";
 import { getDataByPrice } from '../../services/database';
 import { debounce, filterPostsByParameters } from '../../services/utils';
 
@@ -17,32 +20,24 @@ export default class Home extends React.Component {
       showFilters: false,
       filters: {
         advType: "home",
+        title: "",
         minPrice: 0,
-        maxPrice: 2000,
-        // unlimitedDate: false,
-        // startDate: Date.now(),
-        // endDate: Date.now() + 1000*60*60*24*120,
-        // apartmentsType: "any",
-        // rentType: "any",
-        // benefitList: []
-      },
-      searchString: ""
+        maxPrice: 2000
+      }
     };
 
     this.toggleFiltersShow = this.toggleFiltersShow.bind(this);
     this.searchChanged = debounce(this.searchChanged.bind(this), 1000);
     this.typeChanged = debounce(this.typeChanged.bind(this), 1000);
-    // this.filtersChanged = debounce(this.filtersChanged.bind(this), 1000);
   }
 
   async componentDidMount() {
-    const posts = await getDataByPrice("posts", this.state.filters);
+    const { filters } = this.state;
+    const posts = await getDataByPrice("posts", filters);
     this.setState({
       posts,
-      filteredPosts: filterPostsByParameters(posts, {
-        ...this.state.filters,
-        title: this.state.searchString
-      })
+      filters,
+      filteredPosts: filterPostsByParameters(posts, filters)
     })
   }
 
@@ -52,8 +47,8 @@ export default class Home extends React.Component {
       title: searchString || ""
     }
     this.setState({
-      filteredPosts: filterPostsByParameters(this.state.posts, filters),
-      filters
+      filters,
+      filteredPosts: filterPostsByParameters(this.state.posts, filters)
     })
   }
 
@@ -68,29 +63,6 @@ export default class Home extends React.Component {
     })
   }
 
-  // async filtersChanged(filters) {
-  //   const { minPrice, maxPrice } = this.state.filters;
-  //   if (filters.minPrice !== minPrice || filters.maxPrice !== maxPrice) {
-  //     const posts = await getDataByPrice("posts", filters);
-  //     this.setState({
-  //       posts: posts,
-  //       filteredPosts: filterPostsByParameters(posts, {
-  //         ...filters,
-  //         title: this.state.searchString
-  //       }),
-  //       filters
-  //     })
-  //   } else {
-  //     this.setState({
-  //       filteredPosts: filterPostsByParameters(this.state.posts, {
-  //         ...filters,
-  //         title: this.state.searchString
-  //       }),
-  //       filters
-  //     })
-  //   }
-  // }
-
   toggleFiltersShow() {
     this.setState({
       showFilters: !this.state.showFilters
@@ -99,9 +71,7 @@ export default class Home extends React.Component {
 
   render() {
     const {
-      filteredPosts,
-      showFilters,
-      advType
+      filteredPosts
     } = this.state;
     return (
       <Container
@@ -123,22 +93,6 @@ export default class Home extends React.Component {
               onChange={this.searchChanged}
               onChangeType={this.typeChanged}
             />
-            {/* <Accordion
-              fluid
-              styled
-              className="margin-v-1"
-            >
-              <Accordion.Title active={showFilters} onClick={this.toggleFiltersShow}>
-                <Icon name='dropdown' />
-                Filters
-              </Accordion.Title>
-              <Accordion.Content active={showFilters}>
-                <Filters
-                  basic
-                  onChange={this.filtersChanged}
-                />
-              </Accordion.Content>
-            </Accordion> */}
           </Container>
         </Segment>
         <Segment basic textAlign="center" padded>
