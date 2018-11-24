@@ -16,14 +16,15 @@ export default class Home extends React.Component {
     this.state = {
       showFilters: false,
       filters: {
+        advType: "home",
         minPrice: 0,
-        maxPrice: 300,
-        unlimitedDate: false,
-        startDate: Date.now(),
-        endDate: Date.now() + 1000*60*60*24*120,
-        apartmentsType: "any",
-        rentType: "any",
-        benefitList: []
+        maxPrice: 2000,
+        // unlimitedDate: false,
+        // startDate: Date.now(),
+        // endDate: Date.now() + 1000*60*60*24*120,
+        // apartmentsType: "any",
+        // rentType: "any",
+        // benefitList: []
       },
       searchString: ""
     };
@@ -46,20 +47,24 @@ export default class Home extends React.Component {
   }
 
   searchChanged(searchString) {
+    const filters = {
+      ...this.state.filters,
+      title: searchString || ""
+    }
     this.setState({
-      filteredPosts: filterPostsByParameters(this.state.posts, {
-        ...this.state.filters,
-        title: searchString || ""
-      })
+      filteredPosts: filterPostsByParameters(this.state.posts, filters),
+      filters
     })
   }
 
   typeChanged(type) {
+    const filters = {
+      ...this.state.filters,
+      advType: type || ""
+    }
     this.setState({
-      filteredPosts: filterPostsByParameters(this.state.posts, {
-        ...this.state.filters,
-        advType: type || ""
-      })
+      filteredPosts: filterPostsByParameters(this.state.posts, filters),
+      filters
     })
   }
 
@@ -95,7 +100,8 @@ export default class Home extends React.Component {
   render() {
     const {
       filteredPosts,
-      showFilters
+      showFilters,
+      advType
     } = this.state;
     return (
       <Container
