@@ -3,11 +3,6 @@ import { Segment, Header, Button, Modal, Image, Grid, List, Card, Icon, Label } 
 
 import { benefits } from '../../services/constants';
 import './RentAdvertise.scss';
-// import { Map, AddressInput, ImageInput, Loader } from '..';
-// import { dateToInputFormat } from '../../services/utils';
-// import { appartmentsTypes, rentTypes, benefits } from '../../services/constants';
-// import { uploadImage, deleteImage } from '../../services/storage';
-// import { pushData, updateData } from '../../services/database';
 
 
 export default class RentAdvertise extends React.Component {
@@ -49,6 +44,7 @@ export default class RentAdvertise extends React.Component {
   render() {
     const {
       id,
+      advType,
       title,
       description,
       location,
@@ -61,120 +57,122 @@ export default class RentAdvertise extends React.Component {
       benefitList,
       photos
     } = this.state;
+    const isHome = advType && advType === "home";
     return (
-      // <Container>
-        <Grid stackable divided>
-          <Grid.Column
-            width={4}
+      <Grid stackable divided>
+        <Grid.Column
+          width={isHome? 4: 16}
+        >
+          <Header>
+            {title || "Untitled"}
+            <Header.Subheader
+              content={description || "Description is empty..."}
+            />
+          </Header>
+
+          <List>
+            {
+              apartmentsType && rentType &&
+              <List.Item>
+                <Label
+                  basic
+                  key={`info-${id}`}
+                  color='blue'
+                >
+                  <Icon name="hotel"/>
+                  {apartmentsType}
+                  &nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+                  <Icon name="clock"/>
+                  {rentType}
+                </Label>
+              </List.Item>
+            }
+            {
+              price &&
+              <List.Item>
+                <Label as='a' color="red">
+                  {price}$
+                </Label>
+              </List.Item>
+            }
+            {
+              startDate &&
+              <List.Item>
+                <List.Content>Available from: {new Date(startDate).toLocaleDateString()}</List.Content>
+              </List.Item>
+            }
+            {
+              endDate &&
+              <List.Item>
+                <List.Content>Available to: {unlimitedDate? "unlimited": new Date(endDate).toLocaleDateString()}</List.Content>
+              </List.Item>
+            }
+            {
+              benefitList &&
+              <List.Item>
+                <List.Content>Benefits: {benefitList.map(val => {
+                  const { icon, text } = (benefits.find(b => b.value === val) || {});
+                  return (
+                    <Icon
+                      key={val}
+                      name={icon}
+                      title={text}
+                    />
+                  )
+                })}
+                </List.Content>
+              </List.Item>
+            }
+            {
+              location &&
+              <Modal
+                trigger={(
+                  <List.Item>
+                    <Segment
+                      as={Button}
+                      fluid
+                      basic
+                    >
+                      <Icon name="map marker alternate"/>
+                      {(location && location.address) || "Look on map"}
+                    </Segment>
+                  </List.Item>
+                )}
+                closeOnEscape={true}
+                closeOnDimmerClick={true}
+                onClose={this.toggleAvatarChange}
+                size="small"
+              >
+                <Modal.Header>Location of this rent</Modal.Header>
+                <Modal.Content>
+                  In development
+                </Modal.Content>
+              </Modal>
+            }
+          </List>
+
+          <Modal
+            trigger={(
+              <Button
+                primary
+                fluid
+              >
+                Send message
+              </Button>
+            )}
+            closeOnEscape={true}
+            closeOnDimmerClick={true}
+            onClose={this.toggleAvatarChange}
+            size="small"
           >
-            <Header>
-              {title || "Untitled"}
-              <Header.Subheader
-                content={description || "Description is empty..."}
-              />
-            </Header>
-
-            <List>
-              {
-                apartmentsType && rentType &&
-                <List.Item>
-                  <Label
-                    basic
-                    key={`info-${id}`}
-                    color='blue'
-                  >
-                    <Icon name="hotel"/>
-                    {apartmentsType}
-                    &nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
-                    <Icon name="clock"/>
-                    {rentType}
-                  </Label>
-                </List.Item>
-              }
-              {
-                price &&
-                <List.Item>
-                  <Label as='a' color="red">
-                    {price}$
-                  </Label>
-                </List.Item>
-              }
-              {
-                startDate &&
-                <List.Item>
-                  <List.Content>Available from: {new Date(startDate).toLocaleDateString()}</List.Content>
-                </List.Item>
-              }
-              {
-                endDate &&
-                <List.Item>
-                  <List.Content>Available to: {unlimitedDate? "unlimited": new Date(endDate).toLocaleDateString()}</List.Content>
-                </List.Item>
-              }
-              {
-                benefitList &&
-                <List.Item>
-                  <List.Content>Benefits: {benefitList.map(val => {
-                    const { icon, text } = (benefits.find(b => b.value === val) || {});
-                    return (
-                      <Icon
-                        key={val}
-                        name={icon}
-                        title={text}
-                      />
-                    )
-                  })}
-                  </List.Content>
-                </List.Item>
-              }
-              {
-                location &&
-                <Modal
-                  trigger={(
-                    <List.Item>
-                      <Segment
-                        as={Button}
-                        fluid
-                        basic
-                      >
-                        <Icon name="map marker alternate"/>
-                        {(location && location.address) || "Look on map"}
-                      </Segment>
-                    </List.Item>
-                  )}
-                  closeOnEscape={true}
-                  closeOnDimmerClick={true}
-                  onClose={this.toggleAvatarChange}
-                  size="small"
-                >
-                  <Modal.Header>Location of this rent</Modal.Header>
-                  <Modal.Content>
-                    In development
-                  </Modal.Content>
-                </Modal>
-              }
-            </List>
-
-            <Modal
-              trigger={(
-                <Button
-                  primary
-                  fluid
-                >
-                  Send message
-                </Button>
-              )}
-              closeOnEscape={true}
-              closeOnDimmerClick={true}
-              onClose={this.toggleAvatarChange}
-              size="small"
-            >
-              <Modal.Header>Contact with owner?</Modal.Header>
-              <Modal.Content>
-                In development
-              </Modal.Content>
-            </Modal>
-          </Grid.Column>
+            <Modal.Header>Contact with owner?</Modal.Header>
+            <Modal.Content>
+              In development
+            </Modal.Content>
+          </Modal>
+        </Grid.Column>
+        {
+          isHome &&
           <Grid.Column width={12}>
             {
               photos &&
@@ -209,8 +207,8 @@ export default class RentAdvertise extends React.Component {
               />
             }
           </Grid.Column>
-        </Grid>
-      // </Container>
+        }
+      </Grid>
     );
   }
 }
