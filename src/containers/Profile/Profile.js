@@ -8,17 +8,15 @@ import {
   Item,
   Button,
   Header,
-  Card,
   List,
-  Tab,
   Icon,
   Form,
   Modal,
   Dimmer
 } from 'semantic-ui-react';
 
-import { AdvertiseCard, Loader, AddressInput, AvatarUploader } from "../../components";
-import { advertStatusList, placeholderImg, advertTypeList } from '../../services/constants';
+import { Loader, AddressInput, AvatarUploader } from "../../components";
+import { placeholderImg } from '../../services/constants';
 import { getUser, signOut } from '../../services/auth';
 import { extendUserWithAdditionalData, getData } from '../../services/database';
 import { dateToInputFormat } from '../../services/utils';
@@ -37,7 +35,6 @@ export default class Profile extends React.Component {
       posts: []
     };
 
-    this.filterPostsByStatusAndType = this.filterPostsByStatusAndType.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
     this.toggleAvatarChange = this.toggleAvatarChange.bind(this);
     this.handleAvatarDimmerShow = this.handleAvatarDimmerShow.bind(this);
@@ -175,40 +172,6 @@ export default class Profile extends React.Component {
   logout() {
     signOut();
     window.location.reload();
-  }
-
-  filterPostsByStatusAndType(posts, status, advType) {
-    return (
-      <Card.Group centered>
-        {Object.keys(posts).map(key => posts[key][status.key] === status.value && posts[key].advType === advType && <AdvertiseCard key={posts[key].id} data={posts[key]} />)}
-      </Card.Group>
-    )
-  };
-
-  generateAdvertTabs(advType) {
-    const { posts } = this.state;
-    return advertStatusList.map(status => {
-      return {
-        menuItem: status.name,
-        render: () => <Tab.Pane>{this.filterPostsByStatusAndType(posts, status, advType)}</Tab.Pane>
-      };
-    });
-  }
-
-  generateTypesTabs() {
-    return advertTypeList.map(type => {
-      return {
-        menuItem: type.name,
-        render: () => (
-          <Tab.Pane>
-            <Tab
-              menu={{ secondary: true, pointing: true }}
-              panes={this.generateAdvertTabs(type.value)}
-            />
-          </Tab.Pane>
-        )
-      };
-    });
   }
 
   generateUserPhotoAndRating(user, edit, avatarDimmerShow) {
@@ -408,16 +371,22 @@ export default class Profile extends React.Component {
                   <Segment basic>
                     <Header size="large">About</Header>
                     <Item>{user.description || "Nothing special"}</Item>
+                    <Header size="large">Tools</Header>
+                    <Button
+                      onClick={console.log}
+                      // className="margin-v-1"
+                    >
+                      My Messages
+                    </Button>
+                    <Button
+                      onClick={console.log}
+                      // className="margin-v-1"
+                    >
+                      My Posts
+                    </Button>
                   </Segment>
                 )
               }
-              <Segment basic>
-                {/* <Header size="large">My Adverts</Header> */}
-                <Tab
-                  // menu={{ vertical: true, tabular: true }}
-                  panes={this.generateTypesTabs()}
-                />
-              </Segment>
             </Grid.Column>
           </Grid>
         </Container>

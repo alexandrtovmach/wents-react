@@ -1,7 +1,13 @@
 import React from 'react';
-import { Container, Card, Segment, Header } from 'semantic-ui-react';
+import {
+  Container,
+  Card,
+  Segment,
+  Tab
+} from 'semantic-ui-react';
 
 import { AdvertiseCard, Loader } from "../../components";
+import { advertStatusList, advertTypeList } from '../../services/constants';
 import { getUser } from '../../services/auth';
 import { getData } from '../../services/database';
 
@@ -13,6 +19,7 @@ export default class AdvertiseList extends React.Component {
       user: null,
       loading: true
     };
+    this.filterPostsByStatusAndType = this.filterPostsByStatusAndType.bind(this);
   }
 
   async componentDidMount() {
@@ -29,6 +36,40 @@ export default class AdvertiseList extends React.Component {
     }
   }
 
+  filterPostsByStatusAndType(posts, status, advType) {
+    return (
+      <Card.Group centered>
+        {Object.keys(posts).map(key => posts[key][status.key] === status.value && posts[key].advType === advType && <AdvertiseCard key={posts[key].id} data={posts[key]} />)}
+      </Card.Group>
+    )
+  };
+
+  generateAdvertTabs(advType) {
+    const { posts } = this.state;
+    return advertStatusList.map(status => {
+      return {
+        menuItem: status.name,
+        render: () => <Tab.Pane basic>{this.filterPostsByStatusAndType(posts, status, advType)}</Tab.Pane>
+      };
+    });
+  }
+
+  generateTypesTabs() {
+    return advertTypeList.map(type => {
+      return {
+        menuItem: type.name,
+        render: () => (
+          <Tab.Pane>
+            <Tab
+              menu={{ secondary: true, pointing: true }}
+              panes={this.generateAdvertTabs(type.value)}
+            />
+          </Tab.Pane>
+        )
+      };
+    });
+  }
+
   
   render() {
     const { loading, posts } = this.state;
@@ -41,10 +82,12 @@ export default class AdvertiseList extends React.Component {
         <Container
           className="header-compensator min-height-viewport"
         >
-          <Header>
-            My posts
-          </Header>
           <Segment basic textAlign="center" padded>
+            <Tab
+              panes={this.generateTypesTabs()}
+            />
+          </Segment>
+          {/* <Segment basic textAlign="center" padded>
             <Card.Group stackable itemsPerRow={4}>
               {posts && Object.keys(posts).map(id => (
                 <AdvertiseCard
@@ -60,7 +103,7 @@ export default class AdvertiseList extends React.Component {
                 add={true}
               />
             </Card.Group>
-          </Segment>
+          </Segment> */}
         </Container>
       );
     }
