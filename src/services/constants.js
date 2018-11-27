@@ -1,5 +1,4 @@
-export const appartmentsTypes = [
-  {
+export const appartmentsTypes = [{
     text: "Any",
     value: "any"
   },
@@ -17,8 +16,7 @@ export const appartmentsTypes = [
   },
 ];
 
-export const rentTypes = [
-  {
+export const rentTypes = [{
     text: "Any",
     value: "any"
   },
@@ -32,8 +30,7 @@ export const rentTypes = [
   }
 ];
 
-export const benefits = [
-  {
+export const benefits = [{
     text: "Pool",
     value: "pool",
     icon: "life ring"
@@ -116,10 +113,20 @@ export const benefits = [
 ];
 
 
-export const userKeys = ["email", "displayName", "emailVerified", "metadata", "address", "birthday", "description", "phoneNumber", "photoURL"];
+export const userKeys = [
+  "email",
+  "gender",
+  "displayName",
+  "emailVerified",
+  "metadata",
+  "address",
+  "birthday",
+  "description", 
+  "phoneNumber",
+  "photoURL",
+];
 
-export const advertTypeList = [
-  {
+export const advertTypeList = [{
     name: "Home adverts",
     key: "home",
     value: "home"
@@ -131,8 +138,7 @@ export const advertTypeList = [
   },
 ];
 
-export const advertStatusList = [
-  {
+export const advertStatusList = [{
     name: "Active",
     key: "status",
     value: "active"
@@ -149,4 +155,4 @@ export const advertStatusList = [
   }
 ];
 
-export const placeholderImg =  'https://react.semantic-ui.com/images/wireframe/square-image.png';
+export const placeholderImg = 'https://react.semantic-ui.com/images/wireframe/square-image.png';

@@ -7,11 +7,18 @@ export const generateHashWithDate = () => {
   return `${Date.now()}-${Math.random().toString().slice(-5)}`
 };
 
-export const extractFromProvidersData = (user, key) => {
-  return user && user.providerData && user.providerData.reduce((prev, el) => {
-    return prev || el[key]
-  }, null);
-};
+export const extractFromProvidersData = (user, key) => (
+  user && (
+    (
+      user.providerData &&
+      user.providerData.reduce((prev, el) => prev || el[key], null)
+    ) || (
+      user.additionalUserInfo &&
+      user.additionalUserInfo.profile &&
+      user.additionalUserInfo.profile[key]
+    )
+  )
+);
 
 export const debounce = (fn, time) => {
   let timeout;

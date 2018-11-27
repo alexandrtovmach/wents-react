@@ -166,18 +166,25 @@ export default class AdvertiseForm extends React.Component {
               label="Type"
             >
               <Button
-                animated
+                animated="vertical"
                 onClick={() => this.fieldChange(null, "home", "advType")}
                 color={isHomeType? "blue": null}
               >
-                <Button.Content hidden>spojbpsd</Button.Content>
-                <Button.Content active>Home</Button.Content>
+                <Button.Content hidden>
+                  <Icon name="home" />
+                </Button.Content>
+                <Button.Content visible>Home</Button.Content>
               </Button>
               <Button
+                animated="vertical"
                 onClick={() => this.fieldChange(null, "rent", "advType")}
-                content="Rent"
                 color={!isHomeType? "blue": null}
-              />
+              >
+                <Button.Content hidden>
+                  <Icon name="share square" />
+                </Button.Content>
+                <Button.Content visible>Rent</Button.Content>
+              </Button>
             </Button.Group>
           </Form.Group>
           <Form.Group>
@@ -308,14 +315,14 @@ export default class AdvertiseForm extends React.Component {
           </Form.Group>
           <Form.Group
             className={classNames({
-              hidden: !isHomeType
+              "hidden-element": !isHomeType
             })}
           >
             <Header>Photos</Header>
           </Form.Group>
           <Form.Group
             className={classNames({
-              hidden: !isHomeType
+              "hidden-element": !isHomeType
             })}
           >
             <Form.Field

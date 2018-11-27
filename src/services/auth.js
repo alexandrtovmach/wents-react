@@ -20,6 +20,9 @@ export const signIn = (email, password, lang) => {
 export const signInGoogle = (lang) => {
   auth().languageCode = lang || "en_US";
   const provider = new auth.GoogleAuthProvider();
+  provider.addScope("https://www.googleapis.com/auth/user.phonenumbers.read");
+  provider.addScope("https://www.googleapis.com/auth/user.birthday.read");
+  provider.addScope("https://www.googleapis.com/auth/user.addresses.read");
   return auth()
     .signInWithPopup(provider)
     .then(getUserAdditionalData)
@@ -29,10 +32,33 @@ export const signInGoogle = (lang) => {
 export const signInFacebook = (lang) => {
   auth().languageCode = lang || "en_US";
   const provider = new auth.FacebookAuthProvider();
+  provider.addScope('email');
+  provider.addScope('user_birthday');
+  provider.addScope('user_gender');
+  provider.addScope('user_location');
+  provider.addScope('user_photos');
   return auth()
     .signInWithPopup(provider)
     .then(getUserAdditionalData)
     .then(extendUserWithAdditionalData)
+}
+
+export const signInPhone = (phone, captchaContainerId, lang) => {
+  auth().languageCode = lang || "en_US";
+  window.recaptchaVerifier = new auth.RecaptchaVerifier(captchaContainerId);
+  return auth().signInWithPhoneNumber(phone, window.recaptchaVerifier)
+    .then(confirmationResult => {
+      // SMS sent. Prompt user to type the code from the message, then sign the
+      // user in with confirmationResult.confirm(code).
+      window.confirmationResult = confirmationResult;
+      console.log(confirmationResult);
+    }).catch(error => {
+      console.log(error);
+    });
+  // return auth()
+  //   .signInWithPopup(provider)
+  //   .then(getUserAdditionalData)
+  //   .then(extendUserWithAdditionalData)
 }
 
 export const signOut = () => {

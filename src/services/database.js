@@ -25,7 +25,7 @@ export const extendUserWithAdditionalData = (user) => {
   }
 };
 
-export const getUserAdditionalData = ({user}) => {
+export const getUserAdditionalData = ({user, additionalUserInfo}) => {
   if (user && user.uid) {
     return database()
       .ref(`users/${user.uid}`)
@@ -34,7 +34,8 @@ export const getUserAdditionalData = ({user}) => {
         const additional = snapshot.val() || {};
         return {
           ...user,
-          ...additional
+          ...additional,
+          additionalUserInfo
         };
       })
   } else {
