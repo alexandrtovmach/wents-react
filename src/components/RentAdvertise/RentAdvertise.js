@@ -126,6 +126,8 @@ export default class RentAdvertise extends React.Component {
             {
               location &&
               <Modal
+                header="Location of this rent"
+                content="In development"
                 trigger={(
                   <List.Item>
                     <Segment
@@ -142,16 +144,13 @@ export default class RentAdvertise extends React.Component {
                 closeOnDimmerClick={true}
                 onClose={this.toggleAvatarChange}
                 size="small"
-              >
-                <Modal.Header>Location of this rent</Modal.Header>
-                <Modal.Content>
-                  In development
-                </Modal.Content>
-              </Modal>
+              />
             }
           </List>
 
           <Modal
+            header="Contact with owner?"
+            content="In development"
             trigger={(
               <Button
                 primary
@@ -164,12 +163,7 @@ export default class RentAdvertise extends React.Component {
             closeOnDimmerClick={true}
             onClose={this.toggleAvatarChange}
             size="small"
-          >
-            <Modal.Header>Contact with owner?</Modal.Header>
-            <Modal.Content>
-              In development
-            </Modal.Content>
-          </Modal>
+          />
         </Grid.Column>
         {
           isHome &&

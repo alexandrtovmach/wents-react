@@ -38,6 +38,8 @@ export default class AdvertiseForm extends React.Component {
   }
 
   async componentDidMount() {
+    const owner = await getUser();
+    console.log(owner)
     this.setState({
       ...this.props.data,
       ownerId: (await getUser()).uid

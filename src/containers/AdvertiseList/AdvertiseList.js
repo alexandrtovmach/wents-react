@@ -40,6 +40,13 @@ export default class AdvertiseList extends React.Component {
     return (
       <Card.Group centered>
         {Object.keys(posts).map(key => posts[key][status.key] === status.value && posts[key].advType === advType && <AdvertiseCard key={posts[key].id} data={posts[key]} />)}
+        {
+          status.value === "active" &&
+          <AdvertiseCard
+            key={0}
+            add={true}
+          />
+        }
       </Card.Group>
     )
   };
