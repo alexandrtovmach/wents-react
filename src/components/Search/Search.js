@@ -15,12 +15,7 @@ export default props => {
         options={options}
         onChange={(e, data) => props.onChange && props.onChangeType(data.value)}
       />}
-      labelPosition='left'
-      // icon={{
-      //   name: 'search',
-      //   circular: true,
-      //   link: true
-      // }}
+      labelPosition='right'
       placeholder="Search..."
       onChange={(e, data) => props.onChange && props.onChange(data.value)}
     />

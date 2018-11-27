@@ -86,9 +86,9 @@ export default class Home extends React.Component {
             RENTWENS
           </Header>
           <Container
+            text
             className="min-width-2"
           >
-            
             <Search
               onChange={this.searchChanged}
               onChangeType={this.typeChanged}
