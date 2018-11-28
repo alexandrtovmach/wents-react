@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Segment, Header, Image, Form, Input, Icon, Message, Modal } from "semantic-ui-react";
+import { Button, Segment, Header, Image, Form, Input, Icon, Message } from "semantic-ui-react";
 
-import { signInFacebook, signInGoogle, signIn, signUp, signInPhone } from '../../services/auth';
+import { signInFacebook, signInGoogle, signIn, signUp } from '../../services/auth';
 import CircleLogoSrc from '../../attachments/images/circle-logo.png';
 
 export default class AuthComponent extends React.Component {
@@ -15,12 +15,10 @@ export default class AuthComponent extends React.Component {
       passwordError: null
     };
 
-    this.phoneChanged = this.phoneChanged.bind(this);
     this.signUp = this.signUp.bind(this);
     this.signIn = this.signIn.bind(this);
     this.signInGoogle = this.signInGoogle.bind(this);
     this.signInFacebook = this.signInFacebook.bind(this);
-    this.signInPhone = this.signInPhone.bind(this);
   }
 
   onEnterCredential(name, value) {
@@ -29,14 +27,6 @@ export default class AuthComponent extends React.Component {
       emailError: false,
       passwordError: false
     });
-  }
-
-  phoneChanged(event, value) {
-    if (!event.target.validationMessage) {
-      this.setState({
-        phoneNumber: value
-      });
-    }
   }
 
   signUp(e) {
@@ -98,20 +88,8 @@ export default class AuthComponent extends React.Component {
       });
   }
 
-  signInPhone() {
-    const { phoneNumber } = this.state;
-    signInPhone(phoneNumber, "testing", this.props.lang)
-      .then(() => {
-        // window.location.href = "/profile";
-      })
-      .catch(error => {
-        const { code, message, email, credential } = error;
-        console.log(code, message, email, credential);
-      });
-  }
-
   render() {
-    const { emailError, passwordError, phoneNumber } = this.state;
+    const { emailError, passwordError } = this.state;
     return (
       <Segment
         padded="very"
@@ -192,37 +170,6 @@ export default class AuthComponent extends React.Component {
             icon="facebook"
             content="Login with Facebook"
             onClick={this.signInFacebook}
-          />
-          <Modal
-            trigger={
-              <Button
-                className="margin-v-1"
-                // color="facebook"
-                // icon="facebook"
-                content="Login with phone"
-              />
-            }
-            header="Confirm what you're not human.... robot I mean :)"
-            content={
-              <>
-                <Input
-                  fluid
-                  type="tel"
-                  maxLength={13}
-                  pattern="[\+]\d{0,12}"
-                  placeholder="+380XXXXXXXXX"
-                  value={phoneNumber}
-                  icon='phone'
-                  iconPosition='left'
-                  onChange={(event, data) => this.phoneChanged(event, data.value)}
-                />
-                <div id="testing"></div>
-                <Button
-                  content="Send SMS"
-                  onClick={this.signInPhone}
-                />
-              </>
-            }
           />
         </Segment>
       </Segment>

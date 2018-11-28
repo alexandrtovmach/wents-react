@@ -9,6 +9,7 @@ export { default as RentAdvertise } from './RentAdvertise/RentAdvertise';
 export { default as AdvertiseForm } from './AdvertiseForm/AdvertiseForm';
 export { default as PageNotFound } from './PageNotFound/PageNotFound';
 export { default as Auth } from './Auth/Auth';
+export { default as PhoneValidation } from './Auth/PhoneValidation';
 export { default as AddressInput } from './AddressInput/AddressInput';
 export { default as Map } from './Map/Map';
 export { default as ImageInput } from './ImageInput/ImageInput';

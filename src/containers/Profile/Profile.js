@@ -15,7 +15,7 @@ import {
   Dimmer
 } from 'semantic-ui-react';
 
-import { Loader, AddressInput, AvatarUploader } from "../../components";
+import { Loader, AddressInput, AvatarUploader, PhoneValidation } from "../../components";
 import { placeholderImg } from '../../services/constants';
 import { getUser, signOut } from '../../services/auth';
 import { extendUserWithAdditionalData, getData } from '../../services/database';
@@ -53,7 +53,7 @@ export default class Profile extends React.Component {
     if (user) {
       const userPosts = await getData("posts", "", user.uid);
       this.setState({
-        fullUser: user,
+        currentUser: user,
         user: {
           uid: user.uid,
           displayName: user.displayName,
@@ -74,21 +74,30 @@ export default class Profile extends React.Component {
   }
 
   toggleEdit() {
-    const { edit, user } = this.state;
+    const { edit, user, currentUser } = this.state;
     if (edit) {
-      this.setState({
-        loading: true
-      });
-      extendUserWithAdditionalData(user)
-        .then(this.setState({
-          edit: false,
-          loading: false
-        }))
+      if (user.phoneNumber !== currentUser.phoneNumber) {
+        console.log(user.phoneNumber);
+      }
     } else {
       this.setState({
         edit: true
       });
     }
+  }
+
+  saveChanges() {
+    const { user } = this.state;
+    this.setState({
+      loading: true
+    });
+    extendUserWithAdditionalData(user)
+      .then(
+        this.setState({
+          edit: false,
+          loading: false
+        })
+      )
   }
 
   toggleAvatarChange() {
@@ -228,14 +237,6 @@ export default class Profile extends React.Component {
               value={user.displayName}
               onChange={(event, data) => this.nameChanged(event, data.value)}
             />
-            <Form.Field>
-              <AddressInput
-                setLocation={this.addressChanged}
-                value={user.address}
-                icon='map marker alternate'
-                placeholder="Your location"
-              />
-            </Form.Field>
             <Form.Input
               fluid
               type="date"
@@ -245,6 +246,14 @@ export default class Profile extends React.Component {
               iconPosition='left'
               onChange={(event, data) => this.birthChanged(event, data.value)}
             />
+            <Form.Field>
+              <AddressInput
+                setLocation={this.addressChanged}
+                value={user.address}
+                icon='map marker alternate'
+                placeholder="Your location"
+              />
+            </Form.Field>
             <Form.Input
               fluid
               type="tel"
@@ -272,13 +281,6 @@ export default class Profile extends React.Component {
           </Header>
           <List>
             {
-              user.address &&
-              <List.Item>
-                <List.Icon name='map marker alternate' />
-                <List.Content>{user.address}</List.Content>
-              </List.Item>
-            }
-            {
               user.birthday &&
               <List.Item>
                 <List.Icon name='calendar check outline' />
@@ -291,6 +293,13 @@ export default class Profile extends React.Component {
                 <a href={`mailto:${user.email}`}>{user.email}</a>
               </List.Content>
             </List.Item>
+            {
+              user.address &&
+              <List.Item>
+                <List.Icon name='map marker alternate' />
+                <List.Content>{user.address}</List.Content>
+              </List.Item>
+            }
             {
               user.phoneNumber &&
               <List.Item>
@@ -305,7 +314,7 @@ export default class Profile extends React.Component {
   }
 
   render() {
-    const { user, loading, edit, avatarChanging, avatarDimmerShow } = this.state;
+    const { user, loading, edit, avatarChanging, avatarDimmerShow, phoneToValidate } = this.state;
 
     if (loading) {
       return <Loader />
@@ -330,6 +339,9 @@ export default class Profile extends React.Component {
               />
             </Modal.Content>
           </Modal>
+          <PhoneValidation
+            phoneToValidate={phoneToValidate}
+          />
           <Grid stackable divided>
             <Grid.Column
               width={4}
