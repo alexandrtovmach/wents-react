@@ -16,7 +16,7 @@ body {
 .header-compensator {
   padding-top: 100px;
   @media screen and (max-width: 1024px) {
-    padding-top: 80px!important; // overriding semantic-ui
+    padding-top: 90px!important; // overriding semantic-ui
   }
 }
 
@@ -43,6 +43,7 @@ body {
 
 .min-height-viewport {
   min-height: calc(100vh - 160px); // 160px is Footer height
+  padding-bottom: 15px;
 }
 
 .min-width-1 {

@@ -15,7 +15,7 @@ import {
   Dimmer
 } from 'semantic-ui-react';
 
-import { Loader, AddressInput, AvatarUploader, PhoneValidation } from "../../components";
+import { Loader, AddressInput, AvatarUploader, PhoneValidation, UserForm } from "../../components";
 import { placeholderImg } from '../../services/constants';
 import { getUser, signOut } from '../../services/auth';
 import { extendUserWithAdditionalData, getData } from '../../services/database';
@@ -40,18 +40,19 @@ export default class Profile extends React.Component {
     this.handleAvatarDimmerShow = this.handleAvatarDimmerShow.bind(this);
     this.handleAvatarDimmerHide = this.handleAvatarDimmerHide.bind(this);
     this.avatarChanged = this.avatarChanged.bind(this);
-    this.nameChanged = this.nameChanged.bind(this);
-    this.birthChanged = this.birthChanged.bind(this);
-    this.addressChanged = this.addressChanged.bind(this);
-    this.phoneChanged = this.phoneChanged.bind(this);
-    this.descriptionChanged = this.descriptionChanged.bind(this);
+    this.userFieldChange = this.userFieldChange.bind(this);
+
+    // this.nameChanged = this.nameChanged.bind(this);
+    // this.birthChanged = this.birthChanged.bind(this);
+    // this.addressChanged = this.addressChanged.bind(this);
+    // this.phoneChanged = this.phoneChanged.bind(this);
+    // this.descriptionChanged = this.descriptionChanged.bind(this);
     this.logout = this.logout.bind(this);
   }
   
   async componentDidMount() {
     const user = await getUser();
     if (user) {
-      const userPosts = await getData("posts", "", user.uid);
       this.setState({
         currentUser: user,
         user: {
@@ -65,7 +66,6 @@ export default class Profile extends React.Component {
           email: user.email,
           description: user.description
         },
-        posts: userPosts || [],
         loading: false
       });
     } else {
@@ -78,6 +78,8 @@ export default class Profile extends React.Component {
     if (edit) {
       if (user.phoneNumber !== currentUser.phoneNumber) {
         console.log(user.phoneNumber);
+      } else {
+        // this.saveChanges(user);
       }
     } else {
       this.setState({
@@ -86,8 +88,7 @@ export default class Profile extends React.Component {
     }
   }
 
-  saveChanges() {
-    const { user } = this.state;
+  saveChanges(user) {
     this.setState({
       loading: true
     });
@@ -125,58 +126,69 @@ export default class Profile extends React.Component {
     });
   }
 
-  nameChanged(event, value) {
-    if (!event.target.validationMessage) {
+  userFieldChange(event, value, name) {
+    if (event === null || !event.target.validationMessage) {
       this.setState({
         user: {
           ...this.state.user,
-          displayName: value
+          [name]: value
         }
       });
     }
   }
 
-  birthChanged(event, value) {
-    if (!event.target.validationMessage) {
-      this.setState({
-        user: {
-          ...this.state.user,
-          birthday: value
-        }
-      });
-    }
-  }
+  // nameChanged(event, value) {
+  //   if (!event.target.validationMessage) {
+  //     this.setState({
+  //       user: {
+  //         ...this.state.user,
+  //         displayName: value
+  //       }
+  //     });
+  //   }
+  // }
 
-  addressChanged({ address }) {
-    this.setState({
-      user: {
-        ...this.state.user,
-        address: address
-      }
-    });
-  }
+  // birthChanged(event, value) {
+  //   if (!event.target.validationMessage) {
+  //     this.setState({
+  //       user: {
+  //         ...this.state.user,
+  //         birthday: value
+  //       }
+  //     });
+  //   }
+  // }
 
-  phoneChanged(event, value) {
-    if (!event.target.validationMessage) {
-      this.setState({
-        user: {
-          ...this.state.user,
-          phoneNumber: value
-        }
-      });
-    }
-  }
+  // addressChanged({ address }) {
+  //   this.setState({
+  //     user: {
+  //       ...this.state.user,
+  //       address: address
+  //     }
+  //   });
+  // }
 
-  descriptionChanged(event, value) {
-    if (!event.target.validationMessage) {
-      this.setState({
-        user: {
-          ...this.state.user,
-          description: value
-        }
-      });
-    }
-  }
+  // phoneChanged(event, value) {
+  //   if (!event.target.validationMessage) {
+  //     this.setState({
+  //       user: {
+  //         ...this.state.user,
+  //         phoneNumber: value
+  //       }
+  //     });
+  //   }
+  // }
+
+  // descriptionChanged(event, value) {
+  //   if (!event.target.validationMessage) {
+  //     this.setState({
+  //       user: {
+  //         ...this.state.user,
+  //         description: value
+  //       }
+  //     });
+  //   }
+  // }
 
   logout() {
     signOut();
@@ -234,22 +246,23 @@ export default class Profile extends React.Component {
               iconPosition='left'
               placeholder="Your name"
               maxLength={30}
-              value={user.displayName}
-              onChange={(event, data) => this.nameChanged(event, data.value)}
+              value={user.displayName || ""}
+              onChange={(event, data) => this.userFieldChange(event, data.value, "displayName")}
             />
             <Form.Input
               fluid
               type="date"
-              value={dateToInputFormat(user.birthday)}
+              value={dateToInputFormat(user.birthday || "")}
               min="1950-01-01"
+              max={dateToInputFormat(Date.now() - 1000*60*60*24*365*18)}
               icon='calendar check outline'
               iconPosition='left'
-              onChange={(event, data) => this.birthChanged(event, data.value)}
+              onChange={(event, data) => this.userFieldChange(event, data.value, "birthday")}
             />
             <Form.Field>
               <AddressInput
-                setLocation={this.addressChanged}
-                value={user.address}
+                setLocation={data => this.userFieldChange(null, data.address, "address")}
+                value={user.address || ""}
                 icon='map marker alternate'
                 placeholder="Your location"
               />
@@ -260,10 +273,10 @@ export default class Profile extends React.Component {
               maxLength={13}
               pattern="[\+]\d{0,12}"
               placeholder="+380XXXXXXXXX"
-              value={user.phoneNumber}
+              value={user.phoneNumber || ""}
               icon='phone'
               iconPosition='left'
-              onChange={(event, data) => this.phoneChanged(event, data.value)}
+              onChange={(event, data) => this.userFieldChange(event, data.value, "phoneNumber")}
             />
           </Form>
         </Segment>
@@ -321,9 +334,13 @@ export default class Profile extends React.Component {
     } else {
       return (
         <Container
+          text
           className="header-compensator min-height-viewport"
         >
-          <Modal
+          <UserForm
+            user={user}
+          />
+          {/* <Modal
             open={avatarChanging}
             closeOnEscape={true}
             closeOnDimmerClick={true}
@@ -376,7 +393,7 @@ export default class Profile extends React.Component {
                       label="About"
                       maxLength={500}
                       value={user.description}
-                      onChange={(event, data) => this.descriptionChanged(event, data.value)}
+                      onChange={(event, data) => this.userFieldChange(event, data.value, "description")}
                     />
                   </Form>
                 ) : (
@@ -400,7 +417,7 @@ export default class Profile extends React.Component {
                 )
               }
             </Grid.Column>
-          </Grid>
+          </Grid> */}
         </Container>
       )
     }
