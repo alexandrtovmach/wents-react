@@ -156,3 +156,5 @@ export const advertStatusList = [{
 ];
 
 export const placeholderImg = 'https://react.semantic-ui.com/images/wireframe/square-image.png';
+
+export const EMAIL_REGEX = "^(([^<>()\[\]\\.,;:\s@\"]+(\.[^<>()\[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$";

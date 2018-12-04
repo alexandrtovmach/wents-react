@@ -1,8 +1,6 @@
 import React from 'react';
 import {
-  Container,
   Segment,
-  Label,
   Image,
   Header,
   Button,
@@ -15,8 +13,8 @@ import {
   Responsive
 } from 'semantic-ui-react';
 
-import { Loader, AddressInput, AvatarUploader, PhoneValidation } from "../../components";
-import { placeholderImg } from '../../services/constants';
+import { AddressInput, AvatarUploader, PhoneValidation } from "../../components";
+import { placeholderImg, EMAIL_REGEX } from '../../services/constants';
 import { dateToInputFormat } from '../../services/utils';
 
 
@@ -25,7 +23,7 @@ export default class Profile extends React.Component {
     super();
 
     this.state = {
-      user: null,
+      user: {},
       loading: true,
       avatarChanging: false,
       avatarDimmerShow: false
@@ -35,7 +33,22 @@ export default class Profile extends React.Component {
     this.handleAvatarDimmerShow = this.handleAvatarDimmerShow.bind(this);
     this.handleAvatarDimmerHide = this.handleAvatarDimmerHide.bind(this);
     this.avatarChanged = this.avatarChanged.bind(this);
+    this.toggleSMSModal = this.toggleSMSModal.bind(this);
     this.userFieldChange = this.userFieldChange.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({
+      user: this.props.user
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.user !== this.props.user) {
+      this.setState({
+        user: this.props.user
+      })
+    }
   }
 
   toggleAvatarChange() {
@@ -44,13 +57,22 @@ export default class Profile extends React.Component {
     });
   }
 
+  toggleSMSModal() {
+    this.setState({
+      showSMSModal: !this.state.showSMSModal
+    });
+  }
 
   handleAvatarDimmerShow() {
-    this.setState({ avatarDimmerShow: true });
+    this.setState({
+      avatarDimmerShow: true
+    });
   }
 
   handleAvatarDimmerHide() {
-    this.setState({ avatarDimmerShow: false });
+    this.setState({
+      avatarDimmerShow: false
+    });
   }
 
   avatarChanged(value) {
@@ -75,8 +97,8 @@ export default class Profile extends React.Component {
   }
 
   generatePanes() {
-    const { avatarChanging, avatarDimmerShow, phoneToValidate } = this.state;
-    const { saveChanges, user } = this.props;
+    const { avatarChanging, avatarDimmerShow, user: newUser, showSMSModal } = this.state;
+    const { saveChanges, user: currentUser } = this.props;
 
     return [
       {
@@ -107,7 +129,7 @@ export default class Profile extends React.Component {
               header="Select a Photo"
               content={
                 <AvatarUploader
-                  src={user.photoURL}
+                  src={currentUser.photoURL}
                   onChange={this.avatarChanged}
                   onCancel={this.toggleAvatarChange}
                 />
@@ -130,7 +152,7 @@ export default class Profile extends React.Component {
                   }}
                   onMouseEnter={this.handleAvatarDimmerShow}
                   onMouseLeave={this.handleAvatarDimmerHide}
-                  src={user.photoURL || placeholderImg}
+                  src={currentUser.photoURL || placeholderImg}
                 />
               </Segment>
               <Segment
@@ -143,13 +165,13 @@ export default class Profile extends React.Component {
                     iconPosition='left'
                     placeholder="Your name"
                     maxLength={30}
-                    value={user.displayName || ""}
+                    value={currentUser.displayName || ""}
                     onChange={(event, data) => this.userFieldChange(event, data.value, "displayName")}
                   />
                   <Form.Input
                     fluid
                     type="date"
-                    value={dateToInputFormat(user.birthday || "")}
+                    value={dateToInputFormat(currentUser.birthday || "")}
                     min="1950-01-01"
                     max={dateToInputFormat(Date.now() - 1000*60*60*24*365*18)}
                     icon='calendar check outline'
@@ -159,7 +181,7 @@ export default class Profile extends React.Component {
                   <Form.Field>
                     <AddressInput
                       setLocation={data => this.userFieldChange(null, data.address, "address")}
-                      value={user.address || ""}
+                      value={currentUser.address || ""}
                       icon='map marker alternate'
                       placeholder="Your location"
                     />
@@ -168,7 +190,7 @@ export default class Profile extends React.Component {
                     autoHeight
                     label="About"
                     maxLength={500}
-                    value={user.description}
+                    value={currentUser.description}
                     onChange={(event, data) => this.userFieldChange(event, data.value, "description")}
                   />
                 </Form>
@@ -201,75 +223,83 @@ export default class Profile extends React.Component {
         ),
         render: () => (
           <Tab.Pane>
-            <PhoneValidation
-              phoneToValidate={phoneToValidate}
-            />
-            <Segment
+            <Form
+              as={Segment}
               basic
             >
-              <Form>
-                <Form.Field>
-                  <Form.Input
-                    fluid
-                    placeholder='user@mail.com'
-                    type="email"
-                    maxLength={30}
-                    pattern="[\+]\d{0,12}"
-                    value={user.email || ""}
-                    label="Email"
-                    iconPosition='right'
-                    onChange={(event, data) => this.userFieldChange(event, data.value, "email")}
-                  >
-                    <input/>
+              {/* <Form.Field>
+                <Form.Input
+                  fluid
+                  placeholder='user@mail.com'
+                  type="email"
+                  maxLength={40}
+                  value={(newUser && newUser.email) || ""}
+                  label="Email"
+                  icon={
+                    currentUser &&
+                    currentUser.emailVerified &&
+                    newUser.email === currentUser.email &&
                     {
-                      user.emailVerified &&
-                      <Icon
-                        name='check'
-                        color="green"
-                      />
+                      color: "green",
+                      name: 'check'
                     }
-                  </Form.Input>
+                  }
+                  onChange={(event, data) => this.userFieldChange(null, data.value, "email")}
+                />
+                {
+                  (
+                    !currentUser ||
+                    !currentUser.emailVerified ||
+                    newUser.email !== currentUser.email
+                  ) &&
                   <Button
                     size="mini"
                     color="orange"
-                    onClick={saveChanges}
+                    onClick={this.sendEmailModal}
                     content="Send email to confirm"
                   />
-                </Form.Field>
-                <Form.Field>
-                  <Form.Input
-                    fluid
-                    type="tel"
-                    maxLength={13}
-                    pattern="[\+]\d{0,12}"
-                    placeholder="+380XXXXXXXXX"
-                    value={user.phoneNumber || ""}
-                    label="Phone"
-                    iconPosition='right'
-                    onChange={(event, data) => this.userFieldChange(event, data.value, "phoneNumber")}
-                  >
-                    <input/>
+                }
+              </Form.Field> */}
+              <Form.Field>
+                <Form.Input
+                  fluid
+                  type="tel"
+                  maxLength={13}
+                  pattern="\+\d{0,12}"
+                  placeholder="+380XXXXXXXXX"
+                  value={(newUser && newUser.phoneNumber) || ""}
+                  label="Phone"
+                  icon={
+                    currentUser &&
+                    currentUser.phoneVerified &&
+                    newUser.phoneNumber === currentUser.phoneNumber &&
                     {
-                      !user.phoneVerified &&
-                      <Icon
-                        disabled
-                        name='check'
-                        color="green"
-                      />
+                      color: "green",
+                      name: 'check'
                     }
-                  </Form.Input>
-                  {
-                    !user.phoneVerified &&
+                  }
+                  onChange={(event, data) => this.userFieldChange(event, data.value, "phoneNumber")}
+                />
+                {
+                  (
+                    !currentUser ||
+                    !currentUser.phoneVerified ||
+                    newUser.phoneNumber !== currentUser.phoneNumber
+                  ) &&
+                  <PhoneValidation
+                    phoneToVerify={(newUser && newUser.phoneNumber) || ""}
+                  >
                     <Button
+                      disabled={!newUser.phoneNumber || newUser.phoneNumber.toString().length !== 13}
                       size="mini"
                       color="orange"
-                      onClick={saveChanges}
+                      onClick={this.toggleSMSModal}
                       content="Send SMS to confirm"
                     />
-                  }
-                </Form.Field>
-              </Form>
-            </Segment>
+                  </PhoneValidation>
+                }
+              </Form.Field>
+            </Form>
             <Button
               primary
               fluid
@@ -346,11 +376,6 @@ export default class Profile extends React.Component {
     return (
       <Tab
         renderActiveOnly
-        menu={{
-          fluid: true,
-          vertical: true,
-          tabular: true
-        }}
         panes={this.generatePanes()}
       />
     )

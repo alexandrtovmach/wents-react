@@ -2,23 +2,19 @@ import React from 'react';
 import {
   Container,
   Segment,
-  Grid,
   Image,
   Rating,
-  Item,
-  Button,
   Header,
   List,
   Icon,
   Form,
-  Modal,
   Dimmer
 } from 'semantic-ui-react';
 
-import { Loader, AddressInput, AvatarUploader, PhoneValidation, UserForm } from "../../components";
+import { Loader, AddressInput, UserForm } from "../../components";
 import { placeholderImg } from '../../services/constants';
 import { getUser, signOut } from '../../services/auth';
-import { extendUserWithAdditionalData, getData } from '../../services/database';
+import { extendUserWithAdditionalData } from '../../services/database';
 import { dateToInputFormat } from '../../services/utils';
 
 
@@ -36,17 +32,6 @@ export default class Profile extends React.Component {
     };
 
     this.toggleEdit = this.toggleEdit.bind(this);
-    this.toggleAvatarChange = this.toggleAvatarChange.bind(this);
-    this.handleAvatarDimmerShow = this.handleAvatarDimmerShow.bind(this);
-    this.handleAvatarDimmerHide = this.handleAvatarDimmerHide.bind(this);
-    this.avatarChanged = this.avatarChanged.bind(this);
-    this.userFieldChange = this.userFieldChange.bind(this);
-
-    // this.nameChanged = this.nameChanged.bind(this);
-    // this.birthChanged = this.birthChanged.bind(this);
-    // this.addressChanged = this.addressChanged.bind(this);
-    // this.phoneChanged = this.phoneChanged.bind(this);
-    // this.descriptionChanged = this.descriptionChanged.bind(this);
     this.logout = this.logout.bind(this);
   }
   
@@ -55,17 +40,7 @@ export default class Profile extends React.Component {
     if (user) {
       this.setState({
         currentUser: user,
-        user: {
-          uid: user.uid,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-          rating: Math.round(Math.random() * 5),
-          address: user.address,
-          birthday: user.birthday,
-          phoneNumber: user.phoneNumber,
-          email: user.email,
-          description: user.description
-        },
+        user: user,
         loading: false
       });
     } else {
@@ -100,95 +75,6 @@ export default class Profile extends React.Component {
         })
       )
   }
-
-  toggleAvatarChange() {
-    this.setState({
-      avatarChanging: !this.state.avatarChanging
-    });
-  }
-
-
-  handleAvatarDimmerShow() {
-    this.setState({ avatarDimmerShow: true });
-  }
-
-  handleAvatarDimmerHide() {
-    this.setState({ avatarDimmerShow: false });
-  }
-
-  avatarChanged(value) {
-    this.setState({
-      user: {
-        ...this.state.user,
-        photoURL: value
-      },
-      avatarChanging: false
-    });
-  }
-
-  userFieldChange(event, value, name) {
-    if (event === null || !event.target.validationMessage) {
-      this.setState({
-        user: {
-          ...this.state.user,
-          [name]: value
-        }
-      });
-    }
-  }
-
-  // nameChanged(event, value) {
-  //   if (!event.target.validationMessage) {
-  //     this.setState({
-  //       user: {
-  //         ...this.state.user,
-  //         displayName: value
-  //       }
-  //     });
-  //   }
-  // }
-
-  // birthChanged(event, value) {
-  //   if (!event.target.validationMessage) {
-  //     this.setState({
-  //       user: {
-  //         ...this.state.user,
-  //         birthday: value
-  //       }
-  //     });
-  //   }
-  // }
-
-  // addressChanged({ address }) {
-  //   this.setState({
-  //     user: {
-  //       ...this.state.user,
-  //       address: address
-  //     }
-  //   });
-  // }
-
-  // phoneChanged(event, value) {
-  //   if (!event.target.validationMessage) {
-  //     this.setState({
-  //       user: {
-  //         ...this.state.user,
-  //         phoneNumber: value
-  //       }
-  //     });
-  //   }
-  // }
-
-  // descriptionChanged(event, value) {
-  //   if (!event.target.validationMessage) {
-  //     this.setState({
-  //       user: {
-  //         ...this.state.user,
-  //         description: value
-  //       }
-  //     });
-  //   }
-  // }
 
   logout() {
     signOut();

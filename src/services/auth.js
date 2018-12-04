@@ -48,10 +48,8 @@ export const signInPhone = (phone, captchaContainerId, lang) => {
   window.recaptchaVerifier = new auth.RecaptchaVerifier(captchaContainerId);
   return auth().signInWithPhoneNumber(phone, window.recaptchaVerifier)
     .then(confirmationResult => {
-      // SMS sent. Prompt user to type the code from the message, then sign the
-      // user in with confirmationResult.confirm(code).
       window.confirmationResult = confirmationResult;
-      console.log(confirmationResult);
+      return confirmationResult;
     }).catch(error => {
       console.log(error);
     });
