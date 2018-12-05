@@ -10,13 +10,15 @@ import {
   Modal,
   Dimmer,
   Tab,
-  Responsive
+  Responsive,
+  List
 } from 'semantic-ui-react';
 
 import { AddressInput, AvatarUploader, PhoneValidation } from "../../components";
 import { placeholderImg } from '../../services/constants';
 import { dateToInputFormat } from '../../services/utils';
 import { signOut, linkWithGoogle, linkWithFacebook } from '../../services/auth';
+import { extendUserWithAdditionalData } from '../../services/database';
 
 
 export default class Profile extends React.Component {
@@ -25,11 +27,14 @@ export default class Profile extends React.Component {
 
     this.state = {
       user: {},
+      edit: false,
       loading: true,
       avatarChanging: false,
       avatarDimmerShow: false
     };
 
+    this.toggleEdit = this.toggleEdit.bind(this);
+    this.saveChanges = this.saveChanges.bind(this);
     this.toggleAvatarChange = this.toggleAvatarChange.bind(this);
     this.handleAvatarDimmerShow = this.handleAvatarDimmerShow.bind(this);
     this.handleAvatarDimmerHide = this.handleAvatarDimmerHide.bind(this);
@@ -50,6 +55,31 @@ export default class Profile extends React.Component {
         user: this.props.user
       })
     }
+  }
+
+  toggleEdit() {
+    const { edit, user } = this.state;
+    if (edit) {
+      this.saveChanges(user);
+    } else {
+      this.setState({
+        edit: true
+      });
+    }
+  }
+
+
+  saveChanges(user) {
+    this.setState({
+      loading: true
+    });
+    extendUserWithAdditionalData(user)
+      .then(
+        this.setState({
+          edit: false,
+          loading: false
+        })
+      )
   }
 
   toggleAvatarChange() {
@@ -98,8 +128,8 @@ export default class Profile extends React.Component {
   }
 
   generatePanes() {
-    const { avatarChanging, avatarDimmerShow, user: newUser } = this.state;
-    const { saveChanges, user: currentUser } = this.props;
+    const { avatarChanging, avatarDimmerShow, user: newUser, edit } = this.state;
+    const { user: currentUser } = this.props;
 
     const googleConnected = Boolean(currentUser && currentUser.email && currentUser.emailVerified);
     const facebookConnected = Boolean(currentUser && currentUser.providerData && currentUser.providerData.some(el => el && el.providerId === "facebook.com"));
@@ -147,63 +177,104 @@ export default class Profile extends React.Component {
                 <Dimmer.Dimmable
                   as={Image}
                   centered
-                  size="medium"
-                  dimmed
+                  size="small"
+                  dimmed={edit}
                   dimmer={{
-                    active: avatarDimmerShow,
+                    active: edit && avatarDimmerShow,
                     content: <Icon name='configure' size="huge"/>,
                     onClick: this.toggleAvatarChange
                   }}
                   onMouseEnter={this.handleAvatarDimmerShow}
                   onMouseLeave={this.handleAvatarDimmerHide}
-                  src={currentUser.photoURL || placeholderImg}
+                  src={newUser.photoURL || placeholderImg}
                 />
               </Segment>
-              <Segment
-                basic
-              >
-                <Form>
-                  <Form.Input
-                    fluid
-                    icon='user'
-                    iconPosition='left'
-                    placeholder="Your name"
-                    maxLength={30}
-                    value={currentUser.displayName || ""}
-                    onChange={(event, data) => this.userFieldChange(event, data.value, "displayName")}
-                  />
-                  <Form.Input
-                    fluid
-                    type="date"
-                    value={dateToInputFormat(currentUser.birthday || "")}
-                    min="1950-01-01"
-                    max={dateToInputFormat(Date.now() - 1000*60*60*24*365*18)}
-                    icon='calendar check outline'
-                    iconPosition='left'
-                    onChange={(event, data) => this.userFieldChange(event, data.value, "birthday")}
-                  />
-                  <Form.Field>
-                    <AddressInput
-                      setLocation={data => this.userFieldChange(null, data.address, "address")}
-                      value={currentUser.address || ""}
-                      icon='map marker alternate'
-                      placeholder="Your location"
-                    />
-                  </Form.Field>
-                  <Form.TextArea
-                    autoHeight
-                    label="About"
-                    maxLength={500}
-                    value={currentUser.description}
-                    onChange={(event, data) => this.userFieldChange(event, data.value, "description")}
-                  />
-                </Form>
-              </Segment>
+              {
+                edit? (
+                  <Segment
+                    basic
+                  >
+                    <Form>
+                      <Form.Input
+                        fluid
+                        icon='user'
+                        iconPosition='left'
+                        placeholder="Your name"
+                        maxLength={30}
+                        value={newUser.displayName || ""}
+                        onChange={(event, data) => this.userFieldChange(event, data.value, "displayName")}
+                      />
+                      <Form.Input
+                        fluid
+                        type="date"
+                        value={dateToInputFormat(newUser.birthday || "")}
+                        min="1950-01-01"
+                        max={dateToInputFormat(Date.now() - 1000*60*60*24*365*18)}
+                        icon='calendar check outline'
+                        iconPosition='left'
+                        onChange={(event, data) => this.userFieldChange(event, data.value, "birthday")}
+                      />
+                      <Form.Field>
+                        <AddressInput
+                          setLocation={data => this.userFieldChange(null, data.address, "address")}
+                          value={newUser.address || ""}
+                          icon='map marker alternate'
+                          placeholder="Your location"
+                        />
+                      </Form.Field>
+                      <Form.TextArea
+                        autoHeight
+                        label="About"
+                        maxLength={500}
+                        value={newUser.description}
+                        onChange={(event, data) => this.userFieldChange(event, data.value, "description")}
+                      />
+                    </Form>
+                  </Segment>
+                ) : (
+                  <Segment
+                    basic
+                    padded
+                  >
+                    <List>
+                      {
+                        newUser.displayName &&
+                        <List.Item>
+                          <List.Header>Full name</List.Header>
+                          <List.Content size="huge">{newUser.displayName}</List.Content>
+                        </List.Item>
+                      }
+                      {
+                        newUser.birthday &&
+                        <List.Item>
+                          <List.Header>Birthday</List.Header>
+                          <List.Content size="huge">{newUser.birthday}</List.Content>
+                        </List.Item>
+                      }
+                      {
+                        newUser.address &&
+                        <List.Item>
+                          <List.Header>Location</List.Header>
+                          <List.Content size="huge">{newUser.address}</List.Content>
+                        </List.Item>
+                      }
+                      {
+                        newUser.description &&
+                        <List.Item>
+                          <List.Header>About</List.Header>
+                          <List.Content size="huge">{newUser.description || "Nothing special"}</List.Content>
+                        </List.Item>
+                      }
+                    </List>
+                  </Segment>
+                )
+              }
               <Button
+                basic={!edit}
                 primary
                 fluid
-                onClick={saveChanges}
-                content="Save Changes"
+                content={edit? "Save Profile": "Edit Profile"}
+                onClick={this.toggleEdit}
               />
           </Tab.Pane>
         )
@@ -300,12 +371,6 @@ export default class Profile extends React.Component {
                 }
               </Form.Group>
             </Form>
-            <Button
-              primary
-              fluid
-              onClick={saveChanges}
-              content="Save Changes"
-            />
           </Tab.Pane>
         )
       },
