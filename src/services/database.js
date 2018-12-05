@@ -4,17 +4,18 @@ import { getUser } from './auth';
 import { extractFromProvidersData } from './utils';
 
 export const extendUserWithAdditionalData = (user) => {
-  const initialUserObj = {
-    uid: user.uid,
-    providerData: user.providerData || null
-  };
-  user = userKeys.reduce((prev, el) => {
-    return {
-      ...prev,
-      [el]: user[el] || extractFromProvidersData(user, el) || null
-    }
-  }, initialUserObj);
   if (user && user.uid) {
+    const initialUserObj = {
+      uid: user.uid,
+      providerData: user.providerData || null
+    };
+    user = userKeys.reduce((prev, el) => {
+      return {
+        ...prev,
+        [el]: user[el] || extractFromProvidersData(user, el) || null
+      }
+    }, initialUserObj);
+    
     return database()
       .ref(`users/${user.uid}`)
       .update({

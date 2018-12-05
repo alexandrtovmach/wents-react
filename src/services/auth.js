@@ -1,7 +1,7 @@
 import { auth } from './firebase';
 import { extendUserWithAdditionalData, getUserAdditionalData } from './database';
 
-export const signUp = (email, password, lang) => {
+export const signUpWithEmailAndPassword = (email, password, lang) => {
   auth().languageCode = lang || "en_US";
   return auth()
     .createUserWithEmailAndPassword(email, password)
@@ -9,7 +9,7 @@ export const signUp = (email, password, lang) => {
     .then(extendUserWithAdditionalData)
 }
 
-export const signIn = (email, password, lang) => {
+export const signInWithEmailAndPassword = (email, password, lang) => {
   auth().languageCode = lang || "en_US";
   return auth()
     .signInWithEmailAndPassword(email, password)
@@ -43,9 +43,40 @@ export const signInFacebook = (lang) => {
     .then(extendUserWithAdditionalData)
 }
 
+export const linkWithGoogle = async (lang) => {
+  auth().languageCode = lang || "en_US";
+  const provider = new auth.GoogleAuthProvider();
+  provider.addScope("https://www.googleapis.com/auth/user.phonenumbers.read");
+  provider.addScope("https://www.googleapis.com/auth/user.birthday.read");
+  provider.addScope("https://www.googleapis.com/auth/user.addresses.read");
+  return auth().currentUser
+    .linkWithPopup(provider)
+    .then(({user}) => extendUserWithAdditionalData(user))
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+export const linkWithFacebook = async (lang) => {
+  auth().languageCode = lang || "en_US";
+  const provider = new auth.FacebookAuthProvider();
+  provider.addScope('email');
+  provider.addScope('user_birthday');
+  provider.addScope('user_gender');
+  provider.addScope('user_location');
+  provider.addScope('user_photos');
+  return auth().currentUser
+    .linkWithPopup(provider)
+    .then(({user}) => extendUserWithAdditionalData(user))
+    .catch(error => {
+      console.log(error);
+    });
+}
+
 export const linkWithPhoneNumber = async (phone, captchaContainerId, lang) => {
   auth().languageCode = lang || "en_US";
-  return auth().currentUser.linkWithPhoneNumber(phone, new auth.RecaptchaVerifier(captchaContainerId))
+  return auth().currentUser
+    .linkWithPhoneNumber(phone, new auth.RecaptchaVerifier(captchaContainerId))
     .catch(error => {
       console.log(error);
     });
@@ -53,9 +84,7 @@ export const linkWithPhoneNumber = async (phone, captchaContainerId, lang) => {
 
 export const phoneCodeVerification = (verificationInstance, code) => {
   return verificationInstance.confirm(code)
-    .then(result => {
-      return result.user;
-    })
+    .then(({user}) => extendUserWithAdditionalData(user))
     .catch(error => {
       console.log(error);
     });

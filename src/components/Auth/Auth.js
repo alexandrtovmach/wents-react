@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Segment, Header, Image, Form, Input, Icon, Message } from "semantic-ui-react";
 
-import { signInFacebook, signInGoogle, signIn, signUp } from '../../services/auth';
+import { signInFacebook, signInGoogle, signInWithEmailAndPassword, signUpWithEmailAndPassword } from '../../services/auth';
 import CircleLogoSrc from '../../attachments/images/circle-logo.png';
 
 export default class AuthComponent extends React.Component {
@@ -15,8 +15,8 @@ export default class AuthComponent extends React.Component {
       passwordError: null
     };
 
-    this.signUp = this.signUp.bind(this);
-    this.signIn = this.signIn.bind(this);
+    this.signUpWithEmailAndPassword = this.signUpWithEmailAndPassword.bind(this);
+    this.signInWithEmailAndPassword = this.signInWithEmailAndPassword.bind(this);
     this.signInGoogle = this.signInGoogle.bind(this);
     this.signInFacebook = this.signInFacebook.bind(this);
   }
@@ -29,11 +29,11 @@ export default class AuthComponent extends React.Component {
     });
   }
 
-  signUp(e) {
+  signUpWithEmailAndPassword(e) {
     e.preventDefault(); // semantic handle all button clicks like 'submit', and because it need to preventDefault
     const { email, password } = this.state;
     if (email && password) {
-      signUp(email, password, this.props.lang)
+      signUpWithEmailAndPassword(email, password, this.props.lang)
         .then(() => {
           window.location.href = "/profile";
         })
@@ -48,10 +48,10 @@ export default class AuthComponent extends React.Component {
     }
   }
 
-  signIn() {
+  signInWithEmailAndPassword() {
     const { email, password } = this.state;
     if (email && password) {
-      signIn(email, password, this.props.lang)
+      signInWithEmailAndPassword(email, password, this.props.lang)
         .then(() => {
           window.location.href = "/profile";
         })
@@ -103,7 +103,7 @@ export default class AuthComponent extends React.Component {
         >
           Login
         </Header>
-        <Form onSubmit={this.signIn}>
+        <Form onSubmit={this.signInWithEmailAndPassword}>
           <Form.Field>
             <Input
               error={emailError}
@@ -138,7 +138,7 @@ export default class AuthComponent extends React.Component {
             </Button>
             <Button.Or text="/"/>
             <Button
-              onClick={this.signUp}
+              onClick={this.signUpWithEmailAndPassword}
             >
               Register
             </Button>

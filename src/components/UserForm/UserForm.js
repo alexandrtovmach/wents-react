@@ -16,7 +16,7 @@ import {
 import { AddressInput, AvatarUploader, PhoneValidation } from "../../components";
 import { placeholderImg } from '../../services/constants';
 import { dateToInputFormat } from '../../services/utils';
-import { signOut } from '../../services/auth';
+import { signOut, linkWithGoogle, linkWithFacebook } from '../../services/auth';
 
 
 export default class Profile extends React.Component {
@@ -100,6 +100,9 @@ export default class Profile extends React.Component {
   generatePanes() {
     const { avatarChanging, avatarDimmerShow, user: newUser } = this.state;
     const { saveChanges, user: currentUser } = this.props;
+
+    const googleConnected = Boolean(currentUser && currentUser.email && currentUser.emailVerified);
+    const facebookConnected = Boolean(currentUser && currentUser.providerData && currentUser.providerData.some(el => el && el.providerId === "facebook.com"));
 
     return [
       {
@@ -227,41 +230,38 @@ export default class Profile extends React.Component {
             <Form
               as={Segment}
               basic
+              widths="equal"
             >
-              {/* <Form.Field>
-                <Form.Input
+              <Form.Group>
+                <Header>
+                  Socials
+                </Header>
+              </Form.Group>
+              <Form.Group>
+                <Form.Button
+                  disabled={googleConnected}
                   fluid
-                  placeholder='user@mail.com'
-                  type="email"
-                  maxLength={40}
-                  value={(newUser && newUser.email) || ""}
-                  label="Email"
-                  icon={
-                    currentUser &&
-                    currentUser.emailVerified &&
-                    newUser.email === currentUser.email &&
-                    {
-                      color: "green",
-                      name: 'check'
-                    }
-                  }
-                  onChange={(event, data) => this.userFieldChange(null, data.value, "email")}
+                  color="google plus"
+                  icon="google"
+                  content={googleConnected? "Connected with Google": "Connect with Google"}
+                  onClick={() => linkWithGoogle()}
                 />
-                {
-                  (
-                    !currentUser ||
-                    !currentUser.emailVerified ||
-                    newUser.email !== currentUser.email
-                  ) &&
-                  <Button
-                    size="mini"
-                    color="orange"
-                    onClick={this.sendEmailModal}
-                    content="Send email to confirm"
-                  />
-                }
-              </Form.Field> */}
-              <Form.Field>
+                <Form.Button
+                  disabled={facebookConnected}
+                  fluid
+                  color="facebook"
+                  icon="facebook"
+                  content={googleConnected? "Connected with Facebook": "Connect with Facebook"}
+                  onClick={() => linkWithFacebook()}
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Header>
+                  Phone
+                </Header>
+              </Form.Group>
+              <Form.Group>
                 <Form.Input
                   fluid
                   type="tel"
@@ -269,9 +269,9 @@ export default class Profile extends React.Component {
                   pattern="\+\d{0,12}"
                   placeholder="+380XXXXXXXXX"
                   value={(newUser && newUser.phoneNumber) || ""}
-                  label="Phone"
                   icon={
                     currentUser &&
+                    currentUser.phoneNumber &&
                     newUser.phoneNumber === currentUser.phoneNumber &&
                     {
                       color: "green",
@@ -283,6 +283,7 @@ export default class Profile extends React.Component {
                 {
                   (
                     !currentUser ||
+                    !currentUser.phoneNumber ||
                     newUser.phoneNumber !== currentUser.phoneNumber
                   ) &&
                   <PhoneValidation
@@ -297,7 +298,7 @@ export default class Profile extends React.Component {
                     />
                   </PhoneValidation>
                 }
-              </Form.Field>
+              </Form.Group>
             </Form>
             <Button
               primary

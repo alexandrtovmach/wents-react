@@ -14,7 +14,7 @@ export default class PhoneLoginComponent extends React.Component {
 
     this.codeChange = this.codeChange.bind(this);
     this.setStep = this.setStep.bind(this);
-    this.signInPhone = this.signInPhone.bind(this);
+    this.verifyPhone = this.verifyPhone.bind(this);
     this.verifyCode = this.verifyCode.bind(this);
   }
 
@@ -26,9 +26,9 @@ export default class PhoneLoginComponent extends React.Component {
     }
   }
 
-  signInPhone() {
-    const { phoneToVerify } = this.props;
-    linkWithPhoneNumber(phoneToVerify, "phone-verification-captcha", this.props.lang)
+  verifyPhone() {
+    const { phoneToVerify, lang } = this.props;
+    linkWithPhoneNumber(phoneToVerify, "phone-verification-captcha", lang)
       .then(confirmationResult => {
         this.confirmationResult = confirmationResult;
       })
@@ -40,15 +40,12 @@ export default class PhoneLoginComponent extends React.Component {
 
   verifyCode() {
     phoneCodeVerification(this.confirmationResult, this.state.verificationCode)
-      .then(user => {
-        console.log(user);
-        // window.location.href = "/profile";
-      })
+      .then(window.location.reload())
   }
 
   setStep(newIndex) {
     if (newIndex === 1) {
-      setTimeout(() => this.signInPhone(), 0);
+      setTimeout(() => this.verifyPhone(), 0);
     }
     this.setState({
       stepIdx: newIndex
@@ -119,19 +116,17 @@ export default class PhoneLoginComponent extends React.Component {
           ][stepIdx]}
         />
         <Modal.Actions>
-          {
+          {/* {
             stepIdx > 0 &&
             <Button
               icon="arrow left"
-              // content="Back"
               onClick={() => this.setStep(stepIdx - 1)}
             />
-          }
+          } */}
           {
-            stepIdx <= 2 &&
+            stepIdx < 2 &&
             <Button
               icon="arrow right"
-              // content="Next"
               onClick={() => this.setStep(stepIdx + 1)}
             />
           }
