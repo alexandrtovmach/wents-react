@@ -1,31 +1,49 @@
 import React from 'react';
-import { Button, Step, Modal, Segment } from "semantic-ui-react";
+import { Button, Step, Modal, Segment, Input } from "semantic-ui-react";
 
-import { signInPhone } from '../../services/auth';
+import { linkWithPhoneNumber, phoneCodeVerification } from '../../services/auth';
 
 export default class PhoneLoginComponent extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      stepIdx: 0
+      stepIdx: 0,
+      verificationCode: ""
     };
 
+    this.codeChange = this.codeChange.bind(this);
     this.setStep = this.setStep.bind(this);
     this.signInPhone = this.signInPhone.bind(this);
+    this.verifyCode = this.verifyCode.bind(this);
+  }
+
+  codeChange(event, value) {
+    if (event === null || !event.target.validationMessage) {
+      this.setState({
+        verificationCode: value
+      });
+    }
   }
 
   signInPhone() {
     const { phoneToVerify } = this.props;
-    signInPhone(phoneToVerify, "phone-verification-captcha", this.props.lang)
+    linkWithPhoneNumber(phoneToVerify, "phone-verification-captcha", this.props.lang)
       .then(confirmationResult => {
-        // window.location.href = "/profile";
-        confirmationResult.confirm();
+        this.confirmationResult = confirmationResult;
       })
       .catch(error => {
         const { code, message, email, credential } = error;
         console.log(code, message, email, credential);
       });
+  }
+
+  verifyCode() {
+    phoneCodeVerification(this.confirmationResult, this.state.verificationCode)
+      .then(user => {
+        console.log(user);
+        // window.location.href = "/profile";
+      })
   }
 
   setStep(newIndex) {
@@ -39,14 +57,14 @@ export default class PhoneLoginComponent extends React.Component {
 
   render() {
     const { children, phoneToVerify } = this.props;
-    const { stepIdx } = this.state;
+    const { stepIdx, verificationCode } = this.state;
     return (
       <Modal
         size="small"
         trigger={children}
       >
         <Modal.Header>
-          <Step.Group stackable ordered fluid>
+          <Step.Group ordered fluid>
             <Step
               active={stepIdx === 0}
               completed={stepIdx > 0}
@@ -74,7 +92,6 @@ export default class PhoneLoginComponent extends React.Component {
           </Step.Group>
         </Modal.Header>
         <Modal.Content
-          basic
           content={[
             <Segment
               basic
@@ -86,19 +103,22 @@ export default class PhoneLoginComponent extends React.Component {
             />,
             <Segment
               basic
-              content={
-                <Button
-                  icon="mail"
-                  content="Send SMS"
-                  onClick={this.signInPhone}
-                />
-              }
-            />
+            >
+              <Input
+                icon="key"
+                maxLength={6}
+                value={verificationCode}
+                onChange={(event, data) => this.codeChange(event, data.value)}
+              />
+              <Button
+                disabled={ !verificationCode || verificationCode.length < 6 }
+                content="Verify"
+                onClick={this.verifyCode}
+              />
+            </Segment>
           ][stepIdx]}
         />
-        <Modal.Actions
-          textAlign="center"
-        >
+        <Modal.Actions>
           {
             stepIdx > 0 &&
             <Button

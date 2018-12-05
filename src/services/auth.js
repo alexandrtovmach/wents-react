@@ -43,20 +43,22 @@ export const signInFacebook = (lang) => {
     .then(extendUserWithAdditionalData)
 }
 
-export const signInPhone = (phone, captchaContainerId, lang) => {
+export const linkWithPhoneNumber = async (phone, captchaContainerId, lang) => {
   auth().languageCode = lang || "en_US";
-  window.recaptchaVerifier = new auth.RecaptchaVerifier(captchaContainerId);
-  return auth().signInWithPhoneNumber(phone, window.recaptchaVerifier)
-    .then(confirmationResult => {
-      window.confirmationResult = confirmationResult;
-      return confirmationResult;
-    }).catch(error => {
+  return auth().currentUser.linkWithPhoneNumber(phone, new auth.RecaptchaVerifier(captchaContainerId))
+    .catch(error => {
       console.log(error);
     });
-  // return auth()
-  //   .signInWithPopup(provider)
-  //   .then(getUserAdditionalData)
-  //   .then(extendUserWithAdditionalData)
+}
+
+export const phoneCodeVerification = (verificationInstance, code) => {
+  return verificationInstance.confirm(code)
+    .then(result => {
+      return result.user;
+    })
+    .catch(error => {
+      console.log(error);
+    });
 }
 
 export const signOut = () => {

@@ -69,7 +69,7 @@ export default class AuthComponent extends React.Component {
   signInGoogle() {
     signInGoogle(this.props.lang)
       .then(() => {
-        // window.location.href = "/profile";
+        window.location.href = "/profile";
       })
       .catch(error => {
         const { code, message, email, credential } = error;
@@ -80,7 +80,7 @@ export default class AuthComponent extends React.Component {
   signInFacebook() {
     signInFacebook(this.props.lang)
       .then(() => {
-        // window.location.href = "/profile";
+        window.location.href = "/profile";
       })
       .catch(error => {
         const { code, message, email, credential } = error;

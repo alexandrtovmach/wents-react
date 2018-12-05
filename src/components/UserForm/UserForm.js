@@ -14,8 +14,9 @@ import {
 } from 'semantic-ui-react';
 
 import { AddressInput, AvatarUploader, PhoneValidation } from "../../components";
-import { placeholderImg, EMAIL_REGEX } from '../../services/constants';
+import { placeholderImg } from '../../services/constants';
 import { dateToInputFormat } from '../../services/utils';
+import { signOut } from '../../services/auth';
 
 
 export default class Profile extends React.Component {
@@ -97,7 +98,7 @@ export default class Profile extends React.Component {
   }
 
   generatePanes() {
-    const { avatarChanging, avatarDimmerShow, user: newUser, showSMSModal } = this.state;
+    const { avatarChanging, avatarDimmerShow, user: newUser } = this.state;
     const { saveChanges, user: currentUser } = this.props;
 
     return [
@@ -271,7 +272,6 @@ export default class Profile extends React.Component {
                   label="Phone"
                   icon={
                     currentUser &&
-                    currentUser.phoneVerified &&
                     newUser.phoneNumber === currentUser.phoneNumber &&
                     {
                       color: "green",
@@ -283,7 +283,6 @@ export default class Profile extends React.Component {
                 {
                   (
                     !currentUser ||
-                    !currentUser.phoneVerified ||
                     newUser.phoneNumber !== currentUser.phoneNumber
                   ) &&
                   <PhoneValidation
@@ -365,6 +364,37 @@ export default class Profile extends React.Component {
                 <Icon name='cogs' />
                 In development
               </Header>
+            </Segment>
+          </Tab.Pane>
+        )
+      },
+      {
+        menuItem: (
+          <Menu.Item
+            key="logout"
+          >
+            <Responsive
+              minWidth={640}
+            >
+              Logout
+            </Responsive>
+            <Responsive
+              maxWidth={639}
+            >
+              <Icon name="sign-out"/>
+            </Responsive>
+          </Menu.Item>
+        ),
+        render: () => (
+          <Tab.Pane>
+            <Segment
+              basic
+            >
+              <Button
+                fluid
+                onClick={() => signOut().then(window.location.reload())}
+                content="Click to Logout"
+              />
             </Segment>
           </Tab.Pane>
         )
