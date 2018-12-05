@@ -213,7 +213,7 @@ export default class Profile extends React.Component {
   }
 
   render() {
-    const { user, loading, edit, avatarChanging, avatarDimmerShow, phoneToValidate } = this.state;
+    const { user, loading } = this.state;
 
     if (loading) {
       return <Loader />

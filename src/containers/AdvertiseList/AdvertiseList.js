@@ -79,7 +79,7 @@ export default class AdvertiseList extends React.Component {
 
   
   render() {
-    const { loading, posts } = this.state;
+    const { loading } = this.state;
     if (loading) {
       return (
         <Loader />
