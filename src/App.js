@@ -17,7 +17,8 @@ import {
   Header,
   Sidebar,
   PageNotFound,
-  Footer
+  Footer,
+  Chat
 } from './components';
 import './App.scss';
 
@@ -57,6 +58,9 @@ class App extends React.Component {
           toggleSidebar={this.toggleSidebar}
           showSidebar={showSidebar}
         >
+          <Chat
+            user={user}
+          />
           <Switch>
             <Route
               path="/"

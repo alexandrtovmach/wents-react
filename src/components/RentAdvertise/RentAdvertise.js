@@ -2,7 +2,6 @@ import React from 'react';
 import { Segment, Header, Button, Modal, Image, Grid, List, Card, Icon, Label } from "semantic-ui-react";
 
 import { benefits } from '../../services/constants';
-import './RentAdvertise.scss';
 
 
 export default class RentAdvertise extends React.Component {

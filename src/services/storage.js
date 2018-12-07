@@ -9,7 +9,7 @@ export const uploadImage = async (imageType, imageName, fileData, fileExt, userI
 
   if (imageType && imageName && fileData && fileExt) {
     userId = userId || (await getUser()).uid;
-    const ref = storage().ref(`${userId}/${imageType}/${imageName}-${generateHashWithDate()}.${fileExt}`);
+    const ref = storage.ref(`${userId}/${imageType}/${imageName}-${generateHashWithDate()}.${fileExt}`);
     if (typeof fileData === "string") {
       return ref.putString(fileData, "base64", {contentType: "image/png"}).then(getLink);
     } else {
@@ -23,7 +23,7 @@ export const uploadImage = async (imageType, imageName, fileData, fileExt, userI
 export const deleteImage = async (url, userId) => {
   if (url) {
     userId = userId || (await getUser()).uid;
-    const ref = storage().refFromURL(url);
+    const ref = storage.refFromURL(url);
     return ref.delete();
   } else {
     throw new Error("Not provided all arguments to 'deleteImage()'")

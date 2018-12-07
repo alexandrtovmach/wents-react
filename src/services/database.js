@@ -16,7 +16,7 @@ export const extendUserWithAdditionalData = (user) => {
       }
     }, initialUserObj);
     
-    return database()
+    return database
       .ref(`users/${user.uid}`)
       .update({
         ...user
@@ -28,7 +28,7 @@ export const extendUserWithAdditionalData = (user) => {
 
 export const getUserAdditionalData = ({user, additionalUserInfo}) => {
   if (user && user.uid) {
-    return database()
+    return database
       .ref(`users/${user.uid}`)
       .once('value')
       .then(snapshot => {
@@ -46,21 +46,21 @@ export const getUserAdditionalData = ({user, additionalUserInfo}) => {
 
 export const getData = async (type, path = "", userId) => {
   userId = userId || (await getUser()).uid;
-  return database()
+  return database
     .ref(`${type}/${userId}/${path}`)
     .once('value')
     .then(snapshot => snapshot.val())
 };
 
 export const getPublicData = async (type, path = "") => {
-  return database()
+  return database
     .ref(`public/${type}/${path}`)
     .once('value')
     .then(snapshot => snapshot.val())
 };
 
 export const getDataByPath = (path) => {
-  return database()
+  return database
     .ref(path)
     .once('value')
     .then(snapshot => ({
@@ -75,7 +75,7 @@ export const pushData = async (type, data, userId) => {
     ...data,
     createdAt: Date.now()
   }
-  return database()
+  return database
     .ref(pathString)
     .push(data)
     .then(snapshot => (data.publish && addToPublic(type, snapshot.key, data)) || snapshot.key)
@@ -88,7 +88,7 @@ export const updateData = async (type, key, data, userId) => {
     ...data,
     updatedAt: Date.now()
   }
-  return database()
+  return database
     .ref(pathString)
     .update({
       ...data,
@@ -99,7 +99,7 @@ export const updateData = async (type, key, data, userId) => {
 };
 
 export const addToPublic = async (type, key, data) => {
-  return database()
+  return database
     .ref(`public/${type}/${key}`)
     .set({
       ...data,
@@ -109,7 +109,7 @@ export const addToPublic = async (type, key, data) => {
 };
 
 export const getLatestData = (type, limit) => {
-  return database()
+  return database
     .ref(`public/${type}`)
     .orderByChild("updatedAt")
     .limitToLast(limit || 20)
@@ -122,7 +122,7 @@ export const getDataByPrice = async (type, parameters) => {
     minPrice,
     maxPrice
   } = parameters;
-  return database()
+  return database
     .ref(`public/${type}`)
     .orderByChild("price")
     .startAt(minPrice)
