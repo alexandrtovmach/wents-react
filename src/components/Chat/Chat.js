@@ -11,10 +11,17 @@ export default class RentAdvertise extends React.Component {
   }
 
   async componentDidMount() {
-    // this.setState({
-    //   ...this.props.data
-    // })
-    subscribeToRef("a", console.log)
+    const { user } = this.props;
+    if (user && user.uid && user.conversations) {
+      user.conversations.forEach(convId => subscribeToRef(user.uid, convId, this.onConversationUpdated));
+    } else {
+      console.warn("Chat: provided 'user' object is not valid");
+    }
+  }
+
+  onConversationUpdated(newData) {
+    const { onUpdated } = this.props;
+    onUpdated && onUpdated(newData);
   }
 
   componentDidUpdate(prevProps) {
@@ -28,9 +35,13 @@ export default class RentAdvertise extends React.Component {
 
 
   render() {
+    const { open } = this.props;
     const {} = this.state;
     return (
-      <div></div>
+      <Modal
+        open={open}
+        size="fullscreen"
+      />
     );
   }
 }

@@ -2,6 +2,11 @@ import { firestore } from './firebase';
 // import { getUser } from './auth';
 
 
-export const subscribeToRef = (ref, callback) => {
-  firestore.collection(ref).onSnapshot(callback);
+export const subscribeToRef = (userId, ref, callback) => {
+  firestore.collection(userId)
+    .doc(ref)
+    .onSnapshot(doc => {
+      callback(doc.data())
+    });
 }
+

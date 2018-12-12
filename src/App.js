@@ -28,14 +28,29 @@ class App extends React.Component {
 
     this.state = {
       showSidebar: false,
+      showChat: false,
+      chatData: null,
       user: null
     };
     this.toggleSidebar = debounce(this.toggleSidebar.bind(this), 100);
+    this.toggleChat = debounce(this.toggleChat.bind(this), 100);
   }
 
   async componentDidMount() {
     this.setState({
       user: await getUser()
+    })
+  }
+
+  onChatUpdated(newData) {
+    this.setState({
+      chatData: newData
+    })
+  }
+
+  toggleChat() {
+    this.setState({
+      showChat: !this.state.showChat
     })
   }
 
@@ -46,11 +61,13 @@ class App extends React.Component {
   }
 
   render() {
-    const { showSidebar, user } = this.state;
+    const { showSidebar, showChat, user, chatData } = this.state;
     return (
       <>
         <Header
           user={user}
+          chatData={chatData}
+          toggleChat={this.toggleChat}
           toggleSidebar={this.toggleSidebar}
         />
         <Sidebar
@@ -60,6 +77,8 @@ class App extends React.Component {
         >
           <Chat
             user={user}
+            open={showChat}
+            onUpdated={this.onChatUpdated}
           />
           <Switch>
             <Route
