@@ -1,7 +1,8 @@
 import React from 'react';
-import { Segment, Header, Button, Modal, Image, Grid, List, Card, Icon, Label } from "semantic-ui-react";
+import { Grid, Modal } from "semantic-ui-react";
 
 import { subscribeToRef } from '../../services/chat';
+import ChatControls from './ChatControls';
 
 export default class RentAdvertise extends React.Component {
   constructor() {
@@ -35,13 +36,23 @@ export default class RentAdvertise extends React.Component {
 
 
   render() {
-    const { open } = this.props;
+    const { open, toggleChat, chatData } = this.props;
     const {} = this.state;
     return (
       <Modal
         open={open}
-        size="fullscreen"
-      />
+        size="large"
+        onClose={toggleChat}
+      >
+        <Grid>
+          <Grid.Column width={4}>
+            Last
+          </Grid.Column>
+          <Grid.Column width={12}>
+            <ChatControls />
+          </Grid.Column>
+        </Grid>
+      </Modal>
     );
   }
 }

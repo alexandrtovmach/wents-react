@@ -28,7 +28,7 @@ class App extends React.Component {
 
     this.state = {
       showSidebar: false,
-      showChat: false,
+      showChat: true,
       chatData: null,
       user: null
     };
@@ -78,7 +78,9 @@ class App extends React.Component {
           <Chat
             user={user}
             open={showChat}
+            chatData={chatData}
             onUpdated={this.onChatUpdated}
+            toggleChat={this.toggleChat}
           />
           <Switch>
             <Route
