@@ -1,0 +1,11 @@
+.chat-modal {
+  max-height: 400px;
+
+  >* {
+    height: 100%;
+  }
+
+  .chat-user-list {
+    height: 100%;
+  }
+}

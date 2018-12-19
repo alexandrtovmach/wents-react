@@ -11,6 +11,7 @@
     "rc-slider": "^8.6.3",
     "react": "^16.6.3",
     "react-avatar-edit": "^0.6.0",
+    "react-chat-elements": "^10.1.1",
     "react-dom": "^16.6.3",
     "react-google-maps": "^9.4.5",
     "react-router-dom": "^4.3.1",
