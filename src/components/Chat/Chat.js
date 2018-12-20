@@ -1,9 +1,10 @@
 import React from 'react';
-import { Grid, Modal, Segment, Button, Responsive } from "semantic-ui-react";
-import { SystemMessage, MessageList, ChatList, Input } from 'react-chat-elements'
+import { Modal, Segment, Button, Icon, Item, Dropdown } from "semantic-ui-react";
+import { 
+  // SystemMessage,
+  MessageList, ChatList, Input } from 'react-chat-elements'
 
 import { subscribeToRef } from '../../services/chat';
-import ChatControls from './ChatControls';
 import './Chat.scss';
 
 export default class RentAdvertise extends React.Component {
@@ -40,47 +41,85 @@ export default class RentAdvertise extends React.Component {
 
 
   render() {
-    const { open, toggleChat, chatData } = this.props;
-    const {} = this.state;
+    const { open, toggleChat,
+      // chatData
+    } = this.props;
+    // const {} = this.state;
     return (
       <Modal
         open={open}
         size="large"
-        className='chat-modal'
         onClose={toggleChat}
       >
         <Modal.Header>Chat</Modal.Header>
-        <Grid as={Segment} basic>
-          <Grid.Column width={6}>
-            <ChatList
-              className='chat-user-list'
-              dataSource={chats}
+        <Segment
+          basic
+          className='chat-modal'
+        >
+          <ChatList
+            className='chat-user-list'
+            dataSource={chats}
+          />
+          <Item
+            className='chat-messages-block'
+          >
+            <MessageList
+              className='chat-message-list'
+              // lockable={true}
+              // toBottomHeight={"100%"}
+              dataSource={messages}
             />
-          </Grid.Column>
-          <Grid.Column width={10} verticalAlign='bottom'>
-            <Segment basic>
-              <MessageList
-                className='message-list'
-                // lockable={true}
-                toBottomHeight={'100%'}
-                dataSource={messages}
-              />
-            </Segment>
             <Segment>
               <Input
                 placeholder="Type here..."
                 multiline
                 autofocus
+                leftButtons={
+                  <Dropdown
+                    upward
+                    trigger={
+                      <Button
+                        circular
+                        icon="plus"
+                      />
+                    }
+                    options={[
+                      {
+                        key: "dropdown-file",
+                        text: "Upload file",
+                        icon: <Icon link name='file' size="large" />
+                      },
+                      {
+                        key: "dropdown-emodgi",
+                        text: "Smile",
+                        icon: <Icon link name='smile' size="large" />
+                      },
+                      {
+                        key: "dropdown-share-contact-button",
+                        text: "Share contact details with user",
+                        icon: <Icon link name='user' size="large" />
+                      },
+                      {
+                        key: "dropdown-deal-button",
+                        text: "Make a deal with user",
+                        icon: <Icon link name='handshake' size="large" />
+                      }
+                    ]}
+                  >
+                    {/* <Icon link name='file' size="large" />
+                    <Icon link name='smile outline' size="large" /> */}
+                  </Dropdown>    
+                }
                 rightButtons={
                   <Button
-                    color='blue'
+                    primary
                     content='Send'
                   />
                 }
               />
             </Segment>
-          </Grid.Column>
-        </Grid>
+          </Item>
+        </Segment>
       </Modal>
     );
   }

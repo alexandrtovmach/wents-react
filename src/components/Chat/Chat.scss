@@ -1,11 +1,35 @@
 .chat-modal {
-  max-height: 400px;
-
-  >* {
-    height: 100%;
-  }
+  height: 500px;
+  display: flex!important;
+  align-items: center;
 
   .chat-user-list {
+    flex: 0 1 30%;
     height: 100%;
   }
+  .chat-messages-block {
+    flex: 0 1 70%;
+    height: 100%;
+    margin: 0 15px!important;
+    display: flex!important;
+    justify-content: flex-end;
+    flex-direction: column;
+
+    .chat-message-list {
+    }
+  }
+
+  // .rce-mbox {
+  //   background-color: #c3f9f9;
+  //   >div>svg {
+  //     fill: #c3f9f9;
+  //   }
+
+  //   &.rce-mbox-right {
+  //     background-color: #d1f9c3;
+  //     >svg {
+  //       fill: #d1f9c3;
+  //     }
+  //   }
+  // }
 }
