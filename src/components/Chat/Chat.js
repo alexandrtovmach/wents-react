@@ -14,6 +14,12 @@ export default class RentAdvertise extends React.Component {
     this.state = {
       show: true
     }
+
+    this.onClickConversation = this.onClickConversation.bind(this);
+    this.toggleUploadFile = this.toggleUploadFile.bind(this);
+    this.toggleEmodji = this.toggleEmodji.bind(this);
+    this.shareContactDetails = this.shareContactDetails.bind(this);
+    this.makeDeal = this.makeDeal.bind(this);
   }
 
   async componentDidMount() {
@@ -23,6 +29,26 @@ export default class RentAdvertise extends React.Component {
     } else {
       console.warn("Chat: provided 'user' object is not valid");
     }
+  }
+
+  onClickConversation() {
+    console.log(arguments);
+  }
+
+  toggleUploadFile() {
+    console.log(arguments);
+  }
+
+  toggleEmodji() {
+    console.log(arguments);
+  }
+  
+  shareContactDetails() {
+    console.log(arguments);
+  }
+
+  makeDeal() {
+    console.log(arguments);
   }
 
   onConversationUpdated(newData) {
@@ -59,14 +85,14 @@ export default class RentAdvertise extends React.Component {
           <ChatList
             className='chat-user-list'
             dataSource={chats}
+            onClick={this.onClickConversation}
           />
           <Item
             className='chat-messages-block'
           >
             <MessageList
               className='chat-message-list'
-              // lockable={true}
-              // toBottomHeight={"100%"}
+              toBottomHeight={"100%"}
               dataSource={messages}
             />
             <Segment>
@@ -77,6 +103,7 @@ export default class RentAdvertise extends React.Component {
                 leftButtons={
                   <Dropdown
                     upward
+                    value={null}
                     trigger={
                       <Button
                         circular
@@ -87,22 +114,26 @@ export default class RentAdvertise extends React.Component {
                       {
                         key: "dropdown-file",
                         text: "Upload file",
-                        icon: <Icon link name='file' size="large" />
+                        icon: <Icon link name='file' size="large" />,
+                        onClick: this.toggleUploadFile
                       },
                       {
                         key: "dropdown-emodgi",
                         text: "Smile",
-                        icon: <Icon link name='smile' size="large" />
+                        icon: <Icon link name='smile' size="large" />,
+                        onClick: this.toggleEmodji
                       },
                       {
                         key: "dropdown-share-contact-button",
                         text: "Share contact details with user",
-                        icon: <Icon link name='user' size="large" />
+                        icon: <Icon link name='user' size="large" />,
+                        onClick: this.shareContactDetails
                       },
                       {
                         key: "dropdown-deal-button",
                         text: "Make a deal with user",
-                        icon: <Icon link name='handshake' size="large" />
+                        icon: <Icon link name='handshake' size="large" />,
+                        onClick: this.makeDeal
                       }
                     ]}
                   >
@@ -291,7 +322,7 @@ const chats = [
     title: 'Steve',
     subtitle: 'Rent: "Квартира в Киеве"',
     date: new Date(),
-    unread: 0,
+    unread: 5,
   },
   {
     avatar: 'https://react.semantic-ui.com/images/avatar/large/molly.png',
@@ -299,7 +330,7 @@ const chats = [
     title: 'Molly',
     subtitle: 'Rent: "Квартира во Львове"',
     date: new Date(),
-    unread: 0,
+    unread: 2,
   },
   {
     avatar: 'https://react.semantic-ui.com/images/avatar/large/jenny.jpg',

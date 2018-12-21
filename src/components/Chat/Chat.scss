@@ -16,6 +16,13 @@
     flex-direction: column;
 
     .chat-message-list {
+      .rce-mbox {
+        padding: 6px 9px 18px 9px;
+        .rce-mbox-time.non-copiable {
+          font-size: 80%;
+          bottom: -120%;
+        }
+      }
     }
   }
 
