@@ -4,7 +4,7 @@ import {
   // SystemMessage,
   MessageList, ChatList, Input } from 'react-chat-elements'
 
-import { subscribeToRef } from '../../services/chat';
+import { subscribeToRef, createConversation, postMessageToConversation } from '../../services/chat';
 import './Chat.scss';
 
 export default class RentAdvertise extends React.Component {
@@ -16,6 +16,7 @@ export default class RentAdvertise extends React.Component {
       showConverstionList: true
     }
 
+    this.onConversationUpdated = this.onConversationUpdated.bind(this);
     this.onClickConversation = this.onClickConversation.bind(this);
     this.toggleConversationList = this.toggleConversationList.bind(this);
     this.toggleUploadFile = this.toggleUploadFile.bind(this);
@@ -26,8 +27,12 @@ export default class RentAdvertise extends React.Component {
 
   async componentDidMount() {
     const { user } = this.props;
+    console.log(user);
+    postMessageToConversation("yoJoACwRNdMpfUYQ66Sn");
+    // createConversation("y6cm3Yl4oARrjRQsszH9ADvu9xl1", "5Vq2Ss00A8f2WBJ1P6xakJbJZDT2")
+      // .then(console.log)
     if (user && user.uid && user.conversations) {
-      user.conversations.forEach(convId => subscribeToRef(user.uid, convId, this.onConversationUpdated));
+      user.conversations.forEach(convId => subscribeToRef(convId, this.onConversationUpdated));
     } else {
       console.warn("Chat: provided 'user' object is not valid");
     }
@@ -62,6 +67,7 @@ export default class RentAdvertise extends React.Component {
   onConversationUpdated(newData) {
     const { onUpdated } = this.props;
     onUpdated && onUpdated(newData);
+    console.log("updated", newData);
   }
 
 

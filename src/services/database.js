@@ -81,19 +81,20 @@ export const pushData = async (type, data, userId) => {
     .then(snapshot => (data.publish && addToPublic(type, snapshot.key, data)) || snapshot.key)
 };
 
-export const updateData = async (type, key, data, userId) => {
+export const updateData = async (type, key, data, userId, withoutMetaInfo) => {
   userId = userId || (await getUser()).uid;
   const pathString = `${type}/${userId}/${key}`;
+  const metaInfo = withoutMetaInfo || {
+    id: key,
+    updatedAt: Date.now(),
+  };
   data = {
     ...data,
-    updatedAt: Date.now()
+    ...metaInfo
   }
   return database
     .ref(pathString)
-    .update({
-      ...data,
-      id: key
-    })
+    .update(data)
     .then(() => data.publish && addToPublic(type, key, data))
     // .then(() => addTimestamp(type, `${pathString}`)) // add timestamp
 };
