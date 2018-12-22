@@ -1,29 +1,27 @@
-.chat-modal {
+.chat-modal.pushable {
   height: 500px;
-  display: flex!important;
-  align-items: center;
 
   .chat-user-list {
-    flex: 0 1 30%;
     height: 100%;
   }
-  .chat-messages-block {
-    flex: 0 1 70%;
+  .pusher {
     height: 100%;
-    margin: 0 15px!important;
-    display: flex!important;
-    justify-content: flex-end;
-    flex-direction: column;
-
-    .chat-message-list {
-      .rce-mbox {
-        padding: 6px 9px 18px 9px;
-        .rce-mbox-time.non-copiable {
-          font-size: 80%;
-          bottom: -120%;
+    .chat-messages-block {
+      height: 100%;
+      display: flex!important;
+      justify-content: flex-end;
+      flex-direction: column;
+  
+      .chat-message-list {
+        .rce-mbox {
+          padding: 6px 9px 18px 9px;
+          .rce-mbox-time.non-copiable {
+            font-size: 80%;
+            bottom: -120%;
+          }
         }
       }
-    }
+  }
   }
 
   // .rce-mbox {

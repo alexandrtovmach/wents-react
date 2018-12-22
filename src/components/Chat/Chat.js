@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Segment, Button, Icon, Item, Dropdown } from "semantic-ui-react";
+import { Modal, Segment, Button, Icon, Item, Dropdown, Sidebar, Label } from "semantic-ui-react";
 import { 
   // SystemMessage,
   MessageList, ChatList, Input } from 'react-chat-elements'
@@ -12,10 +12,12 @@ export default class RentAdvertise extends React.Component {
     super();
 
     this.state = {
-      show: true
+      show: true,
+      showConverstionList: true
     }
 
     this.onClickConversation = this.onClickConversation.bind(this);
+    this.toggleConversationList = this.toggleConversationList.bind(this);
     this.toggleUploadFile = this.toggleUploadFile.bind(this);
     this.toggleEmodji = this.toggleEmodji.bind(this);
     this.shareContactDetails = this.shareContactDetails.bind(this);
@@ -33,6 +35,12 @@ export default class RentAdvertise extends React.Component {
 
   onClickConversation() {
     console.log(arguments);
+  }
+
+  toggleConversationList() {
+    this.setState({
+      showConverstionList: !this.state.showConverstionList
+    })
   }
 
   toggleUploadFile() {
@@ -56,6 +64,8 @@ export default class RentAdvertise extends React.Component {
     onUpdated && onUpdated(newData);
   }
 
+
+
   componentDidUpdate(prevProps) {
     // if (!prevProps.data && this.props.data) {
     //   this.setState({
@@ -67,90 +77,104 @@ export default class RentAdvertise extends React.Component {
 
 
   render() {
-    const { open, toggleChat,
-      // chatData
-    } = this.props;
-    // const {} = this.state;
+    const { open, toggleChat } = this.props;
+    const { showConverstionList } = this.state;
     return (
       <Modal
         open={open}
         size="large"
         onClose={toggleChat}
       >
-        <Modal.Header>Chat</Modal.Header>
-        <Segment
-          basic
+        <Modal.Header>
+          <Label
+            basic
+            as="a"
+            onClick={this.toggleConversationList}
+          >
+            <Icon name='angle left' size="large" flipped={showConverstionList? null: "horizontally" } />
+            <Icon name='users' size="large" fitted/>
+          </Label>
+        </Modal.Header>
+        <Sidebar.Pushable
           className='chat-modal'
         >
-          <ChatList
-            className='chat-user-list'
-            dataSource={chats}
-            onClick={this.onClickConversation}
-          />
-          <Item
-            className='chat-messages-block'
+          <Sidebar
+            animation='push'
+            icon='labeled'
+            onHide={this.handleSidebarHide}
+            visible={showConverstionList}
+            width='wide'
           >
-            <MessageList
-              className='chat-message-list'
-              toBottomHeight={"100%"}
-              dataSource={messages}
+            <ChatList
+              className='chat-user-list'
+              dataSource={chats}
+              onClick={this.onClickConversation}
             />
-            <Segment>
-              <Input
-                placeholder="Type here..."
-                multiline
-                autofocus
-                leftButtons={
-                  <Dropdown
-                    upward
-                    value={null}
-                    trigger={
-                      <Button
-                        circular
-                        icon="plus"
-                      />
-                    }
-                    options={[
-                      {
-                        key: "dropdown-file",
-                        text: "Upload file",
-                        icon: <Icon link name='file' size="large" />,
-                        onClick: this.toggleUploadFile
-                      },
-                      {
-                        key: "dropdown-emodgi",
-                        text: "Smile",
-                        icon: <Icon link name='smile' size="large" />,
-                        onClick: this.toggleEmodji
-                      },
-                      {
-                        key: "dropdown-share-contact-button",
-                        text: "Share contact details with user",
-                        icon: <Icon link name='user' size="large" />,
-                        onClick: this.shareContactDetails
-                      },
-                      {
-                        key: "dropdown-deal-button",
-                        text: "Make a deal with user",
-                        icon: <Icon link name='handshake' size="large" />,
-                        onClick: this.makeDeal
-                      }
-                    ]}
-                  >
-                    {/* <Icon link name='file' size="large" />
-                    <Icon link name='smile outline' size="large" /> */}
-                  </Dropdown>    
-                }
-                rightButtons={
-                  <Button
-                    primary
-                    content='Send'
-                  />
-                }
+          </Sidebar>
+
+          <Sidebar.Pusher>
+            <Item
+              className='chat-messages-block'
+            >
+              <MessageList
+                className='chat-message-list'
+                toBottomHeight={"100%"}
+                dataSource={messages}
               />
-            </Segment>
-          </Item>
-        </Segment>
+              <Segment>
+                <Input
+                  placeholder="Type here..."
+                  multiline
+                  autofocus
+                  leftButtons={
+                    <Dropdown
+                      upward
+                      value={null}
+                      trigger={
+                        <Button
+                          circular
+                          icon="plus"
+                        />
+                      }
+                      options={[
+                        {
+                          key: "dropdown-file",
+                          text: "Upload file",
+                          icon: <Icon link name='file' size="large" />,
+                          onClick: this.toggleUploadFile
+                        },
+                        {
+                          key: "dropdown-emodgi",
+                          text: "Smile",
+                          icon: <Icon link name='smile' size="large" />,
+                          onClick: this.toggleEmodji
+                        },
+                        {
+                          key: "dropdown-share-contact-button",
+                          text: "Share contact details with user",
+                          icon: <Icon link name='user' size="large" />,
+                          onClick: this.shareContactDetails
+                        },
+                        {
+                          key: "dropdown-deal-button",
+                          text: "Make a deal with user",
+                          icon: <Icon link name='handshake' size="large" />,
+                          onClick: this.makeDeal
+                        }
+                      ]}
+                    /> 
+                  }
+                  rightButtons={
+                    <Button
+                      primary
+                      content='Send'
+                    />
+                  }
+                />
+              </Segment>
+            </Item>
+          </Sidebar.Pusher>
+        </Sidebar.Pushable>
       </Modal>
     );
   }
