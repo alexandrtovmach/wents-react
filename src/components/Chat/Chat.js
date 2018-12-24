@@ -4,7 +4,7 @@ import {
   // SystemMessage,
   MessageList, ChatList, Input } from 'react-chat-elements'
 
-import { subscribeToRef, createConversation, postMessageToConversation } from '../../services/chat';
+import { subscribeToRef, createConversation, postMessageToConversation, getConversationDetails } from '../../services/chat';
 import './Chat.scss';
 
 export default class RentAdvertise extends React.Component {
@@ -13,7 +13,8 @@ export default class RentAdvertise extends React.Component {
 
     this.state = {
       show: true,
-      showConverstionList: true
+      showConversationList: true,
+      conversationList: []
     }
 
     this.onConversationUpdated = this.onConversationUpdated.bind(this);
@@ -27,12 +28,31 @@ export default class RentAdvertise extends React.Component {
 
   async componentDidMount() {
     const { user } = this.props;
-    console.log(user);
-    postMessageToConversation("yoJoACwRNdMpfUYQ66Sn");
+    // postMessageToConversation("lrjHZUhCqZd6Mr9goLMJ", "y6cm3Yl4oARrjRQsszH9ADvu9xl1", "5Vq2Ss00A8f2WBJ1P6xakJbJZDT2");
     // createConversation("y6cm3Yl4oARrjRQsszH9ADvu9xl1", "5Vq2Ss00A8f2WBJ1P6xakJbJZDT2")
       // .then(console.log)
     if (user && user.uid && user.conversations) {
-      user.conversations.forEach(convId => subscribeToRef(convId, this.onConversationUpdated));
+      Promise.all(
+        user.conversations.map(convId => {
+          subscribeToRef(convId, this.onConversationUpdated);
+          return getConversationDetails(convId)
+            .then(details => {
+              if (details) {
+                const notMe = Object.keys(details.participants).find(id => id !== user.uid)
+                const participant = details.participants[notMe];
+                return {
+                  id: convId,
+                  avatar: participant.photoURL,
+                  alt: participant.displayName,
+                  title: participant.displayName,
+                  subtitle: details.subject,
+                  // date: new Date(),
+                  // unread: 5,
+                }
+              }
+            })
+          })
+      ).then(conversationList => this.setState({conversationList}))
     } else {
       console.warn("Chat: provided 'user' object is not valid");
     }
@@ -44,7 +64,7 @@ export default class RentAdvertise extends React.Component {
 
   toggleConversationList() {
     this.setState({
-      showConverstionList: !this.state.showConverstionList
+      showConversationList: !this.state.showConversationList
     })
   }
 
@@ -84,7 +104,8 @@ export default class RentAdvertise extends React.Component {
 
   render() {
     const { open, toggleChat } = this.props;
-    const { showConverstionList } = this.state;
+    const { showConversationList, conversationList } = this.state;
+    console.log(conversationList);
     return (
       <Modal
         open={open}
@@ -97,7 +118,7 @@ export default class RentAdvertise extends React.Component {
             as="a"
             onClick={this.toggleConversationList}
           >
-            <Icon name='angle left' size="large" flipped={showConverstionList? null: "horizontally" } />
+            <Icon name='angle left' size="large" flipped={showConversationList? null: "horizontally" } />
             <Icon name='users' size="large" fitted/>
           </Label>
         </Modal.Header>
@@ -108,12 +129,12 @@ export default class RentAdvertise extends React.Component {
             animation='push'
             icon='labeled'
             onHide={this.handleSidebarHide}
-            visible={showConverstionList}
+            visible={showConversationList}
             width='wide'
           >
             <ChatList
               className='chat-user-list'
-              dataSource={chats}
+              dataSource={conversationList}
               onClick={this.onClickConversation}
             />
           </Sidebar>
