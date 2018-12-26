@@ -45,11 +45,15 @@ class App extends React.Component {
 
   onChatUpdated(newData) {
     this.setState({
-      chatData: newData
+      chatData: {
+        ...this.state.chatData,
+        ...newData
+      }
     })
   }
 
   toggleChat() {
+    console.log("toggleChat");
     this.setState({
       showChat: !this.state.showChat
     })

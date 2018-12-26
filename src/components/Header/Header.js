@@ -34,7 +34,7 @@ export default class HeaderComponent extends React.Component {
   }
 
   render () {
-    const { toggleSidebar, toggleChat,  user } = this.props;
+    const { toggleSidebar, toggleChat, user } = this.props;
     return (
       <header
         ref={el => this.headerEl = el}
@@ -85,6 +85,7 @@ export default class HeaderComponent extends React.Component {
                 as='div'
                 labelPosition='right'
                 size="tiny"
+                onClick={toggleChat}
               >
                 <Button 
                   primary

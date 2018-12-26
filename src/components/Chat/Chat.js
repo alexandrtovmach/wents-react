@@ -14,7 +14,8 @@ export default class RentAdvertise extends React.Component {
     this.state = {
       show: true,
       showConversationList: true,
-      conversationList: []
+      conversationList: [],
+      conversationMessages: {}
     }
 
     this.onConversationUpdated = this.onConversationUpdated.bind(this);
@@ -58,6 +59,45 @@ export default class RentAdvertise extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    const { chatData, user } = this.props;
+
+    console.log(prevProps.chatData, chatData);
+    if ((!prevProps.chatData && chatData) || Object.keys(prevProps.chatData).length !== Object.keys(chatData).length) {
+      this.setState({
+        conversationMessages: Object.keys(chatData).reduce((prev, el) => {
+          return {
+            ...prev,
+            [el]: chatData[el].map(m => ({
+              position: m.sender === user.uid? 'right': "left",
+              type: 'text',
+              text: m.text,
+              date: new Date(m.createdAt),
+            }))
+          }
+        }, {})
+      })
+    }
+    // {
+    //   position: 'right',
+    //   type: 'text',
+    //   text: 'How are you?',
+    //   date: new Date(Date.now() - 1000*60*0.1),
+    // },
+    // {
+    //   position: 'left',
+    //   type: 'file',
+    //   text: 'react.svg',
+    //   data: {
+    //     uri: 'https://react.semantic-ui.com/images/wireframe/image.png',
+    //     status: {
+    //         click: false,
+    //         loading: 0,
+    //     }
+    //   }
+    // }
+  }
+
   onClickConversation() {
     console.log(arguments);
   }
@@ -90,22 +130,18 @@ export default class RentAdvertise extends React.Component {
     console.log("updated", newData);
   }
 
+  // transformChatData(chatData, userId) {
 
 
-  componentDidUpdate(prevProps) {
-    // if (!prevProps.data && this.props.data) {
-    //   this.setState({
-    //     ...this.props.data
-    //   })
-    // }
-  }
-
+  // }
 
 
   render() {
     const { open, toggleChat } = this.props;
-    const { showConversationList, conversationList } = this.state;
-    console.log(conversationList);
+    const { showConversationList, conversationList, conversationMessages } = this.state;
+    console.log("conversationList", conversationList);
+    console.log("conversationMessages", conversationMessages["lrjHZUhCqZd6Mr9goLMJ"]);
+
     return (
       <Modal
         open={open}
@@ -146,7 +182,7 @@ export default class RentAdvertise extends React.Component {
               <MessageList
                 className='chat-message-list'
                 toBottomHeight={"100%"}
-                dataSource={messages}
+                dataSource={conversationMessages["lrjHZUhCqZd6Mr9goLMJ"]}
               />
               <Segment>
                 <Input
@@ -206,237 +242,3 @@ export default class RentAdvertise extends React.Component {
     );
   }
 }
-
-const messages = [
-  {
-    position: 'right',
-    type: 'text',
-    text: 'Hello',
-    date: new Date(Date.now() - 1000*60*1.5),
-  },
-  {
-    position: 'left',
-    type: 'text',
-    text: 'Hi man',
-    date: new Date(Date.now() - 1000*60*1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'How are you?',
-    date: new Date(Date.now() - 1000*60*0.1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'Hello',
-    date: new Date(Date.now() - 1000*60*1.5),
-  },
-  {
-    position: 'left',
-    type: 'text',
-    text: 'Hi man',
-    date: new Date(Date.now() - 1000*60*1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'How are you?',
-    date: new Date(Date.now() - 1000*60*0.1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'Hello',
-    date: new Date(Date.now() - 1000*60*1.5),
-  },
-  {
-    position: 'left',
-    type: 'text',
-    text: 'Hi man',
-    date: new Date(Date.now() - 1000*60*1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'How are you?',
-    date: new Date(Date.now() - 1000*60*0.1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'Hello',
-    date: new Date(Date.now() - 1000*60*1.5),
-  },
-  {
-    position: 'left',
-    type: 'text',
-    text: 'Hi man',
-    date: new Date(Date.now() - 1000*60*1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'How are you?',
-    date: new Date(Date.now() - 1000*60*0.1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'Hello',
-    date: new Date(Date.now() - 1000*60*1.5),
-  },
-  {
-    position: 'left',
-    type: 'text',
-    text: 'Hi man',
-    date: new Date(Date.now() - 1000*60*1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'How are you?',
-    date: new Date(Date.now() - 1000*60*0.1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'Hello',
-    date: new Date(Date.now() - 1000*60*1.5),
-  },
-  {
-    position: 'left',
-    type: 'text',
-    text: 'Hi man',
-    date: new Date(Date.now() - 1000*60*1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'How are you?',
-    date: new Date(Date.now() - 1000*60*0.1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'Hello',
-    date: new Date(Date.now() - 1000*60*1.5),
-  },
-  {
-    position: 'left',
-    type: 'text',
-    text: 'Hi man',
-    date: new Date(Date.now() - 1000*60*1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'How are you?',
-    date: new Date(Date.now() - 1000*60*0.1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'Hello',
-    date: new Date(Date.now() - 1000*60*1.5),
-  },
-  {
-    position: 'left',
-    type: 'text',
-    text: 'Hi man',
-    date: new Date(Date.now() - 1000*60*1),
-  },
-  {
-    position: 'right',
-    type: 'text',
-    text: 'How are you?',
-    date: new Date(Date.now() - 1000*60*0.1),
-  },
-  {
-    position: 'left',
-    type: 'file',
-    text: 'react.svg',
-    data: {
-      uri: 'https://react.semantic-ui.com/images/wireframe/image.png',
-      status: {
-          click: false,
-          loading: 0,
-      }
-    }
-  }
-];
-
-const chats = [
-  {
-    avatar: 'https://react.semantic-ui.com/images/avatar/large/steve.jpg',
-    alt: 'Steve',
-    title: 'Steve',
-    subtitle: 'Rent: "Квартира в Киеве"',
-    date: new Date(),
-    unread: 5,
-  },
-  {
-    avatar: 'https://react.semantic-ui.com/images/avatar/large/molly.png',
-    alt: 'Molly',
-    title: 'Molly',
-    subtitle: 'Rent: "Квартира во Львове"',
-    date: new Date(),
-    unread: 2,
-  },
-  {
-    avatar: 'https://react.semantic-ui.com/images/avatar/large/jenny.jpg',
-    alt: 'Jenny',
-    title: 'Jenny',
-    subtitle: 'Rent: "Дом на берегу, Одесса"',
-    date: new Date(),
-    unread: 0,
-  },
-  {
-    avatar: 'https://react.semantic-ui.com/images/avatar/large/steve.jpg',
-    alt: 'Steve',
-    title: 'Steve',
-    subtitle: 'Rent: "Квартира в Киеве"',
-    date: new Date(),
-    unread: 0,
-  },
-  {
-    avatar: 'https://react.semantic-ui.com/images/avatar/large/molly.png',
-    alt: 'Molly',
-    title: 'Molly',
-    subtitle: 'Rent: "Квартира во Львове"',
-    date: new Date(),
-    unread: 0,
-  },
-  {
-    avatar: 'https://react.semantic-ui.com/images/avatar/large/jenny.jpg',
-    alt: 'Jenny',
-    title: 'Jenny',
-    subtitle: 'Rent: "Дом на берегу, Одесса"',
-    date: new Date(),
-    unread: 0,
-  },
-  {
-    avatar: 'https://react.semantic-ui.com/images/avatar/large/steve.jpg',
-    alt: 'Steve',
-    title: 'Steve',
-    subtitle: 'Rent: "Квартира в Киеве"',
-    date: new Date(),
-    unread: 0,
-  },
-  {
-    avatar: 'https://react.semantic-ui.com/images/avatar/large/molly.png',
-    alt: 'Molly',
-    title: 'Molly',
-    subtitle: 'Rent: "Квартира во Львове"',
-    date: new Date(),
-    unread: 0,
-  },
-  {
-    avatar: 'https://react.semantic-ui.com/images/avatar/large/jenny.jpg',
-    alt: 'Jenny',
-    title: 'Jenny',
-    subtitle: 'Rent: "Дом на берегу, Одесса"',
-    date: new Date(),
-    unread: 0,
-  },
-]

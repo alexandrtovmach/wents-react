@@ -6,10 +6,11 @@ export const subscribeToRef = (ref, callback) => {
   firestore.collection("chat")
     .doc(ref)
     .collection("messages")
-    .onSnapshot(doc => {
-      callback(doc.docs.map(queryDoc => ({
-        ...queryDoc.data()
-      })))
+    .onSnapshot(messagesCollection => {
+      console.log(messagesCollection.docChanges())
+      callback({
+        [ref]: messagesCollection.docs.map(queryDoc => queryDoc.data()),
+      })
     });
 }
 
@@ -36,12 +37,13 @@ export const createConversation = (userId1, userId2, subject) => {
 }
 
 export const postMessageToConversation = (conversationId, userId1, userId2) => {
+  const rand = (Number(Math.random().toString().slice(-1)) % 2);
   return firestore.collection("chat")
     .doc(conversationId)
     .collection("messages")
     .add({
-      sender: userId1,
-      receiver: userId2,
+      sender: rand? userId1: userId2,
+      receiver: rand? userId2: userId1,
       createdAt: Date.now(),
       text: `Hello ${new Date().toISOString()}`
     })
