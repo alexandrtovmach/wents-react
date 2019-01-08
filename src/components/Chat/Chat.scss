@@ -6,6 +6,9 @@
   }
   .pusher {
     height: 100%;
+    >.ui.placeholder.segment {
+      height: 100%;
+    }
     .chat-messages-block {
       height: 100%;
       display: flex!important;
@@ -21,20 +24,15 @@
           }
         }
       }
+    }
   }
+  .rce-mbox {
+    background-color: #eefdfd;
+    >svg {
+      fill: #eefdfd;
+    }
+    >div>svg {
+      fill: #eefdfd;
+    }
   }
-
-  // .rce-mbox {
-  //   background-color: #c3f9f9;
-  //   >div>svg {
-  //     fill: #c3f9f9;
-  //   }
-
-  //   &.rce-mbox-right {
-  //     background-color: #d1f9c3;
-  //     >svg {
-  //       fill: #d1f9c3;
-  //     }
-  //   }
-  // }
 }

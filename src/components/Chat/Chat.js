@@ -1,8 +1,12 @@
 import React from 'react';
-import { Modal, Segment, Button, Icon, Item, Dropdown, Sidebar, Label } from "semantic-ui-react";
+import isEqual from 'lodash.isequal';
+import { Modal, Segment, Button, Icon, Item, Dropdown, Sidebar, Label, Header } from "semantic-ui-react";
 import { 
-  // SystemMessage,
-  MessageList, ChatList, Input } from 'react-chat-elements'
+  SystemMessage,
+  MessageList,
+  ChatList,
+  Input
+} from 'react-chat-elements'
 
 import { subscribeToRef, createConversation, postMessageToConversation, getConversationDetails } from '../../services/chat';
 import './Chat.scss';
@@ -15,7 +19,8 @@ export default class RentAdvertise extends React.Component {
       show: true,
       showConversationList: true,
       conversationList: [],
-      conversationMessages: {}
+      conversationMessages: {},
+      selectedConversation: ""
     }
 
     this.onConversationUpdated = this.onConversationUpdated.bind(this);
@@ -25,13 +30,12 @@ export default class RentAdvertise extends React.Component {
     this.toggleEmodji = this.toggleEmodji.bind(this);
     this.shareContactDetails = this.shareContactDetails.bind(this);
     this.makeDeal = this.makeDeal.bind(this);
+    this.onMessageInput = this.onMessageInput.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
   }
 
   async componentDidMount() {
     const { user } = this.props;
-    // postMessageToConversation("lrjHZUhCqZd6Mr9goLMJ", "y6cm3Yl4oARrjRQsszH9ADvu9xl1", "5Vq2Ss00A8f2WBJ1P6xakJbJZDT2");
-    // createConversation("y6cm3Yl4oARrjRQsszH9ADvu9xl1", "5Vq2Ss00A8f2WBJ1P6xakJbJZDT2")
-      // .then(console.log)
     if (user && user.uid && user.conversations) {
       Promise.all(
         user.conversations.map(convId => {
@@ -39,10 +43,12 @@ export default class RentAdvertise extends React.Component {
           return getConversationDetails(convId)
             .then(details => {
               if (details) {
-                const notMe = Object.keys(details.participants).find(id => id !== user.uid)
-                const participant = details.participants[notMe];
+                const notMeId = Object.keys(details.participants).find(id => id !== user.uid);
+                const participant = details.participants[notMeId];
                 return {
                   id: convId,
+                  senderId: user.uid,
+                  receiverId: notMeId,
                   avatar: participant.photoURL,
                   alt: participant.displayName,
                   title: participant.displayName,
@@ -61,45 +67,37 @@ export default class RentAdvertise extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { chatData, user } = this.props;
-
-    console.log(prevProps.chatData, chatData);
-    if ((!prevProps.chatData && chatData) || Object.keys(prevProps.chatData).length !== Object.keys(chatData).length) {
+    if (!isEqual(prevProps.chatData, chatData)) {
       this.setState({
-        conversationMessages: Object.keys(chatData).reduce((prev, el) => {
-          return {
-            ...prev,
-            [el]: chatData[el].map(m => ({
+        conversationMessages: Object.keys(chatData).reduce((prev, el) => ({
+          ...prev,
+          [el]: chatData[el]
+            .map(m => ({
               position: m.sender === user.uid? 'right': "left",
-              type: 'text',
+              type: m.type || 'text',
+              systemMessageId: m.systemMessageId,
               text: m.text,
               date: new Date(m.createdAt),
             }))
-          }
-        }, {})
+            .sort((a, b) => a.date - b.date)
+        }), {})
       })
     }
-    // {
-    //   position: 'right',
-    //   type: 'text',
-    //   text: 'How are you?',
-    //   date: new Date(Date.now() - 1000*60*0.1),
-    // },
-    // {
-    //   position: 'left',
-    //   type: 'file',
-    //   text: 'react.svg',
-    //   data: {
-    //     uri: 'https://react.semantic-ui.com/images/wireframe/image.png',
-    //     status: {
-    //         click: false,
-    //         loading: 0,
-    //     }
-    //   }
-    // }
   }
 
-  onClickConversation() {
-    console.log(arguments);
+  shouldComponentUpdate(prevProp, prevState) {
+    if (prevState.messageText !== this.state.messageText) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  onClickConversation(item) {
+    this.setState({
+      selectedConversation: item.id,
+      showConversationList: false
+    })
   }
 
   toggleConversationList() {
@@ -109,38 +107,59 @@ export default class RentAdvertise extends React.Component {
   }
 
   toggleUploadFile() {
-    console.log(arguments);
+    console.warn("In development");
   }
 
   toggleEmodji() {
-    console.log(arguments);
+    console.warn("In development");
   }
   
-  shareContactDetails() {
-    console.log(arguments);
+  shareContactDetails(isAlreadySharedContacts) {
+    const { selectedConversation, conversationList } = this.state;
+
+    if (isAlreadySharedContacts) {
+      console.warn("Already shared contacts. Action skipped");
+    } else {
+      const { senderId, receiverId } = conversationList.find(el => el.id === selectedConversation);
+      postMessageToConversation(selectedConversation, senderId, receiverId, "Congratulations! You're shared your contacts.", 2);
+    }
   }
 
-  makeDeal() {
-    console.log(arguments);
+  makeDeal(isAlreadyHasDeal) {
+    const { selectedConversation, conversationList } = this.state;
+
+    if (isAlreadyHasDeal) {
+      console.warn("Already have deal. Action skipped");
+    } else {
+      const { senderId, receiverId } = conversationList.find(el => el.id === selectedConversation);
+      postMessageToConversation(selectedConversation, senderId, receiverId, "Congratulations! You're accepted deal.", 1);
+    }
+  }
+
+  onMessageInput(e) {
+    this.setState({
+      messageText: e.target.value
+    })
+  }
+
+  sendMessage() {
+    const { messageText, selectedConversation, conversationList } = this.state;
+    const { senderId, receiverId } = conversationList.find(el => el.id === selectedConversation);
+    postMessageToConversation(selectedConversation, senderId, receiverId, messageText);
   }
 
   onConversationUpdated(newData) {
     const { onUpdated } = this.props;
     onUpdated && onUpdated(newData);
-    console.log("updated", newData);
   }
-
-  // transformChatData(chatData, userId) {
-
-
-  // }
 
 
   render() {
     const { open, toggleChat } = this.props;
-    const { showConversationList, conversationList, conversationMessages } = this.state;
-    console.log("conversationList", conversationList);
-    console.log("conversationMessages", conversationMessages["lrjHZUhCqZd6Mr9goLMJ"]);
+    const { showConversationList, conversationList, conversationMessages, selectedConversation } = this.state;
+
+    const isAlreadyHasDeal = (conversationMessages[selectedConversation] || []).some(el => el.type === "system" && el.systemMessageId === 1);
+    const isAlreadySharedContacts = (conversationMessages[selectedConversation] || []).some(el => el.type === "system" && el.systemMessageId === 2);
 
     return (
       <Modal
@@ -176,66 +195,83 @@ export default class RentAdvertise extends React.Component {
           </Sidebar>
 
           <Sidebar.Pusher>
-            <Item
-              className='chat-messages-block'
-            >
-              <MessageList
-                className='chat-message-list'
-                toBottomHeight={"100%"}
-                dataSource={conversationMessages["lrjHZUhCqZd6Mr9goLMJ"]}
-              />
-              <Segment>
-                <Input
-                  placeholder="Type here..."
-                  multiline
-                  autofocus
-                  leftButtons={
-                    <Dropdown
-                      upward
-                      value={null}
-                      trigger={
+            {
+              conversationMessages[selectedConversation]? (
+                <Item
+                  className='chat-messages-block'
+                >
+                  <MessageList
+                    className='chat-message-list'
+                    toBottomHeight={"100%"}
+                    dataSource={conversationMessages[selectedConversation]}
+                  />
+                  <Segment>
+                    <Input
+                      placeholder="Type here..."
+                      multiline
+                      autofocus
+                      onChange={this.onMessageInput}
+                      leftButtons={
+                        <Dropdown
+                          upward
+                          value={null}
+                          trigger={
+                            <Button
+                              circular
+                              icon="plus"
+                            />
+                          }
+                          options={[
+                            {
+                              key: "dropdown-file",
+                              text: "Upload file (In development)",
+                              icon: <Icon link name='file' size="large" />,
+                              onClick: this.toggleUploadFile
+                            },
+                            {
+                              key: "dropdown-emodgi",
+                              text: "Smile (In development)",
+                              icon: <Icon link name='smile' size="large" />,
+                              onClick: this.toggleEmodji
+                            },
+                            {
+                              key: "dropdown-share-contact-button",
+                              disabled: isAlreadySharedContacts,
+                              text: "Share contact details with user",
+                              icon: isAlreadySharedContacts? <Icon link name='check' size="large" color="green" />: <Icon link name='user' size="large" />,
+                              onClick: () => this.shareContactDetails(isAlreadySharedContacts)
+                            },
+                            {
+                              key: "dropdown-deal-button",
+                              disabled: isAlreadyHasDeal,
+                              text: "Make a deal with user",
+                              icon: isAlreadyHasDeal? <Icon link name='check' size="large" color="green" />: <Icon link name='handshake' size="large" />,
+                              onClick: () => this.makeDeal(isAlreadyHasDeal)
+                            }
+                          ]}
+                        /> 
+                      }
+                      rightButtons={
                         <Button
-                          circular
-                          icon="plus"
+                          primary
+                          content='Send'
+                          onClick={this.sendMessage}
                         />
                       }
-                      options={[
-                        {
-                          key: "dropdown-file",
-                          text: "Upload file",
-                          icon: <Icon link name='file' size="large" />,
-                          onClick: this.toggleUploadFile
-                        },
-                        {
-                          key: "dropdown-emodgi",
-                          text: "Smile",
-                          icon: <Icon link name='smile' size="large" />,
-                          onClick: this.toggleEmodji
-                        },
-                        {
-                          key: "dropdown-share-contact-button",
-                          text: "Share contact details with user",
-                          icon: <Icon link name='user' size="large" />,
-                          onClick: this.shareContactDetails
-                        },
-                        {
-                          key: "dropdown-deal-button",
-                          text: "Make a deal with user",
-                          icon: <Icon link name='handshake' size="large" />,
-                          onClick: this.makeDeal
-                        }
-                      ]}
-                    /> 
-                  }
-                  rightButtons={
-                    <Button
-                      primary
-                      content='Send'
                     />
-                  }
-                />
-              </Segment>
-            </Item>
+                  </Segment>
+                </Item>
+              ) : (
+                <Segment
+                  placeholder
+                >
+                  <Header icon>
+                    <Icon name='arrow left' />
+                    Please select conversation
+                  </Header>
+                </Segment>
+              )
+            }
           </Sidebar.Pusher>
         </Sidebar.Pushable>
       </Modal>

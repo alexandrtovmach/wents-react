@@ -7,9 +7,11 @@ export const subscribeToRef = (ref, callback) => {
     .doc(ref)
     .collection("messages")
     .onSnapshot(messagesCollection => {
-      console.log(messagesCollection.docChanges())
       callback({
-        [ref]: messagesCollection.docs.map(queryDoc => queryDoc.data()),
+        changes: messagesCollection.docChanges(),
+        full: {
+          [ref]: messagesCollection.docs.map(queryDoc => queryDoc.data())
+        }
       })
     });
 }
@@ -36,17 +38,25 @@ export const createConversation = (userId1, userId2, subject) => {
     });
 }
 
-export const postMessageToConversation = (conversationId, userId1, userId2) => {
-  const rand = (Number(Math.random().toString().slice(-1)) % 2);
+export const postMessageToConversation = (conversationId, senderId, receiverId, text, systemMessageId) => {
+  const message = systemMessageId? {
+    type: 'system',
+    systemMessageId: systemMessageId,
+    sender: senderId,
+    receiver: receiverId,
+    createdAt: Date.now(),
+    text: text,
+  } : {
+    sender: senderId,
+    receiver: receiverId,
+    createdAt: Date.now(),
+    text: text
+  };
+
   return firestore.collection("chat")
     .doc(conversationId)
     .collection("messages")
-    .add({
-      sender: rand? userId1: userId2,
-      receiver: rand? userId2: userId1,
-      createdAt: Date.now(),
-      text: `Hello ${new Date().toISOString()}`
-    })
+    .add(message)
 }
 
 export const getConversationDetails = (conversationId) => {
