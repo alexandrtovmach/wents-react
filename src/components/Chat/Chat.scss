@@ -1,0 +1,38 @@
+.chat-modal.pushable {
+  height: 500px;
+
+  .chat-user-list {
+    height: 100%;
+  }
+  .pusher {
+    height: 100%;
+    >.ui.placeholder.segment {
+      height: 100%;
+    }
+    .chat-messages-block {
+      height: 100%;
+      display: flex!important;
+      justify-content: flex-end;
+      flex-direction: column;
+  
+      .chat-message-list {
+        .rce-mbox {
+          padding: 6px 9px 18px 9px;
+          .rce-mbox-time.non-copiable {
+            font-size: 80%;
+            bottom: -120%;
+          }
+        }
+      }
+    }
+  }
+  .rce-mbox {
+    background-color: #eefdfd;
+    >svg {
+      fill: #eefdfd;
+    }
+    >div>svg {
+      fill: #eefdfd;
+    }
+  }
+}

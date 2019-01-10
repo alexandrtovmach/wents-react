@@ -1,0 +1,12 @@
+.uppy-Dashboard-inner {
+  min-width: initial !important;
+  min-height: initial !important;
+  .uppy-Dashboard-innerWrap {
+    .uppy-DashboardContent-bar {
+      z-index: 1!important;
+    }
+  }
+  .uppy-DashboardItem-action {
+    z-index: 1!important;
+  }
+}

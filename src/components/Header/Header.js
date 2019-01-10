@@ -1,6 +1,7 @@
 import React from 'react';
-import { Header } from 'semantic-ui-react';
+import { Button, Label, Menu, Image } from 'semantic-ui-react';
 
+import LogoSrc from "../../attachments/images/logo.png";
 import './Header.scss';
 
 const ANIMATION_SPEED = 1;
@@ -8,12 +9,15 @@ const ANIMATION_SPEED = 1;
 export default class HeaderComponent extends React.Component {
   constructor() {
     super();
+    this.state = {
+      showSidebar: true
+    }
 
     this.moveBg = this.moveBg.bind(this);
   }
 
   componentDidMount() {
-    window.addEventListener("scroll", this.moveBg)
+    window.addEventListener("scroll", this.moveBg);
   }
 
   componentWillUnmount() {
@@ -30,24 +34,97 @@ export default class HeaderComponent extends React.Component {
   }
 
   render () {
+    const { toggleSidebar, toggleChat, user } = this.props;
     return (
       <header
         ref={el => this.headerEl = el}
         className="header main-wrapper-padding"
       >
-        <a
+        <Image
+          as="a"
           href="/"
-          className="header-logo"
           title="Home"
-        > </a>
-        <nav
+          size="small"
+          src={LogoSrc}
+        />
+        <Menu
+          text
           className="header-navigation"
         >
-          <Header as="a" color="blue" href="/search-rent">Search house</Header>
-          <Header as="a" color="blue" href="/post-rent">Post house</Header>
-          <Header as="a" color="blue" href="/support">Support</Header>
-          <Header as="a" color="blue" href="/profile">Profile</Header>
-        </nav>
+          <Menu.Item
+            link
+            color="blue"
+            href="/search"
+            content={"SEARCH"}
+          />
+          {
+            user &&
+            <Menu.Item
+              link
+              color="blue"
+              href="/posts/my"
+              content={"POSTS"}
+            />
+          }
+          <Menu.Item
+            link
+            color="blue"
+            href="/profile"
+            content={user? "PROFILE": "LOGIN"}
+          />
+          <Menu.Item
+            link
+            color="blue"
+            href="/support"
+            content={"SUPPORT"}
+          />
+          {
+            user &&
+            <Menu.Item>
+              <Button
+                as='div'
+                labelPosition='right'
+                size="tiny"
+                onClick={toggleChat}
+              >
+                <Button 
+                  primary
+                  icon="mail"
+                  size="tiny"
+                />
+                <Label basic color="blue" pointing='left'>
+                  {user.newMessages || 0}
+                </Label>
+              </Button>
+            </Menu.Item>
+          }
+        </Menu>
+        {
+          user &&
+          <Button
+            className="messages-button-mobile"
+            as='div'
+            labelPosition='right'
+            size="tiny"
+            onClick={toggleChat}
+          >
+            <Button 
+              primary
+              icon="mail"
+              size="tiny"
+            />
+            <Label basic color="blue" pointing='left'>
+              {user.newMessages || 0}
+            </Label>
+          </Button>
+        }
+        <Button
+          className="hamburger-navigation"
+          floated="right"
+          icon="content"
+          basic
+          onClick={toggleSidebar}
+        />
       </header>
     )
   }

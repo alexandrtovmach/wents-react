@@ -1,0 +1,5 @@
+.ui.image.card-cover-photo {
+  height: 200px !important; // override semantic-ui
+  background-size: cover !important; // override semantic-ui
+  background-position: center !important; // override semantic-ui
+}

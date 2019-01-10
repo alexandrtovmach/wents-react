@@ -1,0 +1,18 @@
+.map-container-element,
+.map-placeholder {
+  height: 400px;
+  max-height: 30vh;
+}
+.map-placeholder {
+  background-color: #162d313a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #482d313a;
+  font-size: 100%;
+  font-weight: 700;
+}
+.map-loading-element,
+.map-element {
+  height: 100%;
+}

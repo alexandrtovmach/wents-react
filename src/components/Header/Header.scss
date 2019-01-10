@@ -20,12 +20,21 @@ header.header {
     background-size: 100% auto;
     background-position: center;
   }
-
-  .header-navigation {
-    font-size: 80%;
-    
-    >a {
-      margin: 0 20px;
+  .hamburger-navigation {
+    display: none;
+  }
+  .messages-button-mobile {
+    display: none!important;
+  }
+  @media screen and (max-width: 600px){
+    .hamburger-navigation {
+      display: initial;
+    }
+    .messages-button-mobile {
+      display: inline-flex!important;
+    }
+    .header-navigation {
+      display: none;
     }
   }
 }
