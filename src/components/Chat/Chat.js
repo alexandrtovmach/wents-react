@@ -137,15 +137,27 @@ export default class RentAdvertise extends React.Component {
   }
 
   onMessageInput(e) {
-    this.setState({
-      messageText: e.target.value
-    })
+    if (e) {
+      this.setState({
+        messageInputRef: e.target, // yah, bad practice but I really not found good solution for this case
+        messageText: e.target.value
+      })
+    } else {
+      const { messageInputRef } = this.state;
+      messageInputRef.value = "";
+      this.setState({
+        messageText: ""
+      })
+    }
   }
 
   sendMessage() {
     const { messageText, selectedConversation, conversationList } = this.state;
     const { senderId, receiverId } = conversationList.find(el => el.id === selectedConversation);
-    postMessageToConversation(selectedConversation, senderId, receiverId, messageText);
+    messageText && postMessageToConversation(selectedConversation, senderId, receiverId, messageText)
+      .then(() => {
+        this.onMessageInput(null);
+      })
   }
 
   onConversationUpdated(newData) {
@@ -156,7 +168,7 @@ export default class RentAdvertise extends React.Component {
 
   render() {
     const { open, toggleChat } = this.props;
-    const { showConversationList, conversationList, conversationMessages, selectedConversation } = this.state;
+    const { showConversationList, conversationList, conversationMessages, selectedConversation, messageText } = this.state;
 
     const isAlreadyHasDeal = (conversationMessages[selectedConversation] || []).some(el => el.type === "system" && el.systemMessageId === 1);
     const isAlreadySharedContacts = (conversationMessages[selectedConversation] || []).some(el => el.type === "system" && el.systemMessageId === 2);
