@@ -28,7 +28,7 @@ class App extends React.Component {
 
     this.state = {
       showSidebar: false,
-      showChat: true,
+      showChat: false,
       chatData: null,
       user: null
     };
@@ -44,18 +44,20 @@ class App extends React.Component {
   }
 
   onChatUpdated(newData) {
-    console.log(Object.keys(newData.changes).length);
+    const { user, chatData } = this.state;
     this.setState({
       chatData: {
-        ...this.state.chatData,
+        ...chatData,
         ...newData.full
-      }
+      },
+      unreadCount: newData.changes.filter(el => el.doc.data().receiver === user.uid).length
     })
   }
 
   toggleChat() {
     this.setState({
-      showChat: !this.state.showChat
+      showChat: !this.state.showChat,
+      unreadCount: 0
     })
   }
 
@@ -66,12 +68,12 @@ class App extends React.Component {
   }
 
   render() {
-    const { showSidebar, showChat, user, chatData } = this.state;
+    const { showSidebar, showChat, user, chatData, unreadCount } = this.state;
     return (
       <>
         <Header
           user={user}
-          chatData={chatData}
+          unreadCount={unreadCount}
           toggleChat={this.toggleChat}
           toggleSidebar={this.toggleSidebar}
         />
