@@ -2,6 +2,16 @@ import React from 'react';
 import { Form, Button, Icon, Segment } from 'semantic-ui-react';
 
 export default class ChatControls extends React.Component {
+
+  constructor() {
+    super();
+
+    this.state = {
+      messageText: "",
+      messageAttachments: []
+    }
+  }
+
   render () {
     return (
       <Form>
@@ -14,8 +24,8 @@ export default class ChatControls extends React.Component {
           />
         </Form.Field>
         <Form.Field as={Segment} basic floated="right">
-          <Icon name='file' size="large" />
-          <Icon name='smile outline' size="large" />
+          <Icon link name='file' size="large" />
+          <Icon link name='smile outline' size="large" />
           <Button
             positive
             content="Send"
