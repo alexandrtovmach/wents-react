@@ -115,7 +115,13 @@ class App extends React.Component {
             />
             <Route
               path="/rent/:id"
-              component={AdvertiseContainer}
+              render={({match}) => (
+                <AdvertiseContainer
+                  match={match}
+                  user={user}
+                  toggleChat={this.toggleChat}
+                />
+              )}
             />
             <Route
               path="/rent"

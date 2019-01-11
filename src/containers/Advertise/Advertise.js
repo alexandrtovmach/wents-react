@@ -3,7 +3,6 @@ import { Container, Segment } from 'semantic-ui-react';
 
 import { AdvertiseForm, RentAdvertise, Loader } from '../../components';
 import { getPublicData } from '../../services/database';
-import { getUser } from '../../services/auth';
 
 export default class Advertise extends React.Component {
   constructor() {
@@ -17,9 +16,8 @@ export default class Advertise extends React.Component {
   }
 
   async componentDidMount() {
-    const { match } = this.props;
+    const { match, user } = this.props;
     if (match && match.params && match.params.id) {
-      const user = await getUser();
       const rentPost = await getPublicData("posts", match.params.id);
       this.setState({
         isOwner: user && user.uid === rentPost.ownerId,
@@ -44,7 +42,10 @@ export default class Advertise extends React.Component {
       loading,
       isOwner
     } = this.state;
-    console.log(isOwner, post);
+    const {
+      toggleChat,
+      user
+    } = this.props;
     return (
       <Container
         text={isOwner || !post}
@@ -61,11 +62,14 @@ export default class Advertise extends React.Component {
                 isOwner || !post? (
                   <AdvertiseForm
                     data={post}
+                    user={user}
                     onChange={() => window.location.href = "/posts/my"}
                   />
                 ) : (
                   <RentAdvertise
                     data={post}
+                    user={user}
+                    toggleChat={toggleChat}
                   />
                 )
               }

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Segment, Header, Button, Modal, Image, Grid, List, Card, Icon, Label, Item } from "semantic-ui-react";
+import { Segment, Header, Button, Modal, Image, Grid, List, Card, Icon, Item } from "semantic-ui-react";
 
+import { createConversation } from '../../services/chat';
 import { benefits } from '../../services/constants';
 
 
@@ -9,6 +10,7 @@ export default class RentAdvertise extends React.Component {
     super();
 
     this.state = {
+      ownerId: "",
       title: "",
       description: "",
       price: 100,
@@ -22,6 +24,8 @@ export default class RentAdvertise extends React.Component {
       urlsToRemove: [],
       imageDimmerShow: -1
     }
+
+    this.toggleChat = this.toggleChat.bind(this);
   }
 
   async componentDidMount() {
@@ -38,11 +42,23 @@ export default class RentAdvertise extends React.Component {
     }
   }
 
+  toggleChat() {
+    const { user, toggleChat } = this.props;
+    const { ownerId, title } = this.state;
+    if (user && user.uid && toggleChat) {
+      createConversation(user.uid, ownerId, title)
+        .then(toggleChat);
+    } else {
+      window.location.href = "/login";
+    }
+  }
 
 
   render() {
+    const { user } = this.props;
     const {
       id,
+      ownerId,
       advType,
       title,
       description,
@@ -56,6 +72,7 @@ export default class RentAdvertise extends React.Component {
       benefitList,
       photos
     } = this.state;
+
     const isHome = advType && advType === "home";
     return (
       <Grid stackable divided>
@@ -91,6 +108,15 @@ export default class RentAdvertise extends React.Component {
               size="small"
             />
           }
+          <Segment
+            basic
+            textAlign="center"
+            size="large"
+          >
+            {new Date(startDate).toLocaleDateString()}
+            &nbsp;&nbsp;-&nbsp;&nbsp;
+            {unlimitedDate? "unlimited": new Date(endDate).toLocaleDateString()}
+          </Segment>
           {
             apartmentsType && rentType &&
               <Segment
@@ -99,72 +125,49 @@ export default class RentAdvertise extends React.Component {
                 color='blue'
                 textAlign="center"
               >
-
-                <Item>
-                  <Label color="grey" basic size="large">
-                    {new Date(startDate).toLocaleDateString()}
-                    &nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
-                    {unlimitedDate? "unlimited": new Date(endDate).toLocaleDateString()}
-                  </Label>
-                </Item>
-                <Item className="margin-v-1">
-                  <Label color="grey" basic size="large">
-                    <Icon name="hotel"/>
-                    {apartmentsType}
-                    &nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
-                    <Icon name="clock"/>
-                    {rentType}
-                  </Label>
+                <Item className="margin-v-1" color="grey" >
+                  <Icon name="hotel" size="large"/>
+                  {apartmentsType}
+                  &nbsp;&nbsp;|&nbsp;&nbsp;
+                  <Icon name="clock" size="large"/>
+                  {rentType}
                 </Item>
                 <Item>
                   {
                     benefitList &&
-                    <Label color="grey" basic>
-                      {benefitList.map(val => {
-                        const { icon, text } = (benefits.find(b => b.value === val) || {});
-                        return (
-                          <>
-                            &nbsp;
-                            <Icon
-                              fitted
-                              key={val}
-                              name={icon}
-                              title={text}
-                              size="large"
-                              color="grey"
-                            />
-                            &nbsp;&nbsp;
-                          </>
-                        )
-                      })}
-                    </Label>
+                    benefitList.map(val => {
+                      const { icon, text } = (benefits.find(b => b.value === val) || {});
+                      return (
+                        <Icon
+                          key={val}
+                          name={icon}
+                          title={text}
+                          size="large"
+                        />
+                      )
+                    })
                   }
                 </Item>
               </Segment>
           }
 
-          <Modal
-            header="Contact with owner?"
-            content="In development"
-            trigger={(
-              <Button
-                fluid
-                primary
-                animated="vertical"
-              >
-                <Button.Content hidden>
-                  Contact with owner
-                </Button.Content>
-                <Button.Content visible>
-                  {price}$
-                </Button.Content>
-              </Button>
-            )}
-            closeOnEscape={true}
-            closeOnDimmerClick={true}
-            onClose={this.toggleAvatarChange}
-            size="small"
-          />
+          {
+            (user && user.uid) !== ownerId &&
+            <Button
+              fluid
+              primary
+              animated="vertical"
+              size="large"
+              onClick={this.toggleChat}
+            >
+              <Button.Content hidden>
+                Contact with owner
+              </Button.Content>
+              <Button.Content visible>
+                {price}$
+              </Button.Content>
+            </Button>
+          }
         </Grid.Column>
         {
           isHome &&

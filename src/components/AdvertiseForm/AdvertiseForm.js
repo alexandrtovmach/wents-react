@@ -7,7 +7,6 @@ import { dateToInputFormat } from '../../services/utils';
 import { appartmentsTypes, rentTypes, benefits } from '../../services/constants';
 import { uploadImage, deleteImage } from '../../services/storage';
 import { pushData, updateData } from '../../services/database';
-import { getUser } from '../../services/auth';
 
 
 export default class AdvertiseForm extends React.Component {
@@ -38,11 +37,10 @@ export default class AdvertiseForm extends React.Component {
   }
 
   async componentDidMount() {
-    const owner = await getUser();
-    console.log(owner)
+    const { user } = this.props;
     this.setState({
       ...this.props.data,
-      ownerId: (await getUser()).uid
+      ownerId: user.uid
     })
   }
 

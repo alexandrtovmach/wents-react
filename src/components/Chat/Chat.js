@@ -1,8 +1,7 @@
 import React from 'react';
 import isEqual from 'lodash.isequal';
 import { Modal, Segment, Button, Icon, Item, Dropdown, Sidebar, Label, Header } from "semantic-ui-react";
-import { 
-  SystemMessage,
+import {
   MessageList,
   ChatList,
   Input
