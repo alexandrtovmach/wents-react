@@ -7,7 +7,12 @@ import {
   Input
 } from 'react-chat-elements'
 
-import { subscribeToRef, createConversation, postMessageToConversation, getConversationDetails } from '../../services/chat';
+import {
+  subscribeToRef,
+  // createConversation,
+  postMessageToConversation,
+  getConversationDetails
+} from '../../services/chat';
 import './Chat.scss';
 
 export default class RentAdvertise extends React.Component {
@@ -167,7 +172,7 @@ export default class RentAdvertise extends React.Component {
 
   render() {
     const { open, toggleChat } = this.props;
-    const { showConversationList, conversationList, conversationMessages, selectedConversation, messageText } = this.state;
+    const { showConversationList, conversationList, conversationMessages, selectedConversation } = this.state;
 
     const isAlreadyHasDeal = (conversationMessages[selectedConversation] || []).some(el => el.type === "system" && el.systemMessageId === 1);
     const isAlreadySharedContacts = (conversationMessages[selectedConversation] || []).some(el => el.type === "system" && el.systemMessageId === 2);
