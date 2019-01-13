@@ -3,13 +3,15 @@ import { Container } from 'semantic-ui-react';
 
 import { Auth } from "../../components";
 
-export default () => {
+export default (props) => {
   return (
     <Container
       text
       className="header-compensator min-height-viewport"
     >
-      <Auth />
+      <Auth
+        langPack={props.langPack}
+      />
     </Container>
   );
 }

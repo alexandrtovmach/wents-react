@@ -1,20 +1,20 @@
 import React from 'react';
 import { Segment, Icon, Button, Header } from "semantic-ui-react";
 
-export default (props) => {
+export default ({ langPack, onChange }) => {
   return (
     <Segment>
       <Header>
-        Sort by:
+        {langPack["sort_by"]}:
       </Header>
       <Button.Group>
         <Button active={false}>
-          Name
+          {langPack["name"]}
         </Button>
-        <Button icon onClick={() => props.onChange && props.onChange("title", 1)}>
+        <Button icon onClick={() => onChange && onChange("title", 1)}>
           <Icon name='sort alphabet down' />
         </Button>
-        <Button icon onClick={(e, data) => props.onChange && props.onChange("title", -1)}>
+        <Button icon onClick={(e, data) => onChange && onChange("title", -1)}>
           <Icon name='sort alphabet up' />
         </Button>
       </Button.Group>
@@ -23,12 +23,12 @@ export default (props) => {
       <br />
       <Button.Group>
         <Button active={false}>
-          Price
+          {langPack["price"]}
         </Button>
-        <Button icon onClick={(e, data) => props.onChange && props.onChange("price", 1)}>
+        <Button icon onClick={(e, data) => onChange && onChange("price", 1)}>
           <Icon name='arrow down' />
         </Button>
-        <Button icon onClick={(e, data) => props.onChange && props.onChange("price", -1)}>
+        <Button icon onClick={(e, data) => onChange && onChange("price", -1)}>
           <Icon name='arrow up' />
         </Button>
       </Button.Group>

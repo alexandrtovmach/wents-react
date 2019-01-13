@@ -3,11 +3,15 @@ import { Route, Switch } from 'react-router-dom';
 
 import { debounce } from './services/utils';
 import { getUser } from './services/auth';
-
+import {
+  getLanguage,
+  getTranslations,
+  updateLangTag
+} from "./services/lang";
 import {
   HomeContainer,
   LoginContainer,
-  SupportContainer,
+  // SupportContainer,
   SearchRentContainer,
   ProfileContainer,
   AdvertiseListContainer,
@@ -27,6 +31,7 @@ class App extends React.Component {
     super();
 
     this.state = {
+      locale: getLanguage(),
       showSidebar: false,
       showChat: false,
       chatData: null,
@@ -41,6 +46,11 @@ class App extends React.Component {
     this.setState({
       user: await getUser()
     })
+    updateLangTag(this.state.locale);
+  }
+
+  componentDidUpdate() {
+    updateLangTag(this.state.locale);
   }
 
   onChatUpdated(newData) {
@@ -68,7 +78,9 @@ class App extends React.Component {
   }
 
   render() {
-    const { showSidebar, showChat, user, chatData, unreadCount } = this.state;
+    const { showSidebar, showChat, user, chatData, unreadCount, locale } = this.state;
+    const langPack = getTranslations(locale);
+    console.log(user);
     return (
       <>
         <Header
@@ -76,6 +88,7 @@ class App extends React.Component {
           unreadCount={unreadCount}
           toggleChat={this.toggleChat}
           toggleSidebar={this.toggleSidebar}
+          langPack={langPack["Header"]}
         />
         <Sidebar
           user={user}
@@ -90,28 +103,51 @@ class App extends React.Component {
               chatData={chatData}
               onUpdated={this.onChatUpdated}
               toggleChat={this.toggleChat}
+              langPack={langPack["Chat"]}
             />
           }
           <Switch>
             <Route
               path="/"
               exact
-              component={HomeContainer}
+              render={({match}) => (
+                <HomeContainer
+                  match={match}
+                  user={user}
+                  langPack={langPack["HomeContainer"]}
+                />
+              )}
             />
             <Route
               path="/login"
               exact
-              component={LoginContainer}
+              render={({match}) => (
+                <LoginContainer
+                  match={match}
+                  langPack={langPack["LoginContainer"]}
+                />
+              )}
             />
             <Route
               path="/search"
               exact
-              component={SearchRentContainer}
+              render={({match}) => (
+                <SearchRentContainer
+                  match={match}
+                  langPack={langPack["SearchRentContainer"]}
+                />
+              )}
             />
             <Route
               path="/posts/my"
               exact
-              component={AdvertiseListContainer}
+              render={({match}) => (
+                <AdvertiseListContainer
+                  match={match}
+                  user={user}
+                  langPack={langPack["AdvertiseListContainer"]}
+                />
+              )}
             />
             <Route
               path="/rent/:id"
@@ -120,27 +156,51 @@ class App extends React.Component {
                   match={match}
                   user={user}
                   toggleChat={this.toggleChat}
+                  langPack={langPack["AdvertiseContainer"]}
                 />
               )}
             />
             <Route
               path="/rent"
-              component={AdvertiseContainer}
+              render={({match}) => (
+                <AdvertiseContainer
+                  match={match}
+                  user={user}
+                  langPack={langPack["AdvertiseContainer"]}
+                />
+              )}
             />
             <Route
               path="/profile"
               exact
-              component={ProfileContainer}
+              render={({match}) => (
+                <ProfileContainer
+                  match={match}
+                  user={user}
+                  langPack={langPack["ProfileContainer"]}
+                />
+              )}
             />
             <Route
               path="/login"
               exact
-              component={LoginContainer}
+              render={({match}) => (
+                <LoginContainer
+                  match={match}
+                  langPack={langPack["LoginContainer"]}
+                />
+              )}
             />
             <Route
               path="/support"
               exact
-              component={SupportContainer}
+              // render={({match}) => (
+              //   <SupportContainer
+              //     match={match}
+              //     langPack={langPack["SupportContainer"]}
+              //   />
+              // )}
+              component={PageNotFound}
             />
             <Route component={PageNotFound} />
           </Switch>

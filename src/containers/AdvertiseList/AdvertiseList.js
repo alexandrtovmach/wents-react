@@ -8,7 +8,6 @@ import {
 
 import { AdvertiseCard, Loader } from "../../components";
 import { advertStatusList, advertTypeList } from '../../services/constants';
-import { getUser } from '../../services/auth';
 import { getData } from '../../services/database';
 
 export default class AdvertiseList extends React.Component {
@@ -23,7 +22,7 @@ export default class AdvertiseList extends React.Component {
   }
 
   async componentDidMount() {
-    const user = await getUser();
+    const { user } = this.props;
     if (user) {
       const posts = await getData("posts", "", user.uid);
       this.setState({
@@ -94,23 +93,6 @@ export default class AdvertiseList extends React.Component {
               panes={this.generateTypesTabs()}
             />
           </Segment>
-          {/* <Segment basic textAlign="center" padded>
-            <Card.Group stackable itemsPerRow={4}>
-              {posts && Object.keys(posts).map(id => (
-                <AdvertiseCard
-                  key={id}
-                  data={{
-                    ...posts[id],
-                    id
-                  }}
-                />
-              ))}
-              <AdvertiseCard
-                key={0}
-                add={true}
-              />
-            </Card.Group>
-          </Segment> */}
         </Container>
       );
     }

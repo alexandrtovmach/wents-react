@@ -2,7 +2,6 @@ import React from 'react';
 import { Container } from 'semantic-ui-react';
 
 import { Loader, UserForm } from "../../components";
-import { getUser } from '../../services/auth';
 
 
 export default class Profile extends React.Component {
@@ -15,7 +14,8 @@ export default class Profile extends React.Component {
   }
   
   async componentDidMount() {
-    const user = await getUser();
+    const { user } = this.props;
+    console.log(user);
     if (user) {
       this.setState({
         user: user,
@@ -39,6 +39,7 @@ export default class Profile extends React.Component {
         >
           <UserForm
             user={user}
+            langPack={this.props.langPack}
           />
         </Container>
       )

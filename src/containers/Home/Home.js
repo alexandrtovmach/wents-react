@@ -73,6 +73,7 @@ export default class Home extends React.Component {
     const {
       filteredPosts
     } = this.state;
+    const { langPack } = this.props;
     return (
       <Container
         fluid
@@ -82,7 +83,7 @@ export default class Home extends React.Component {
           basic
           className="header-compensator viewport flex-center flex-column main-bg"
         >
-          <Header as="h1" size="huge" inverted>
+          <Header size="huge" inverted>
             RENTWENS
           </Header>
           <Container
@@ -98,7 +99,7 @@ export default class Home extends React.Component {
         <Segment basic textAlign="center" padded>
           <Container>
             <Header size="medium">
-              Search results:
+              {langPack["search_results"]}
             </Header>
             <Card.Group centered>
               {filteredPosts && Object.keys(filteredPosts).slice(0, LIMIT_CARDS).map(id => (
@@ -116,7 +117,7 @@ export default class Home extends React.Component {
               as="a"
               href="/search"
             >
-              More
+              {langPack["more"]}
             </Button>
           </Container>
         </Segment>

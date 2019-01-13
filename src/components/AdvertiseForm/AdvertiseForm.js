@@ -144,6 +144,7 @@ export default class AdvertiseForm extends React.Component {
       advType,
       imageDimmerShow
     } = this.state;
+    const { langPack } = this.props;
     const isHomeType = advType === "home";
     return (
       <Segment padded>
@@ -235,14 +236,14 @@ export default class AdvertiseForm extends React.Component {
           <Form.Group>
             <Form.Select
               label="Apartments type"
-              options={appartmentsTypes.slice(-3)}
+              options={appartmentsTypes[langPack["_locale"] || "ru"].slice(-3)}
               value={apartmentsType}
               width={4}
               onChange={(event, data) => this.fieldChange(null, data.value, "apartmentsType")}
             />
             <Form.Select
               label="Rent type"
-              options={rentTypes.slice(-2)}
+              options={rentTypes[langPack["_locale"] || "ru"].slice(-2)}
               value={rentType}
               width={4}
               onChange={(event, data) => this.fieldChange(null, data.value, "rentType")}
@@ -304,7 +305,7 @@ export default class AdvertiseForm extends React.Component {
           <Form.Group>
             <Form.Select
               label="Benefits"
-              options={benefits}
+              options={benefits[langPack["_locale"] || "ru"]}
               multiple
               value={benefitList}
               width={8}

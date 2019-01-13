@@ -44,7 +44,8 @@ export default class Advertise extends React.Component {
     } = this.state;
     const {
       toggleChat,
-      user
+      user,
+      langPack
     } = this.props;
     return (
       <Container
@@ -63,12 +64,14 @@ export default class Advertise extends React.Component {
                   <AdvertiseForm
                     data={post}
                     user={user}
+                    langPack={langPack}
                     onChange={() => window.location.href = "/posts/my"}
                   />
                 ) : (
                   <RentAdvertise
                     data={post}
                     user={user}
+                    langPack={langPack}
                     toggleChat={toggleChat}
                   />
                 )

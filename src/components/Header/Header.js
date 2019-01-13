@@ -34,7 +34,7 @@ export default class HeaderComponent extends React.Component {
   }
 
   render () {
-    const { toggleSidebar, toggleChat, user, unreadCount } = this.props;
+    const { toggleSidebar, toggleChat, user, unreadCount, langPack } = this.props;
     return (
       <header
         ref={el => this.headerEl = el}
@@ -55,7 +55,7 @@ export default class HeaderComponent extends React.Component {
             link
             color="blue"
             href="/search"
-            content={"SEARCH"}
+            content={langPack["search"]}
           />
           {
             user &&
@@ -63,20 +63,20 @@ export default class HeaderComponent extends React.Component {
               link
               color="blue"
               href="/posts/my"
-              content={"POSTS"}
+              content={langPack["posts"]}
             />
           }
           <Menu.Item
             link
             color="blue"
             href="/profile"
-            content={user? "PROFILE": "LOGIN"}
+            content={user? langPack["profile"]: langPack["login"]}
           />
           <Menu.Item
             link
             color="blue"
             href="/support"
-            content={"SUPPORT"}
+            content={langPack["support"]}
           />
           {
             user &&

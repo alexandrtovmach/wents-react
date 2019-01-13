@@ -79,6 +79,7 @@ export default class FilterForm extends React.Component {
       rentType,
       benefitList
     } = this.state;
+    const { langPack } = this.props;
     return (
       <Segment
         padded
@@ -86,11 +87,11 @@ export default class FilterForm extends React.Component {
       >
         <Form widths="equal" >
           <Form.Group>
-            <Header>Date</Header>
+            <Header>{langPack["price"]}</Header>
           </Form.Group>
           <Form.Group>
             <Form.Checkbox
-              label="Without end date"
+              label={langPack["without_end_date"]}
               toggle
               checked={unlimitedDate}
               width={1}
@@ -100,8 +101,8 @@ export default class FilterForm extends React.Component {
           <Form.Group>
             <Form.Field width={1}>
               <Input
-                label="Start date"
-                placeholder='From'
+                label={langPack["start_date"]}
+                placeholder={langPack["from"]}
                 type="date"
                 value={dateToInputFormat(startDate)}
                 max={dateToInputFormat(endDate)}
@@ -110,8 +111,8 @@ export default class FilterForm extends React.Component {
             </Form.Field>
             <Form.Field width={1}>
               <Input
-                label="End date"
-                placeholder='To'
+                label={langPack["end_date"]}
+                placeholder={langPack["to"]}
                 type="date"
                 disabled={unlimitedDate}
                 value={dateToInputFormat(endDate)}
@@ -121,7 +122,7 @@ export default class FilterForm extends React.Component {
             </Form.Field>
           </Form.Group>
           <Form.Group>
-            <Header>Budget</Header>
+            <Header>{langPack["budget"]}</Header>
           </Form.Group>
           <Form.Group>
             <Form.Field width={1}>
@@ -136,8 +137,8 @@ export default class FilterForm extends React.Component {
           <Form.Group>
             <Form.Field width={1}>
               <Input
-                label="Minimum price"
-                placeholder='Min'
+                label={langPack["minimum_price"]}
+                placeholder={langPack["min"]}
                 type="number"
                 value={minPrice}
                 onChange={(event, data) => this.priceChanged([data.value, maxPrice])}
@@ -145,8 +146,8 @@ export default class FilterForm extends React.Component {
             </Form.Field>
             <Form.Field width={1}>
               <Input
-                label="Maximum price"
-                placeholder='Max'
+                label={langPack["maximum_price"]}
+                placeholder={langPack["max"]}
                 type="number"
                 width={3}
                 value={maxPrice}
@@ -155,26 +156,26 @@ export default class FilterForm extends React.Component {
             </Form.Field>
           </Form.Group>
           <Form.Group>
-            <Header>Additional</Header>
+            <Header>{langPack["additional"]}</Header>
           </Form.Group>
           <Form.Group>
             <Form.Select
-              label="Apartments type"
-              options={appartmentsTypes}
+              label={langPack["appartments_type"]}
+              options={appartmentsTypes[langPack["_locale"] || "ru"]}
               value={apartmentsType}
               width={4}
               onChange={(event, data) => this.optionSelected(data.value, "apartmentsType")}
             />
             <Form.Select
-              label="Rent type"
-              options={rentTypes}
+              label={langPack["rent_type"]}
+              options={rentTypes[langPack["_locale"] || "ru"]}
               value={rentType}
               width={4}
               onChange={(event, data) => this.optionSelected(data.value, "rentType")}
             />
             <Form.Select
-              label="Options"
-              options={benefits}
+              label={langPack["options"]}
+              options={benefits[langPack["_locale"] || "ru"]}
               multiple
               value={benefitList}
               width={8}

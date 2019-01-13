@@ -121,12 +121,15 @@ export default class SearchRent extends React.Component {
           <Search
             onChange={this.searchChanged}
             onChangeType={this.typeChanged}
+            langPack={this.props.langPack}
           />
           <Filters
             onChange={this.filtersChanged}
+            langPack={this.props.langPack}
           />
           <SortPanel
             onChange={this.sortChanged}
+            langPack={this.props.langPack}
           />
         </Segment>
         <Segment basic textAlign="center" padded>
@@ -134,6 +137,7 @@ export default class SearchRent extends React.Component {
             {filteredPosts && Object.keys(filteredPosts).sort((a, b) => this.sortHandler(a, b, filteredPosts)).map(id => (
               <AdvertiseCard
                 key={id}
+                langPack={this.props.langPack}
                 data={{
                   ...filteredPosts[id],
                   id

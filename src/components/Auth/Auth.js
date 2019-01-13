@@ -39,7 +39,7 @@ export default class AuthComponent extends React.Component {
         })
         .catch(error => {
           const { code, message } = error;
-          console.log(code);
+          // console.log(code);
           this.setState({
             emailError: message,
             passwordError: message
@@ -90,6 +90,7 @@ export default class AuthComponent extends React.Component {
 
   render() {
     const { emailError, passwordError } = this.state;
+    const { langPack } = this.props;
     return (
       <Segment
         padded="very"
@@ -101,7 +102,7 @@ export default class AuthComponent extends React.Component {
         <Header
           textAlign="center"
         >
-          Login
+          {langPack["login"]}
         </Header>
         <Form onSubmit={this.signInWithEmailAndPassword}>
           <Form.Field>
@@ -134,18 +135,18 @@ export default class AuthComponent extends React.Component {
             <Button
               type='submit'
             >
-              Login
+              {langPack["login"]}
             </Button>
             <Button.Or text="/"/>
             <Button
               onClick={this.signUpWithEmailAndPassword}
             >
-              Register
+              {langPack["register"]}
             </Button>
           </Button.Group>
         </Form>
         <Message error hidden={!emailError}>
-          <Message.Header>Login failed</Message.Header>
+          <Message.Header>{langPack["login_failed"]}</Message.Header>
           <p>{emailError}</p>
         </Message>
         <Segment
@@ -155,20 +156,20 @@ export default class AuthComponent extends React.Component {
           <Header
             textAlign="center"
           >
-            or:
+            {langPack["or"]}
           </Header>
           <Button
             className="margin-v-1"
             color="google plus"
             icon="google"
-            content="Login with Google"
+            content={langPack["login_with_google"]}
             onClick={this.signInGoogle}
           />
           <Button
             className="margin-v-1"
             color="facebook"
             icon="facebook"
-            content="Login with Facebook"
+            content={langPack["login_with_facebook"]}
             onClick={this.signInFacebook}
           />
         </Segment>
