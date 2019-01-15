@@ -1,4 +1,5 @@
 export default {
+  loading: "Loading",
   Header: {
     search: "Search",
     posts: "Posts",
@@ -38,5 +39,14 @@ export default {
     appartments_type: "Apartments type",
     rent_type: "Rent type",
     options: "Options",
+    search: "Search..."
+  },
+  AdvertiseContainer: {
+    _locale: "en",
+  },
+  AdvertiseListContainer: {
+    _locale: "en",
+    add_post: "Add new Advertise",
+    loading: "Loading"
   }
 };

@@ -359,17 +359,20 @@ export const userKeys = [
   "photoURL",
 ];
 
-export const advertTypeList = [{
-    name: "Home adverts",
-    key: "home",
-    value: "home"
-  },
-  {
-    name: "Rent adverts",
-    key: "rent",
-    value: "rent"
-  },
-];
+export const advertiseTypes = {
+  en: [
+    { key: 'home', text: 'Home', name: 'Home advertises', value: 'home' },
+    { key: 'rent', text: 'Rent', name: 'Rent advertises', value: 'rent' },
+  ], 
+  ru: [
+    { key: 'home', text: 'Предложения', name: 'Ваши предложения', value: 'home' },
+    { key: 'rent', text: 'Запросы', name: 'Ваши запросы', value: 'rent' },
+  ],
+  ua: [
+    { key: 'home', text: 'Пропозиції', name: 'Ваші пропозиції', value: 'home' },
+    { key: 'rent', text: 'Запити', name: 'Ваші запити', value: 'rent' },
+  ],
+}
 
 export const advertStatusList = [{
     name: "Active",

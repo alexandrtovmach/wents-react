@@ -55,7 +55,10 @@ export default class RentAdvertise extends React.Component {
 
 
   render() {
-    const { user } = this.props;
+    const {
+      user,
+      langPack
+    } = this.props;
     const {
       id,
       ownerId,
@@ -136,7 +139,7 @@ export default class RentAdvertise extends React.Component {
                   {
                     benefitList &&
                     benefitList.map(val => {
-                      const { icon, text } = (benefits.find(b => b.value === val) || {});
+                      const { icon, text } = (benefits[langPack["_locale"]].find(b => b.value === val) || {});
                       return (
                         <Icon
                           key={val}

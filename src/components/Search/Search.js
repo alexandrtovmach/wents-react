@@ -1,22 +1,21 @@
 import React from 'react';
 import { Input, Dropdown } from "semantic-ui-react";
 
-const options = [
-  { key: 'home', text: 'Home', value: 'home' },
-  { key: 'rent', text: 'Rent', value: 'rent' },
-]
+import { advertiseTypes } from "../../services/constants";
 
 export default props => {
   return (
     <Input
       fluid
-      label={<Dropdown
-        defaultValue={options[0].value}
-        options={options}
-        onChange={(e, data) => props.onChange && props.onChangeType(data.value)}
-      />}
+      label={
+        <Dropdown
+          defaultValue={advertiseTypes[props.langPack["_locale"]][0].value}
+          options={advertiseTypes[props.langPack["_locale"]]}
+          onChange={(e, data) => props.onChange && props.onChangeType(data.value)}
+        />
+      }
       labelPosition='right'
-      placeholder="Search..."
+      placeholder={props.langPack["search"]}
       onChange={(e, data) => props.onChange && props.onChange(data.value)}
     />
   );

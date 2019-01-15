@@ -1,4 +1,5 @@
 export default {
+  loading: "Загрузка",
   Header: {
     search: "Поиск",
     posts: "Объявления",
@@ -37,6 +38,15 @@ export default {
     additional: "Дополнительно",
     appartments_type: "Тип жилья",
     rent_type: "Вид аренды",
-    options: "Сервисы"
+    options: "Сервисы",
+    search: "Поиск..."
+  },
+  AdvertiseContainer: {
+    _locale: "ru",
+  },
+  AdvertiseListContainer: {
+    _locale: "ru",
+    add_post: "Создать новое Объявление",
+    loading: "Загрузка"
   }
 };

@@ -7,7 +7,7 @@ import {
 } from 'semantic-ui-react';
 
 import { AdvertiseCard, Loader } from "../../components";
-import { advertStatusList, advertTypeList } from '../../services/constants';
+import { advertStatusList, advertiseTypes } from '../../services/constants';
 import { getData } from '../../services/database';
 
 export default class AdvertiseList extends React.Component {
@@ -36,6 +36,7 @@ export default class AdvertiseList extends React.Component {
   }
 
   filterPostsByStatusAndType(posts, status, advType) {
+    const { langPack } = this.props;
     return (
       <Card.Group centered>
         {posts && Object.keys(posts).map(key => posts[key][status.key] === status.value && posts[key].advType === advType && <AdvertiseCard key={posts[key].id} data={posts[key]} />)}
@@ -44,6 +45,7 @@ export default class AdvertiseList extends React.Component {
           <AdvertiseCard
             key={0}
             add={true}
+            langPack={langPack}
           />
         }
       </Card.Group>
@@ -61,7 +63,8 @@ export default class AdvertiseList extends React.Component {
   }
 
   generateTypesTabs() {
-    return advertTypeList.map(type => {
+    const { langPack } = this.props;
+    return advertiseTypes[langPack["_locale"]].map(type => {
       return {
         menuItem: type.name,
         render: () => (
@@ -79,9 +82,12 @@ export default class AdvertiseList extends React.Component {
   
   render() {
     const { loading } = this.state;
+    const { langPack } = this.props;
     if (loading) {
       return (
-        <Loader />
+        <Loader
+          langPack={langPack}
+        />
       )
     } else {
       return (

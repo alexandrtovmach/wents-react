@@ -1,11 +1,10 @@
 import React from 'react';
 import { Card, Icon, Segment, Header, Image, Label } from 'semantic-ui-react';
 
-// import { benefits } from '../../services/constants';
 import { placeholderImg } from '../../services/constants';
 import './AdvertiseCard.scss';
 
-export default ({ data, add }) => {
+export default ({ data, add, langPack }) => {
   if (add) {
     return (
       <Card
@@ -16,7 +15,7 @@ export default ({ data, add }) => {
         <Card.Content as={Segment} placeholder>
           <Header icon>
             <Icon name='add' />
-            Add post
+              {langPack["add_post"]}
           </Header>
         </Card.Content>
       </Card>
@@ -31,7 +30,6 @@ export default ({ data, add }) => {
       rentType,
       startDate,
       endDate,
-      // benefits,
       photos,
       price
     } = data || {};
@@ -39,7 +37,6 @@ export default ({ data, add }) => {
       <Card
         as="a"
         href={`/rent/${id}`}
-        // target="_blank"
       >
         <Image
           style={{
@@ -66,7 +63,6 @@ export default ({ data, add }) => {
             {rentType}
           </Label>
         </Image>
-        {/* <Image src={(photos && photos[0]) || placeholderImg} fluid/> */}
         <Card.Content>
           <Card.Header>
             {title || "Untitled"}
@@ -77,15 +73,6 @@ export default ({ data, add }) => {
         <Card.Content extra>
           {new Date(startDate).toLocaleDateString()} - {new Date(endDate).toLocaleDateString()}
         </Card.Content>
-        {/* <Label
-          attached='bottom'
-          key={`rentType-${id}`}
-          as='a'
-          inverted
-          color="blue"
-          content={`${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}`}
-          icon='clock'
-        /> */}
       </Card>
     )
   }

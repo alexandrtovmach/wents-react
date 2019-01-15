@@ -1,4 +1,5 @@
 export default {
+  loading: "Завантаження",
   Header: {
     search: "Пошук",
     posts: "Оголошення",
@@ -38,5 +39,15 @@ export default {
     appartments_type: "Тип житла",
     rent_type: "Вид оренди",
     options: "Сервіси",
+    search: "Пошук..."
+  },
+  AdvertiseContainer: {
+    _locale: "ua",
+
+  },
+  AdvertiseListContainer: {
+    _locale: "ua",
+    add_post: "Створити нове Оголошення",
+    loading: "Завантаження"
   }
 };
