@@ -106,6 +106,7 @@ export default class Home extends React.Component {
               {filteredPosts && Object.keys(filteredPosts).slice(0, LIMIT_CARDS).map(id => (
                 <AdvertiseCard
                   key={id}
+                  langPack={langPack}
                   data={{
                     ...filteredPosts[id],
                     id

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Icon, Segment, Header, Image, Label } from 'semantic-ui-react';
 
-import { placeholderImg } from '../../services/constants';
+import { placeholderImg, appartmentsTypes, rentTypes } from '../../services/constants';
 import './AdvertiseCard.scss';
 
 export default ({ data, add, langPack }) => {
@@ -57,10 +57,10 @@ export default ({ data, add, langPack }) => {
             color='blue'
           >
             <Icon name="hotel"/>
-            {apartmentsType}
+            {(appartmentsTypes[langPack["_locale"]].find(t => t.value === apartmentsType) || {}).text}
             &nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
             <Icon name="clock"/>
-            {rentType}
+            {(rentTypes[langPack["_locale"]].find(r => r.value === rentType) || {}).text}
           </Label>
         </Image>
         <Card.Content>
