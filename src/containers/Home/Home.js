@@ -91,6 +91,7 @@ export default class Home extends React.Component {
             className="min-width-2"
           >
             <Search
+              langPack={langPack}
               onChange={this.searchChanged}
               onChangeType={this.typeChanged}
             />

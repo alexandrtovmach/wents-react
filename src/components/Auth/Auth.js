@@ -33,7 +33,7 @@ export default class AuthComponent extends React.Component {
     e.preventDefault(); // semantic handle all button clicks like 'submit', and because it need to preventDefault
     const { email, password } = this.state;
     if (email && password) {
-      signUpWithEmailAndPassword(email, password, this.props.lang)
+      signUpWithEmailAndPassword(email, password, this.props.langPack["_locale"])
         .then(() => {
           window.location.href = "/profile";
         })
@@ -51,7 +51,7 @@ export default class AuthComponent extends React.Component {
   signInWithEmailAndPassword() {
     const { email, password } = this.state;
     if (email && password) {
-      signInWithEmailAndPassword(email, password, this.props.lang)
+      signInWithEmailAndPassword(email, password, this.props.langPack["_locale"])
         .then(() => {
           window.location.href = "/profile";
         })
@@ -67,7 +67,7 @@ export default class AuthComponent extends React.Component {
   }
 
   signInGoogle() {
-    signInGoogle(this.props.lang)
+    signInGoogle(this.props.langPack["_locale"])
       .then(() => {
         window.location.href = "/profile";
       })
@@ -78,7 +78,7 @@ export default class AuthComponent extends React.Component {
   }
 
   signInFacebook() {
-    signInFacebook(this.props.lang)
+    signInFacebook(this.props.langPack["_locale"])
       .then(() => {
         window.location.href = "/profile";
       })
@@ -109,7 +109,7 @@ export default class AuthComponent extends React.Component {
             <Input
               error={emailError}
               iconPosition='left'
-              placeholder='Email'
+              placeholder={langPack["email"]}
               type="email"
               onChange={(e, data) => this.onEnterCredential("email", data.value)}
             >
@@ -121,7 +121,7 @@ export default class AuthComponent extends React.Component {
             <Input
               error={passwordError}
               iconPosition='left'
-              placeholder='Password'
+              placeholder={langPack["password"]}
               type="password"
               onChange={(e, data) => this.onEnterCredential("password", data.value)}
             >

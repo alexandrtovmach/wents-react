@@ -54,7 +54,9 @@ export default class Advertise extends React.Component {
       >
         {
           loading? (
-            <Loader />
+            <Loader
+              langPack={langPack}
+            />
           ) : (
             <Segment
               basic

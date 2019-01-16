@@ -53,7 +53,7 @@ export default class PhoneLoginComponent extends React.Component {
   }
 
   render() {
-    const { children, phoneToVerify } = this.props;
+    const { children, phoneToVerify, langPack } = this.props;
     const { stepIdx, verificationCode } = this.state;
     return (
       <Modal
@@ -67,7 +67,7 @@ export default class PhoneLoginComponent extends React.Component {
               completed={stepIdx > 0}
             >
               <Step.Content>
-                <Step.Title>Check</Step.Title>
+                <Step.Title>{langPack["check"]}</Step.Title>
               </Step.Content>
             </Step>
             <Step
@@ -75,7 +75,7 @@ export default class PhoneLoginComponent extends React.Component {
               completed={stepIdx > 1}
             >
               <Step.Content>
-                <Step.Title>Captcha</Step.Title>
+                <Step.Title>{langPack["captcha"]}</Step.Title>
               </Step.Content>
             </Step>
             <Step
@@ -83,7 +83,7 @@ export default class PhoneLoginComponent extends React.Component {
               completed={stepIdx > 2}
             >
               <Step.Content>
-                <Step.Title>Verify</Step.Title>
+                <Step.Title>{langPack["verify"]}</Step.Title>
               </Step.Content>
             </Step>
           </Step.Group>
@@ -92,7 +92,7 @@ export default class PhoneLoginComponent extends React.Component {
           content={[
             <Segment
               basic
-              content={`We will send verification code to ${phoneToVerify} by SMS. Please make sure what is correct phone number.`}
+              content={langPack["phone_verification_message_1"] + phoneToVerify + langPack["phone_verification_message_2"]}
             />,
             <Segment
               basic
@@ -109,20 +109,13 @@ export default class PhoneLoginComponent extends React.Component {
               />
               <Button
                 disabled={ !verificationCode || verificationCode.length < 6 }
-                content="Verify"
+                content={langPack["verify"]}
                 onClick={this.verifyCode}
               />
             </Segment>
           ][stepIdx]}
         />
         <Modal.Actions>
-          {/* {
-            stepIdx > 0 &&
-            <Button
-              icon="arrow left"
-              onClick={() => this.setStep(stepIdx - 1)}
-            />
-          } */}
           {
             stepIdx < 2 &&
             <Button

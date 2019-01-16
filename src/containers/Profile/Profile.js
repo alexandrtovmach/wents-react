@@ -15,7 +15,6 @@ export default class Profile extends React.Component {
   
   async componentDidMount() {
     const { user } = this.props;
-    console.log(user);
     if (user) {
       this.setState({
         user: user,
@@ -30,7 +29,7 @@ export default class Profile extends React.Component {
     const { user, loading } = this.state;
 
     if (loading) {
-      return <Loader />
+      return <Loader langPack={this.props.langPack} />
     } else {
       return (
         <Container

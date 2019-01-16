@@ -115,6 +115,8 @@ export default class SearchRent extends React.Component {
       langPack
     } = this.props;
 
+    console.log(langPack);
+
     return (
       <Container
         className="header-compensator min-height-viewport"

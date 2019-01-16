@@ -8,6 +8,7 @@ export default {
     login: "Вхід"
   },
   HomeContainer: {
+    _locale: "ua",
     search_results: "Результати пошуку:",
     more: "Більше"
   },

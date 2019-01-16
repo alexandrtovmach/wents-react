@@ -129,7 +129,7 @@ export default class Profile extends React.Component {
 
   generatePanes() {
     const { avatarChanging, avatarDimmerShow, user: newUser, edit } = this.state;
-    const { user: currentUser } = this.props;
+    const { user: currentUser, langPack } = this.props;
 
     const googleConnected = Boolean(currentUser && currentUser.email && currentUser.emailVerified);
     const facebookConnected = Boolean(currentUser && currentUser.providerData && currentUser.providerData.some(el => el && el.providerId === "facebook.com"));
@@ -143,7 +143,7 @@ export default class Profile extends React.Component {
             <Responsive
               minWidth={640}
             >
-              Main
+              {langPack["main"]}
             </Responsive>
             <Responsive
               maxWidth={639}
@@ -160,9 +160,10 @@ export default class Profile extends React.Component {
               closeOnDimmerClick={true}
               onClose={this.toggleAvatarChange}
               size="small"
-              header="Select a Photo"
+              header={langPack["select_a_photo"]}
               content={
                 <AvatarUploader
+                  langPack={langPack}
                   src={currentUser.photoURL}
                   onChange={this.avatarChanged}
                   onCancel={this.toggleAvatarChange}
@@ -199,7 +200,7 @@ export default class Profile extends React.Component {
                         fluid
                         icon='user'
                         iconPosition='left'
-                        placeholder="Your name"
+                        placeholder={langPack["your_name"]}
                         maxLength={30}
                         value={newUser.displayName || ""}
                         onChange={(event, data) => this.userFieldChange(event, data.value, "displayName")}
@@ -219,12 +220,12 @@ export default class Profile extends React.Component {
                           setLocation={data => this.userFieldChange(null, data.address, "address")}
                           value={newUser.address || ""}
                           icon='map marker alternate'
-                          placeholder="Your location"
+                          placeholder={langPack["your_location"]}
                         />
                       </Form.Field>
                       <Form.TextArea
                         autoHeight
-                        label="About"
+                        label={langPack["about"]}
                         maxLength={500}
                         value={newUser.description}
                         onChange={(event, data) => this.userFieldChange(event, data.value, "description")}
@@ -240,29 +241,29 @@ export default class Profile extends React.Component {
                       {
                         newUser.displayName &&
                         <List.Item>
-                          <List.Header>Full name</List.Header>
+                          <List.Header>{langPack["full_name"]}</List.Header>
                           <List.Content size="huge">{newUser.displayName}</List.Content>
                         </List.Item>
                       }
                       {
                         newUser.birthday &&
                         <List.Item>
-                          <List.Header>Birthday</List.Header>
+                          <List.Header>{langPack["birthday"]}</List.Header>
                           <List.Content size="huge">{newUser.birthday}</List.Content>
                         </List.Item>
                       }
                       {
                         newUser.address &&
                         <List.Item>
-                          <List.Header>Location</List.Header>
+                          <List.Header>{langPack["location"]}</List.Header>
                           <List.Content size="huge">{newUser.address}</List.Content>
                         </List.Item>
                       }
                       {
                         newUser.description &&
                         <List.Item>
-                          <List.Header>About</List.Header>
-                          <List.Content size="huge">{newUser.description || "Nothing special"}</List.Content>
+                          <List.Header>{langPack["about"]}</List.Header>
+                          <List.Content size="huge">{newUser.description || langPack["nothing_special"]}</List.Content>
                         </List.Item>
                       }
                     </List>
@@ -273,7 +274,7 @@ export default class Profile extends React.Component {
                 basic={!edit}
                 primary
                 fluid
-                content={edit? "Save Profile": "Edit Profile"}
+                content={edit? langPack["save"]: langPack["edit"]}
                 onClick={this.toggleEdit}
               />
           </Tab.Pane>
@@ -287,7 +288,7 @@ export default class Profile extends React.Component {
             <Responsive
               minWidth={640}
             >
-              Contacts
+              {langPack["contacts"]}
             </Responsive>
             <Responsive
               maxWidth={639}
@@ -305,7 +306,7 @@ export default class Profile extends React.Component {
             >
               <Form.Group>
                 <Header>
-                  Socials
+                  {langPack["socials"]}
                 </Header>
               </Form.Group>
               <Form.Group>
@@ -314,7 +315,7 @@ export default class Profile extends React.Component {
                   fluid
                   color="google plus"
                   icon="google"
-                  content={googleConnected? "Connected with Google": "Connect with Google"}
+                  content={googleConnected? langPack["connected_with_google"]: langPack["connect_with_google"]}
                   onClick={() => linkWithGoogle()}
                 />
                 <Form.Button
@@ -322,14 +323,14 @@ export default class Profile extends React.Component {
                   fluid
                   color="facebook"
                   icon="facebook"
-                  content={googleConnected? "Connected with Facebook": "Connect with Facebook"}
+                  content={googleConnected? langPack["connected_with_facebook"]: langPack["connect_with_facebook"]}
                   onClick={() => linkWithFacebook()}
                 />
               </Form.Group>
 
               <Form.Group>
                 <Header>
-                  Phone
+                  {langPack["phone"]}
                 </Header>
               </Form.Group>
               <Form.Group>
@@ -358,6 +359,7 @@ export default class Profile extends React.Component {
                     newUser.phoneNumber !== currentUser.phoneNumber
                   ) &&
                   <PhoneValidation
+                    langPack={langPack}
                     phoneToVerify={(newUser && newUser.phoneNumber) || ""}
                   >
                     <Button
@@ -365,7 +367,7 @@ export default class Profile extends React.Component {
                       size="mini"
                       color="orange"
                       onClick={this.toggleSMSModal}
-                      content="Send SMS to confirm"
+                      content={langPack["send_sms_to_confirm"]}
                     />
                   </PhoneValidation>
                 }
@@ -382,7 +384,7 @@ export default class Profile extends React.Component {
             <Responsive
               minWidth={640}
             >
-              Settings
+              {langPack["settings"]}
             </Responsive>
             <Responsive
               maxWidth={639}
@@ -398,7 +400,7 @@ export default class Profile extends React.Component {
             >
               <Header icon>
                 <Icon name='cogs' />
-                In development
+                {langPack["in_development"]}
               </Header>
             </Segment>
           </Tab.Pane>
@@ -412,7 +414,7 @@ export default class Profile extends React.Component {
             <Responsive
               minWidth={640}
             >
-              Feedback
+              {langPack["feedback"]}
             </Responsive>
             <Responsive
               maxWidth={639}
@@ -428,7 +430,7 @@ export default class Profile extends React.Component {
             >
               <Header icon>
                 <Icon name='cogs' />
-                In development
+                {langPack["in_development"]}
               </Header>
             </Segment>
           </Tab.Pane>
@@ -442,7 +444,7 @@ export default class Profile extends React.Component {
             <Responsive
               minWidth={640}
             >
-              Logout
+              {langPack["logout"]}
             </Responsive>
             <Responsive
               maxWidth={639}

@@ -155,7 +155,7 @@ export default class AdvertiseForm extends React.Component {
         <Form widths="equal" >
           <Form.Group>
             <Header>
-              Advertise type
+              {langPack["advertise_type"]}
             </Header>
           </Form.Group>
           <Form.Group>
@@ -172,7 +172,7 @@ export default class AdvertiseForm extends React.Component {
                 <Button.Content hidden>
                   <Icon name="home" />
                 </Button.Content>
-                <Button.Content visible>Home</Button.Content>
+                <Button.Content visible>{langPack["home"]}</Button.Content>
               </Button>
               <Button
                 animated="vertical"
@@ -182,22 +182,22 @@ export default class AdvertiseForm extends React.Component {
                 <Button.Content hidden>
                   <Icon name="share square" />
                 </Button.Content>
-                <Button.Content visible>Rent</Button.Content>
+                <Button.Content visible>{langPack["rent"]}</Button.Content>
               </Button>
             </Button.Group>
           </Form.Group>
           <Form.Group>
             <Header>
-              Main
+              {langPack["main"]}
             </Header>
           </Form.Group>
           <Form.Group>
             <Form.Input
               width={1}
-              label="Title"
+              label={langPack["title"]}
               minLength="1"
               maxLength="50"
-              placeholder='Name for post...'
+              placeholder={langPack["title_of_advertise"]}
               value={title}
               onChange={(event, data) => this.fieldChange(event, data.value, "title")}
             />
@@ -206,21 +206,21 @@ export default class AdvertiseForm extends React.Component {
             <Form.TextArea
               width={1}
               autoHeight
-              label="Description"
+              label={langPack["description"]}
               maxLength="500"
-              placeholder='Tell more about your post...'
+              placeholder={langPack["tell_more_details"]}
               value={description}
               onChange={(event, data) => this.fieldChange(event, data.value, "description")}
             />
           </Form.Group>
           <Form.Group>
             <Form.Field width={1}>
-              <label>Address</label>
+              <label>{langPack["address"]}</label>
               <AddressInput
                 setLocation={(data) => this.fieldChange(null, data, "location")}
                 value={location && location.address}
                 center={location}
-                placeholder="Address"
+                placeholder={langPack["type_address_here"]}
               />
             </Form.Field>
           </Form.Group>
@@ -229,20 +229,20 @@ export default class AdvertiseForm extends React.Component {
               <Map
                 setLocation={(data) => this.fieldChange(null, data, "location")}
                 location={location}
-                placeholder="Type in an address to see a map"
+                placeholder={langPack["type_address_to_see_a_map"]}
               />
             </Form.Field>
           </Form.Group>
           <Form.Group>
             <Form.Select
-              label="Apartments type"
+              label={langPack["appartments_type"]}
               options={appartmentsTypes[langPack["_locale"] || "ru"].slice(-3)}
               value={apartmentsType}
               width={4}
               onChange={(event, data) => this.fieldChange(null, data.value, "apartmentsType")}
             />
             <Form.Select
-              label="Rent type"
+              label={langPack["rent_type"]}
               options={rentTypes[langPack["_locale"] || "ru"].slice(-2)}
               value={rentType}
               width={4}
@@ -250,11 +250,11 @@ export default class AdvertiseForm extends React.Component {
             />
           </Form.Group>
           <Form.Group>
-            <Header>Date</Header>
+            <Header>{langPack["date"]}</Header>
           </Form.Group>
           <Form.Group>
             <Form.Checkbox
-              label="Without end date"
+              label={langPack["without_end_date"]}
               toggle
               checked={unlimitedDate}
               width={1}
@@ -267,8 +267,8 @@ export default class AdvertiseForm extends React.Component {
           <Form.Group>
             <Form.Input
               width={1}
-              label="Start date"
-              placeholder='From'
+              label={langPack["start_date"]}
+              placeholder={langPack["from"]}
               type="date"
               value={dateToInputFormat(startDate)}
               max={dateToInputFormat(endDate)}
@@ -276,8 +276,8 @@ export default class AdvertiseForm extends React.Component {
             />
             <Form.Input
               width={1}
-              label="End date"
-              placeholder='To'
+              label={langPack["end_date"]}
+              placeholder={langPack["to"]}
               type="date"
               disabled={unlimitedDate}
               value={dateToInputFormat(endDate)}
@@ -286,12 +286,12 @@ export default class AdvertiseForm extends React.Component {
             />
           </Form.Group>
           <Form.Group>
-            <Header>Budget</Header>
+            <Header>{langPack["budget"]}</Header>
           </Form.Group>
           <Form.Group>
             <Form.Input
               width={1}
-              label="Price"
+              label={langPack["price"]}
               placeholder='100$'
               type="number"
               min={0}
@@ -300,11 +300,11 @@ export default class AdvertiseForm extends React.Component {
             />
           </Form.Group>
           <Form.Group>
-            <Header>Additional</Header>
+            <Header>{langPack["additional"]}</Header>
           </Form.Group>
           <Form.Group>
             <Form.Select
-              label="Benefits"
+              label={langPack["benefits"]}
               options={benefits[langPack["_locale"] || "ru"]}
               multiple
               value={benefitList}
@@ -317,7 +317,7 @@ export default class AdvertiseForm extends React.Component {
               "hidden-element": !isHomeType
             })}
           >
-            <Header>Photos</Header>
+            <Header>{langPack["photos"]}</Header>
           </Form.Group>
           <Form.Group
             className={classNames({
@@ -366,24 +366,24 @@ export default class AdvertiseForm extends React.Component {
             <Button
               primary
               fluid
-              content="Save"
+              content={langPack["save"]}
             />
           }
-          header='Are you sure?'
+          header={langPack["are_you_sure"]}
           actions={[
-            'Cancel',
+            langPack["cancel"],
             <ButtonGroup
               key="yes-button"
             >
               <Button
                 positive
                 basic
-                content="Save"
+                content={langPack["save"]}
                 onClick={() => this.saveChanges()}
               />
               <Button
                 positive
-                content="Save&Publish"
+                content={langPack["save_n_publish"]}
                 onClick={() => this.saveChanges(true)}
               />
             </ButtonGroup>

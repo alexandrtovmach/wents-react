@@ -56,7 +56,7 @@ export default class AvatarUploader extends React.Component {
   
   render () {
     const { preview, loading } = this.state;
-    const { src } = this.props;
+    const { src, langPack } = this.props;
     return (
       <Segment
         basic
@@ -84,7 +84,7 @@ export default class AvatarUploader extends React.Component {
           className="margin-1"
           onClick={this.onCancel}
         >
-          Cancel
+          {langPack["cancel"]}
         </Button>
         <Button
           primary
@@ -93,7 +93,7 @@ export default class AvatarUploader extends React.Component {
           className="margin-1"
           onClick={this.onSave}
         >
-          Save
+          {langPack["save"]}
         </Button>
       </Segment>
     )

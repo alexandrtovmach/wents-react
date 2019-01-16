@@ -2,7 +2,7 @@ import React from 'react';
 import { Segment, Header, Button, Modal, Image, Grid, List, Card, Icon, Item } from "semantic-ui-react";
 
 import { createConversation } from '../../services/chat';
-import { benefits } from '../../services/constants';
+import { appartmentsTypes, rentTypes, benefits } from '../../services/constants';
 
 
 export default class RentAdvertise extends React.Component {
@@ -83,16 +83,16 @@ export default class RentAdvertise extends React.Component {
           width={isHome? 4: 16}
         >
           <Header>
-            {title || "Untitled"}
+            {title || langPack["untitled"]}
             <Header.Subheader
-              content={description || "Description is empty..."}
+              content={description || langPack["description_is_empty"]}
             />
           </Header>
           {
             location &&
             <Modal
-              header="Location of this rent"
-              content="In development"
+              header={langPack["map"]}
+              content={langPack["in_development"]}
               trigger={(
                 <List.Item>
                   <Segment
@@ -101,7 +101,7 @@ export default class RentAdvertise extends React.Component {
                     basic
                   >
                     <Icon name="map marker alternate"/>
-                    {(location && location.address) || "Look on map"}
+                    {(location && location.address) || langPack["look_on_map"]}
                   </Segment>
                 </List.Item>
               )}
@@ -130,10 +130,10 @@ export default class RentAdvertise extends React.Component {
               >
                 <Item className="margin-v-1" color="grey" >
                   <Icon name="hotel" size="large"/>
-                  {apartmentsType}
-                  &nbsp;&nbsp;|&nbsp;&nbsp;
+                  {(appartmentsTypes[langPack["_locale"]].find(t => t.value === apartmentsType) || {}).text}
+                  &nbsp;|&nbsp;
                   <Icon name="clock" size="large"/>
-                  {rentType}
+                  {(rentTypes[langPack["_locale"]].find(r => r.value === rentType) || {}).text}
                 </Item>
                 <Item>
                   {
@@ -164,7 +164,7 @@ export default class RentAdvertise extends React.Component {
               onClick={this.toggleChat}
             >
               <Button.Content hidden>
-                Contact with owner
+                {langPack["contact_with_owner"]}
               </Button.Content>
               <Button.Content visible>
                 {price}$

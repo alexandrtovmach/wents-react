@@ -11,7 +11,7 @@ export default props => {
         <Dropdown
           defaultValue={advertiseTypes[props.langPack["_locale"]][0].value}
           options={advertiseTypes[props.langPack["_locale"]]}
-          onChange={(e, data) => props.onChange && props.onChangeType(data.value)}
+          onChange={(e, data) => props.onChangeType && props.onChangeType(data.value)}
         />
       }
       labelPosition='right'

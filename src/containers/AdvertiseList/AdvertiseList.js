@@ -53,8 +53,9 @@ export default class AdvertiseList extends React.Component {
   };
 
   generateAdvertTabs(advType) {
+    const { langPack } = this.props;
     const { posts } = this.state;
-    return advertStatusList.map(status => {
+    return advertStatusList[langPack["_locale"]].map(status => {
       return {
         menuItem: status.name,
         render: () => <Tab.Pane basic>{this.filterPostsByStatusAndType(posts, status, advType)}</Tab.Pane>

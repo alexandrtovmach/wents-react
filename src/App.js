@@ -94,7 +94,7 @@ class App extends React.Component {
             unreadCount={unreadCount}
             toggleChat={this.toggleChat}
             toggleSidebar={this.toggleSidebar}
-            langPack={langPack["Header"]}
+            langPack={{ ...langPack, ...langPack["Header"] }}
           />
           <Sidebar
             user={user}
@@ -109,7 +109,7 @@ class App extends React.Component {
                 chatData={chatData}
                 onUpdated={this.onChatUpdated}
                 toggleChat={this.toggleChat}
-                langPack={langPack["Chat"]}
+                langPack={{ ...langPack, ...langPack["Chat"] }}
               />
             }
             <Switch>
@@ -120,7 +120,7 @@ class App extends React.Component {
                   <HomeContainer
                     match={match}
                     user={user}
-                    langPack={langPack["HomeContainer"]}
+                    langPack={{ ...langPack, ...langPack["HomeContainer"] }}
                   />
                 )}
               />
@@ -130,7 +130,7 @@ class App extends React.Component {
                 render={({match}) => (
                   <LoginContainer
                     match={match}
-                    langPack={langPack["LoginContainer"]}
+                    langPack={{ ...langPack, ...langPack["LoginContainer"] }}
                   />
                 )}
               />
@@ -140,7 +140,7 @@ class App extends React.Component {
                 render={({match}) => (
                   <SearchRentContainer
                     match={match}
-                    langPack={langPack["SearchRentContainer"]}
+                    langPack={{ ...langPack, ...langPack["SearchRentContainer"] }}
                   />
                 )}
               />
@@ -151,7 +151,7 @@ class App extends React.Component {
                   <AdvertiseListContainer
                     match={match}
                     user={user}
-                    langPack={langPack["AdvertiseListContainer"]}
+                    langPack={{ ...langPack, ...langPack["AdvertiseListContainer"] }}
                   />
                 )}
               />
@@ -162,7 +162,7 @@ class App extends React.Component {
                     match={match}
                     user={user}
                     toggleChat={this.toggleChat}
-                    langPack={langPack["AdvertiseContainer"]}
+                    langPack={{ ...langPack, ...langPack["AdvertiseContainer"] }}
                   />
                 )}
               />
@@ -172,7 +172,7 @@ class App extends React.Component {
                   <AdvertiseContainer
                     match={match}
                     user={user}
-                    langPack={langPack["AdvertiseContainer"]}
+                    langPack={{ ...langPack, ...langPack["AdvertiseContainer"] }}
                   />
                 )}
               />
@@ -183,7 +183,7 @@ class App extends React.Component {
                   <ProfileContainer
                     match={match}
                     user={user}
-                    langPack={langPack["ProfileContainer"]}
+                    langPack={{ ...langPack, ...langPack["ProfileContainer"] }}
                   />
                 )}
               />
@@ -193,7 +193,7 @@ class App extends React.Component {
                 render={({match}) => (
                   <LoginContainer
                     match={match}
-                    langPack={langPack["LoginContainer"]}
+                    langPack={{ ...langPack, ...langPack["LoginContainer"] }}
                   />
                 )}
               />
@@ -203,7 +203,7 @@ class App extends React.Component {
                 // render={({match}) => (
                 //   <SupportContainer
                 //     match={match}
-                //     langPack={langPack["SupportContainer"]}
+                //     langPack={{ ...langPack, ...langPack["SupportContainer"] }}
                 //   />
                 // )}
                 component={PageNotFound}

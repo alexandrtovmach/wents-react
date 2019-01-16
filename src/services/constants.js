@@ -374,21 +374,58 @@ export const advertiseTypes = {
   ],
 }
 
-export const advertStatusList = [{
-    name: "Active",
-    key: "status",
-    value: "active"
-  },
-  {
-    name: "Pending",
-    key: "status",
-    value: "pending"
-  },
-  {
-    name: "Archived",
-    key: "status",
-    value: "archived"
-  }
-];
+export const advertStatusList = {
+  en: [
+    {
+      name: "Active",
+      key: "status",
+      value: "active"
+    },
+    {
+      name: "Pending",
+      key: "status",
+      value: "pending"
+    },
+    {
+      name: "Archived",
+      key: "status",
+      value: "archived"
+    }
+  ],
+  ru: [
+    {
+      name: "Активные",
+      key: "status",
+      value: "active"
+    },
+    {
+      name: "В ожидании",
+      key: "status",
+      value: "pending"
+    },
+    {
+      name: "Архив",
+      key: "status",
+      value: "archived"
+    }
+  ],
+  ua: [
+    {
+      name: "Активні",
+      key: "status",
+      value: "active"
+    },
+    {
+      name: "В очікуванні",
+      key: "status",
+      value: "pending"
+    },
+    {
+      name: "Архів",
+      key: "status",
+      value: "archived"
+    }
+  ],
+};
 
 export const placeholderImg = 'https://react.semantic-ui.com/images/wireframe/square-image.png';
