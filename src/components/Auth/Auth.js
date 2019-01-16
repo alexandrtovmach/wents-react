@@ -39,7 +39,7 @@ export default class AuthComponent extends React.Component {
         })
         .catch(error => {
           const { code, message } = error;
-          // console.log(code);
+          console.log(code);
           this.setState({
             emailError: message,
             passwordError: message
