@@ -70,6 +70,7 @@ export default {
   start_date: "Start date",
   support: "Support",
   tell_more_details: "Tell more details...",
+  this_field_is_required: "This field is required",
   title_of_advertise: "Title of advertise...",
   title: "Title",
   to: "To",

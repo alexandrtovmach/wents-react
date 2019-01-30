@@ -70,6 +70,7 @@ export default {
   start_date: "Дата в'їзду",
   support: "Підтримка",
   tell_more_details: "Розкажіть більше...",
+  this_field_is_required: "Це поле є обов'язковим",
   title_of_advertise: "Заголовок оголошення...",
   title: "Заголовок",
   to: "До",

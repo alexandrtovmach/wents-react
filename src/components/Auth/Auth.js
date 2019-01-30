@@ -45,6 +45,11 @@ export default class AuthComponent extends React.Component {
             passwordError: message
           })
         });
+    } else {
+      this.setState({
+        emailError: this.props.langPack["this_field_is_required"],
+        passwordError: this.props.langPack["this_field_is_required"]
+      })
     }
   }
 
@@ -63,6 +68,11 @@ export default class AuthComponent extends React.Component {
             passwordError: message
           })
         });
+    } else {
+      this.setState({
+        emailError: this.props.langPack["this_field_is_required"],
+        passwordError: this.props.langPack["this_field_is_required"]
+      })
     }
   }
 
