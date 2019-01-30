@@ -150,7 +150,7 @@ export default class AdvertiseForm extends React.Component {
       <Segment padded>
         {
           loading &&
-          <Loader />
+          <Loader langPack={langPack} />
         }
         <Form widths="equal" >
           <Form.Group>

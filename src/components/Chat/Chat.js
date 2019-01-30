@@ -119,24 +119,26 @@ export default class RentAdvertise extends React.Component {
   }
   
   shareContactDetails(isAlreadySharedContacts) {
+    const { langPack } = this.props;
     const { selectedConversation, conversationList } = this.state;
 
     if (isAlreadySharedContacts) {
       console.warn("Already shared contacts. Action skipped");
     } else {
       const { senderId, receiverId } = conversationList.find(el => el.id === selectedConversation);
-      postMessageToConversation(selectedConversation, senderId, receiverId, "Congratulations! You're shared your contacts.", 2);
+      postMessageToConversation(selectedConversation, senderId, receiverId, langPack["congratulations_you_shared_your_contacts"], 2);
     }
   }
 
   makeDeal(isAlreadyHasDeal) {
+    const { langPack } = this.props;
     const { selectedConversation, conversationList } = this.state;
 
     if (isAlreadyHasDeal) {
       console.warn("Already have deal. Action skipped");
     } else {
       const { senderId, receiverId } = conversationList.find(el => el.id === selectedConversation);
-      postMessageToConversation(selectedConversation, senderId, receiverId, "Congratulations! You're accepted deal.", 1);
+      postMessageToConversation(selectedConversation, senderId, receiverId, langPack["congratulations_you_accepted_the_deal"], 1);
     }
   }
 
@@ -171,7 +173,7 @@ export default class RentAdvertise extends React.Component {
 
 
   render() {
-    const { open, toggleChat } = this.props;
+    const { open, toggleChat, langPack } = this.props;
     const { showConversationList, conversationList, conversationMessages, selectedConversation } = this.state;
 
     const isAlreadyHasDeal = (conversationMessages[selectedConversation] || []).some(el => el.type === "system" && el.systemMessageId === 1);
@@ -223,7 +225,7 @@ export default class RentAdvertise extends React.Component {
                   />
                   <Segment>
                     <Input
-                      placeholder="Type here..."
+                      placeholder={langPack["type_here"]}
                       multiline
                       autofocus
                       onChange={this.onMessageInput}
@@ -240,27 +242,27 @@ export default class RentAdvertise extends React.Component {
                           options={[
                             {
                               key: "dropdown-file",
-                              text: "Upload file (In development)",
+                              text: `${langPack["upload_file"]} (${langPack["in_development"]})`,
                               icon: <Icon link name='file' size="large" />,
                               onClick: this.toggleUploadFile
                             },
                             {
                               key: "dropdown-emodgi",
-                              text: "Smile (In development)",
+                              text: `${langPack["smile"]} (${langPack["in_development"]})`,
                               icon: <Icon link name='smile' size="large" />,
                               onClick: this.toggleEmodji
                             },
                             {
                               key: "dropdown-share-contact-button",
                               disabled: isAlreadySharedContacts,
-                              text: "Share contact details with user",
+                              text: langPack["share_contact_details_with_user"],
                               icon: isAlreadySharedContacts? <Icon link name='check' size="large" color="green" />: <Icon link name='user' size="large" />,
                               onClick: () => this.shareContactDetails(isAlreadySharedContacts)
                             },
                             {
                               key: "dropdown-deal-button",
                               disabled: isAlreadyHasDeal,
-                              text: "Make a deal with user",
+                              text: langPack["make_a_deal_with_user"],
                               icon: isAlreadyHasDeal? <Icon link name='check' size="large" color="green" />: <Icon link name='handshake' size="large" />,
                               onClick: () => this.makeDeal(isAlreadyHasDeal)
                             }
@@ -270,7 +272,7 @@ export default class RentAdvertise extends React.Component {
                       rightButtons={
                         <Button
                           primary
-                          content='Send'
+                          content={langPack["send"]}
                           onClick={this.sendMessage}
                         />
                       }
@@ -283,7 +285,7 @@ export default class RentAdvertise extends React.Component {
                 >
                   <Header icon>
                     <Icon name='arrow left' />
-                    Please select conversation
+                    {langPack["please_select_conversation"]}
                   </Header>
                 </Segment>
               )

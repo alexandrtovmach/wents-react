@@ -39,7 +39,7 @@ export default class AdvertiseList extends React.Component {
     const { langPack } = this.props;
     return (
       <Card.Group centered>
-        {posts && Object.keys(posts).map(key => posts[key][status.key] === status.value && posts[key].advType === advType && <AdvertiseCard key={posts[key].id} data={posts[key]} />)}
+        {posts && Object.keys(posts).map(key => posts[key][status.key] === status.value && posts[key].advType === advType && <AdvertiseCard key={posts[key].id} data={posts[key]} langPack={langPack} />)}
         {
           status.value === "active" &&
           <AdvertiseCard
